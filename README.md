@@ -7,10 +7,15 @@ free answers, and records a keep or reject decision. Backbone weights stay froze
 
 ## Status
 
-**v0.0.1-preview** (Python package version `0.0.1a1`). The packaged loop has not
-yet been run end-to-end on Spark as packaged. Ordinary-chat serving and rollback
-acceptance are in progress. Source experiments support investigation of the
-method; they do not establish acceptance of this package.
+**v0.0.1** (Python package version `0.0.1`), an experimental release. A clean
+installed source bundle completed the raw-fact loop on the Spark pair, from
+model-authored questions through native fitting, generated answers, KEEP, and
+ordinary-chat retention. The documented rollback restored the exact originals.
+
+That later research bundle uses the `glm-attnmem` updater and an ordinary-chat
+routing hook. This checkout provides the `glm-rsi-dream` supplied-dataset loop
+and tagged `ask` path. The results below identify the tested implementation;
+native qualification of this checkout's exact CLI remains a verification target.
 
 ## Quick start: CPU dry run
 
@@ -86,9 +91,10 @@ glm-rsi-dream --config config.json --run ~/.cache/glm-rsi-dream/synthetic-1 \
   --question 'What is the Linden project helper called?' --live ask
 ```
 
-The `ask` command uses the package's tagged evaluation path. An ordinary untagged
-chat request bypasses memory installation. Natural-language routing through an
-ordinary-chat service remains an open acceptance item.
+The `ask` command uses this package's tagged evaluation path. An ordinary
+untagged request bypasses its memory installation. The later source bundle's
+ordinary-chat routing passed the bounded qualification described below; that
+routing hook is separate from this checkout's `ask` command.
 
 ## How it works
 
@@ -108,19 +114,47 @@ tags. A passing test suite or lower fitting loss alone cannot accept a memory.
 
 ## Source results
 
-These are source experiments on small sets, supplied for this preview. Model
+These are source experiments on small sets, supplied for this release. Model
 self-grading is explicitly identified below. See [results/RESULTS.md](results/RESULTS.md).
 
 | Experiment | Learned held-out | Baseline | Full in-context carrier | Development | Controls |
 | --- | --- | --- | --- | --- | --- |
 | Round 3, 96 rows on 11 full-attention layers | 34/36 grounded | 1/36 | 35/36 | 12/12 | 30/30 byte-exact |
 | Self-run RSI smoke, plan4 | 18/18 | 0/18 | Not reported | 6/6 | 30/30 tagged controls exact |
+| Installed raw-fact updater, fictional fixture | 18/18 grounded | 0/18 | 18/18 grounded | 6/6 | 30/30 isolation controls exact |
+| Precision continuation, 224 learned rows | 24/24 grounded | 2/24 | 24/24 grounded | 12/12 | 30/30 tagged controls exact |
 
 For plan4, the model generated fictional facts, wrote the questions, graded its
-own answers, and decided **KEEP**. Tiny sets, self-grading bias, and tagged
-controls limit the conclusion. Tagged controls do not establish natural-language
-routing. Ordinary-chat serving testing is pending. Neither row is an
-end-to-end result for the package as shipped.
+own answers, and decided **KEEP**. The installed updater also decided **KEEP**
+on its fresh fictional fixture. These are distinct runs. Grounded scores for
+the updater and precision continuation are GLM self-grades. Their held-out
+questions were sealed before fitting and are now consumed. The precision run
+changed both teacher style and compression density, so it does not isolate
+their individual effects.
+
+The later source bundle's three-pocket ordinary service passed 60/60 exact
+preservation controls, 6/6 user-only probes, and 8/8 complete protected replies.
+Its final routing qualification passed 42 supported development/admission
+questions. An earlier keeper qualification blocked all 90 admission-negative
+checks. The documented rollback was actually executed and restored both exact
+original container identities and 8/8 protected replies.
+
+An extra user-only name-verb question bypassed memory after the initial serving
+gate. Admission was tightened with independently sampled, blind-scope-reviewed
+coverage probes. The failing phrasing then passed a direct regression check on
+the retained pair, with both rank activations verified. That failure and repair
+bound the routing claim; these finite checks establish no general routing guarantee.
+
+An **early concept-only continuity experiment** recorded unprompted first-turn
+tool calls on 17/18 tasks both before and after teaching. Self-graded correct,
+grounded first actions rose from 14/18 to 16/18; the complete concept carrier
+scored 17/18. GLM chose KEEP under the original quality rule. The primary
+call-frequency hypothesis received no gain. Calls were recorded, not executed,
+and this is first-action evidence rather than complete workflow evidence.
+
+Tiny sets, model-authored questions, self-grading bias, and consumed holdouts
+limit every result. Tagged controls alone do not establish natural-language
+routing. Source-bundle outcomes and this checkout's CPU checks remain distinct.
 
 ## Recovery and limits
 
@@ -137,15 +171,18 @@ glm-rsi-dream --config config.json --run ~/.cache/glm-rsi-dream/synthetic-1 \
 ```
 
 A `STOP` file in the run directory requests restoration during an active loop.
-Real interruption, paired corruption, kept-memory reuse, fresh provisioning,
-and exact reply restoration still need Spark acceptance as packaged.
+The later installed source bundle demonstrated retained memory and exact
+rollback on its configured pair. Real interruption, paired corruption, fresh
+provisioning, and this checkout's own recovery path remain native verification
+targets.
 
 This is short-context attention-output distillation with a retained recurrent
 anchor. It is not full-model answer-loss training. Dense-context readout, explicit
 scope terms, tiny consumed sets, quantized decoding, malformed model grading,
-and self-grading bias bound its evidence. Broad generalization, many-memory
-composition, and ordinary-chat memory serving remain unverified. Captured tensors
-and prompts can contain private facts and belong only in private run storage.
+and self-grading bias bound its evidence. Broad generalization and many-memory
+composition remain unverified. Ordinary-chat source serving has the finite
+qualification above. Captured tensors and prompts can contain private facts
+and belong only in private run storage.
 
 ## Glossary
 

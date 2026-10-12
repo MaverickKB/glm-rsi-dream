@@ -4,8 +4,10 @@ GLM RSI Dream is an experimental two-node NVIDIA DGX Spark GB10 attention-memory
 loop using TP=2. Preserve the capture, real 96-row gradients at all 11
 full-attention sites, generated-answer checking, and keep/reject path.
 
-The status is v0.0.1-preview. End-to-end Spark execution as packaged and
-ordinary-chat serving/rollback acceptance remain in progress. CPU dry runs
+The status is v0.0.1, an experimental release. A later installed source bundle
+passed the raw-fact loop, bounded ordinary-chat serving, and exact rollback.
+This checkout retains its supplied-dataset loop and tagged ask path; preserve
+that implementation distinction when describing native acceptance. CPU dry runs
 must open no process or network connection and create no run directory. Live
 execution must be explicitly requested and use the configured pair.
 
@@ -17,7 +19,7 @@ Use only fictional examples in source. Publish aggregate scores without private
 run receipts or private-data fingerprints.
 
 The packaged resources/manifest.json under glm_rsi_dream owns runtime/source
-pins, model identity, method settings, and preview status. Startup validation
+pins, model identity, method settings, and release status. Startup validation
 must use that manifest and reject mismatched sources. Preserve original engine
 files, retained Apache-2.0 headers, LICENSE, and NOTICE. Record borrowed-code
 provenance in UPSTREAM.md. Model weights and containers have separate terms.

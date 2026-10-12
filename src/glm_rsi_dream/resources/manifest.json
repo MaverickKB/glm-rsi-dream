@@ -1,8 +1,8 @@
 {
   "name": "GLM RSI Dream",
   "package": "glm-rsi-dream",
-  "version": "0.0.1a1",
-  "status": "v0.0.1-preview",
+  "version": "0.0.1",
+  "status": "v0.0.1",
   "vendor": "GLM RSI Dream contributors",
   "model": "GLM-5.3-Flash-EXL3",
   "runtime": {

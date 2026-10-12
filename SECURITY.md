@@ -1,8 +1,10 @@
 # Security
 
-The current review target is v0.0.1-preview. This experimental package starts
+The current review target is v0.0.1. This experimental package starts
 temporary Docker containers and uses SSH on a two-node Spark pair. CPU checks
-cover local contracts; native serving and rollback acceptance are in progress.
+cover local contracts. Later installed-source serving and rollback passed
+bounded qualification; this public checkout's exact native CLI remains a
+verification target. See README.md for the tested implementation and limits.
 
 Report vulnerabilities through GitHub private vulnerability reporting: open
 this repository's **Security** tab, select **Report a vulnerability**, and

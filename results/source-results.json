@@ -1,6 +1,6 @@
 {
-  "status": "v0.0.1-preview",
-  "evidence_kind": "Source experiments, separate from packaged acceptance",
+  "status": "v0.0.1",
+  "evidence_kind": "Aggregate source experiments and installed research-bundle qualification",
   "round3": {
     "attention_memory_rows": 96,
     "full_attention_layers": 11,
@@ -40,11 +40,118 @@
     "model_decision": "KEEP"
   },
   "caveats": [
-    "tiny sets",
-    "self-grading for plan4",
-    "tagged controls do not establish natural-language routing",
-    "ordinary-chat serving test pending"
+    "small model-authored sets and model self-grading",
+    "heldouts sealed before fitting and now consumed",
+    "tagged controls alone do not establish natural-language routing",
+    "ordinary routing evidence is bounded and preserves an admission failure and repair",
+    "continuity frequency unchanged; knowledge probes have a baseline ceiling; first-turn calls were not executed",
+    "later installed research bundle and this public checkout have distinct CLI and serving paths",
+    "broad generalization, many-memory composition and full-backbone vocabulary KL unverified"
   ],
-  "packaged_spark_acceptance": "not yet run end-to-end as packaged",
-  "ordinary_chat_serving_and_rollback_acceptance": "in progress"
+  "packaged_spark_acceptance": "later installed research source bundle completed; this public checkout exact native CLI remains a verification target",
+  "ordinary_chat_serving_and_rollback_acceptance": "later source-bundle bounded serving and documented exact rollback passed",
+  "installed_raw_fact_updater": {
+    "implementation": "later installed glm-attnmem source bundle",
+    "facts": "fresh fictional fixture",
+    "grading": "model-self-graded",
+    "heldout": {
+      "learned_grounded": 18,
+      "baseline_grounded": 0,
+      "full_carrier_grounded": 18,
+      "total": 18
+    },
+    "development": {
+      "correct": 6,
+      "total": 6
+    },
+    "controls": {
+      "exact": 30,
+      "total": 30
+    },
+    "model_decision": "KEEP"
+  },
+  "source_ordinary_serving": {
+    "implementation": "later source-bundle ordinary-chat routing hook",
+    "pocket_count": 3,
+    "preservation_controls": {
+      "exact": 60,
+      "total": 60
+    },
+    "protected_replies": {
+      "complete_byte_exact": 8,
+      "total": 8
+    },
+    "user_only_probes": {
+      "grounded": 6,
+      "total": 6
+    },
+    "final_supported_development_and_admission": {
+      "grounded": 42,
+      "total": 42
+    },
+    "earlier_keeper_admission_negatives": {
+      "blocked": 90,
+      "total": 90
+    },
+    "documented_rollback": "executed; both exact original container identities and eight complete protected replies restored",
+    "admission_failure_and_repair": "one extra user-only name-verb phrasing bypassed memory; admission tightened with independent blind-reviewed coverage; direct regression then passed with both rank activations"
+  },
+  "precision_continuation": {
+    "attention_memory_rows": 224,
+    "grading": "model-self-graded",
+    "heldout": {
+      "learned_grounded": 24,
+      "baseline_grounded": 2,
+      "full_carrier_grounded": 24,
+      "total": 24
+    },
+    "development": {
+      "correct": 12,
+      "total": 12
+    },
+    "controls": {
+      "tagged_exact": 30,
+      "total": 30
+    },
+    "model_decision": "KEEP",
+    "comparison_limit": "teacher style and compression density changed together; questions differ from Round 3"
+  },
+  "early_concept_continuity": {
+    "scope": "recorded unprompted first-turn calls; calls not executed",
+    "grading": "semantic quality model-self-graded; call structure checked separately",
+    "heldout": {
+      "baseline": {
+        "tool_calls": 17,
+        "quality": 14,
+        "total": 18
+      },
+      "full_carrier": {
+        "tool_calls": 17,
+        "quality": 17,
+        "total": 18
+      },
+      "learned": {
+        "tool_calls": 17,
+        "quality": 16,
+        "total": 18
+      }
+    },
+    "bypass_controls": {
+      "exact": 30,
+      "total": 30
+    },
+    "attached_controls": {
+      "inappropriate_tool_calls": 0,
+      "total": 30
+    },
+    "knowledge_probes": {
+      "baseline": 6,
+      "full_carrier": 6,
+      "learned": 6,
+      "total": 6
+    },
+    "model_decision": "KEEP under original quality rule",
+    "primary_frequency_gain": 0,
+    "ordinary_activation": "awaiting separate qualification"
+  }
 }
