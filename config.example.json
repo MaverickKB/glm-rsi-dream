@@ -1,0 +1,74 @@
+{
+  "hosts": [
+    {
+      "rank": 0,
+      "ssh": "<SSH_USER>@spark-head.example",
+      "original_container": "<HEAD_CONTAINER>",
+      "work_dir": "/var/tmp/glm-rsi-dream"
+    },
+    {
+      "rank": 1,
+      "ssh": "<SSH_USER>@spark-worker.example",
+      "original_container": "<WORKER_CONTAINER>",
+      "work_dir": "/var/tmp/glm-rsi-dream"
+    }
+  ],
+  "api_url": "http://spark-head.example:<HEAD_API_PORT>",
+  "ssh_command": [
+    "ssh",
+    "-oBatchMode=yes",
+    "-oConnectTimeout=10"
+  ],
+  "remote_python": [
+    "python3"
+  ],
+  "safety": {
+    "memory_floor_bytes": 4000000000,
+    "swap_out_bytes_per_second": 10000000,
+    "swap_sustain_seconds": 30,
+    "ready_timeout_seconds": 360,
+    "probe_seconds": 2,
+    "window_seconds": 3600,
+    "dashboard_url": "http://127.0.0.1:11000/",
+    "protected_urls": [
+      "http://spark-head.example:<PROTECTED_SERVICE_PORT>/health",
+      "http://spark-worker.example:<PROTECTED_SERVICE_PORT>/health"
+    ]
+  },
+  "training": {
+    "device": "cuda",
+    "threads": 4
+  },
+  "acceptance": {
+    "minimum_grounded_recall": 0.8,
+    "minimum_gain": 0.2,
+    "minimum_dev_recall": 0.8,
+    "require_per_fact": true
+  },
+  "max_tokens": 256,
+  "capture_max_tokens": 512,
+  "system_prompt": "Answer the question briefly using only facts you know. Do not add unsupported details.",
+  "baseline": {
+    "master_address": "<FABRIC_HEAD_ADDRESS>",
+    "master_port": 29551,
+    "api_bind": "<API_BIND_ADDRESS>",
+    "api_port": 8888,
+    "context_tokens": 8192,
+    "maximum_tokens": 512,
+    "environment": {
+      "HF_HUB_OFFLINE": "1",
+      "TENSORFOLD_NO_UPDATE_CHECK": "1",
+      "TENSORFOLD_MEMORY_RESERVE_GIB": "16",
+      "TF_GLM_COMM": "nccl",
+      "NCCL_SOCKET_IFNAME": "<FABRIC_SOCKET_INTERFACE>",
+      "NCCL_IB_HCA": "<RDMA_HCA>",
+      "NCCL_IB_GID_INDEX": "<RDMA_GID_INDEX>",
+      "NCCL_MIN_NCHANNELS": "4",
+      "NCCL_MAX_NCHANNELS": "4",
+      "TF_GLM_KV": "fp8",
+      "TF_GLM_DENSE": "q4",
+      "TF_GLM_MTP": "1",
+      "TF_GLM_HC_SPLIT": "1"
+    }
+  }
+}

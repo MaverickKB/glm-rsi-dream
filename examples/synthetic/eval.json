@@ -1,0 +1,509 @@
+{
+  "heldout": [
+    {
+      "id": "heldout-helper-direct-0",
+      "fact_id": "helper",
+      "direction": "direct",
+      "prompt": "A colleague asked for the name of the Linden project helper. What should I tell them?",
+      "aliases": [
+        [
+          "Orbit"
+        ]
+      ]
+    },
+    {
+      "id": "heldout-helper-direct-1",
+      "fact_id": "helper",
+      "direction": "direct",
+      "prompt": "Complete this lookup by returning the name of the Linden project helper.",
+      "aliases": [
+        [
+          "Orbit"
+        ]
+      ]
+    },
+    {
+      "id": "heldout-helper-direct-2",
+      "fact_id": "helper",
+      "direction": "direct",
+      "prompt": "For a project handoff, report the name of the Linden project helper exactly.",
+      "aliases": [
+        [
+          "Orbit"
+        ]
+      ]
+    },
+    {
+      "id": "heldout-helper-reverse-0",
+      "fact_id": "helper",
+      "direction": "reverse",
+      "prompt": "Summarize the documented Linden connection to Orbit.",
+      "aliases": [
+        [
+          "Linden"
+        ],
+        [
+          "project helper"
+        ]
+      ]
+    },
+    {
+      "id": "heldout-helper-reverse-1",
+      "fact_id": "helper",
+      "direction": "reverse",
+      "prompt": "What purpose in Linden is attached to Orbit?",
+      "aliases": [
+        [
+          "Linden"
+        ],
+        [
+          "project helper"
+        ]
+      ]
+    },
+    {
+      "id": "heldout-helper-reverse-2",
+      "fact_id": "helper",
+      "direction": "reverse",
+      "prompt": "Place Orbit in its Linden role using only the record.",
+      "aliases": [
+        [
+          "Linden"
+        ],
+        [
+          "project helper"
+        ]
+      ]
+    },
+    {
+      "id": "heldout-console-direct-0",
+      "fact_id": "console",
+      "direction": "direct",
+      "prompt": "A colleague asked for the board used by the Linden meeting-room console. What should I tell them?",
+      "aliases": [
+        [
+          "Slate-4",
+          "Slate 4"
+        ]
+      ]
+    },
+    {
+      "id": "heldout-console-direct-1",
+      "fact_id": "console",
+      "direction": "direct",
+      "prompt": "Complete this lookup by returning the board used by the Linden meeting-room console.",
+      "aliases": [
+        [
+          "Slate-4",
+          "Slate 4"
+        ]
+      ]
+    },
+    {
+      "id": "heldout-console-direct-2",
+      "fact_id": "console",
+      "direction": "direct",
+      "prompt": "For a project handoff, report the board used by the Linden meeting-room console exactly.",
+      "aliases": [
+        [
+          "Slate-4",
+          "Slate 4"
+        ]
+      ]
+    },
+    {
+      "id": "heldout-console-reverse-0",
+      "fact_id": "console",
+      "direction": "reverse",
+      "prompt": "Summarize the documented Linden connection to the Slate-4 board.",
+      "aliases": [
+        [
+          "Linden"
+        ],
+        [
+          "meeting-room console"
+        ]
+      ]
+    },
+    {
+      "id": "heldout-console-reverse-1",
+      "fact_id": "console",
+      "direction": "reverse",
+      "prompt": "What purpose in Linden is attached to the Slate-4 board?",
+      "aliases": [
+        [
+          "Linden"
+        ],
+        [
+          "meeting-room console"
+        ]
+      ]
+    },
+    {
+      "id": "heldout-console-reverse-2",
+      "fact_id": "console",
+      "direction": "reverse",
+      "prompt": "Place the Slate-4 board in its Linden role using only the record.",
+      "aliases": [
+        [
+          "Linden"
+        ],
+        [
+          "meeting-room console"
+        ]
+      ]
+    },
+    {
+      "id": "heldout-tablet-direct-0",
+      "fact_id": "tablet",
+      "direction": "direct",
+      "prompt": "A colleague asked for the model of the Linden workshop tablet. What should I tell them?",
+      "aliases": [
+        [
+          "DraftPad 12"
+        ]
+      ]
+    },
+    {
+      "id": "heldout-tablet-direct-1",
+      "fact_id": "tablet",
+      "direction": "direct",
+      "prompt": "Complete this lookup by returning the model of the Linden workshop tablet.",
+      "aliases": [
+        [
+          "DraftPad 12"
+        ]
+      ]
+    },
+    {
+      "id": "heldout-tablet-direct-2",
+      "fact_id": "tablet",
+      "direction": "direct",
+      "prompt": "For a project handoff, report the model of the Linden workshop tablet exactly.",
+      "aliases": [
+        [
+          "DraftPad 12"
+        ]
+      ]
+    },
+    {
+      "id": "heldout-tablet-reverse-0",
+      "fact_id": "tablet",
+      "direction": "reverse",
+      "prompt": "Summarize the documented Linden connection to the DraftPad 12.",
+      "aliases": [
+        [
+          "Linden"
+        ],
+        [
+          "workshop tablet"
+        ]
+      ]
+    },
+    {
+      "id": "heldout-tablet-reverse-1",
+      "fact_id": "tablet",
+      "direction": "reverse",
+      "prompt": "What purpose in Linden is attached to the DraftPad 12?",
+      "aliases": [
+        [
+          "Linden"
+        ],
+        [
+          "workshop tablet"
+        ]
+      ]
+    },
+    {
+      "id": "heldout-tablet-reverse-2",
+      "fact_id": "tablet",
+      "direction": "reverse",
+      "prompt": "Place the DraftPad 12 in its Linden role using only the record.",
+      "aliases": [
+        [
+          "Linden"
+        ],
+        [
+          "workshop tablet"
+        ]
+      ]
+    },
+    {
+      "id": "heldout-feed-direct-0",
+      "fact_id": "feed",
+      "direction": "direct",
+      "prompt": "A colleague asked for the identifier of the fictional Linden public feed. What should I tell them?",
+      "aliases": [
+        [
+          "@linden_notes"
+        ]
+      ]
+    },
+    {
+      "id": "heldout-feed-direct-1",
+      "fact_id": "feed",
+      "direction": "direct",
+      "prompt": "Complete this lookup by returning the identifier of the fictional Linden public feed.",
+      "aliases": [
+        [
+          "@linden_notes"
+        ]
+      ]
+    },
+    {
+      "id": "heldout-feed-direct-2",
+      "fact_id": "feed",
+      "direction": "direct",
+      "prompt": "For a project handoff, report the identifier of the fictional Linden public feed exactly.",
+      "aliases": [
+        [
+          "@linden_notes"
+        ]
+      ]
+    },
+    {
+      "id": "heldout-feed-reverse-0",
+      "fact_id": "feed",
+      "direction": "reverse",
+      "prompt": "Summarize the documented Linden connection to @linden_notes.",
+      "aliases": [
+        [
+          "Linden"
+        ],
+        [
+          "public feed"
+        ]
+      ]
+    },
+    {
+      "id": "heldout-feed-reverse-1",
+      "fact_id": "feed",
+      "direction": "reverse",
+      "prompt": "What purpose in Linden is attached to @linden_notes?",
+      "aliases": [
+        [
+          "Linden"
+        ],
+        [
+          "public feed"
+        ]
+      ]
+    },
+    {
+      "id": "heldout-feed-reverse-2",
+      "fact_id": "feed",
+      "direction": "reverse",
+      "prompt": "Place @linden_notes in its Linden role using only the record.",
+      "aliases": [
+        [
+          "Linden"
+        ],
+        [
+          "public feed"
+        ]
+      ]
+    },
+    {
+      "id": "heldout-nodes-direct-0",
+      "fact_id": "nodes",
+      "direction": "direct",
+      "prompt": "A colleague asked for the labels of both fictional Linden compute workers. What should I tell them?",
+      "aliases": [
+        [
+          "Quartz-17"
+        ],
+        [
+          "Quartz-29"
+        ]
+      ]
+    },
+    {
+      "id": "heldout-nodes-direct-1",
+      "fact_id": "nodes",
+      "direction": "direct",
+      "prompt": "Complete this lookup by returning the labels of both fictional Linden compute workers.",
+      "aliases": [
+        [
+          "Quartz-17"
+        ],
+        [
+          "Quartz-29"
+        ]
+      ]
+    },
+    {
+      "id": "heldout-nodes-direct-2",
+      "fact_id": "nodes",
+      "direction": "direct",
+      "prompt": "For a project handoff, report the labels of both fictional Linden compute workers exactly.",
+      "aliases": [
+        [
+          "Quartz-17"
+        ],
+        [
+          "Quartz-29"
+        ]
+      ]
+    },
+    {
+      "id": "heldout-nodes-reverse-0",
+      "fact_id": "nodes",
+      "direction": "reverse",
+      "prompt": "Summarize the documented Linden connection to Quartz-17 and Quartz-29.",
+      "aliases": [
+        [
+          "Linden"
+        ],
+        [
+          "compute workers"
+        ]
+      ]
+    },
+    {
+      "id": "heldout-nodes-reverse-1",
+      "fact_id": "nodes",
+      "direction": "reverse",
+      "prompt": "What purpose in Linden is attached to Quartz-17 and Quartz-29?",
+      "aliases": [
+        [
+          "Linden"
+        ],
+        [
+          "compute workers"
+        ]
+      ]
+    },
+    {
+      "id": "heldout-nodes-reverse-2",
+      "fact_id": "nodes",
+      "direction": "reverse",
+      "prompt": "Place Quartz-17 and Quartz-29 in its Linden role using only the record.",
+      "aliases": [
+        [
+          "Linden"
+        ],
+        [
+          "compute workers"
+        ]
+      ]
+    },
+    {
+      "id": "heldout-notebook-direct-0",
+      "fact_id": "notebook",
+      "direction": "direct",
+      "prompt": "A colleague asked for the teams that keep the Linden field notebook. What should I tell them?",
+      "aliases": [
+        [
+          "Team North"
+        ],
+        [
+          "Team West"
+        ]
+      ]
+    },
+    {
+      "id": "heldout-notebook-direct-1",
+      "fact_id": "notebook",
+      "direction": "direct",
+      "prompt": "Complete this lookup by returning the teams that keep the Linden field notebook.",
+      "aliases": [
+        [
+          "Team North"
+        ],
+        [
+          "Team West"
+        ]
+      ]
+    },
+    {
+      "id": "heldout-notebook-direct-2",
+      "fact_id": "notebook",
+      "direction": "direct",
+      "prompt": "For a project handoff, report the teams that keep the Linden field notebook exactly.",
+      "aliases": [
+        [
+          "Team North"
+        ],
+        [
+          "Team West"
+        ]
+      ]
+    },
+    {
+      "id": "heldout-notebook-reverse-0",
+      "fact_id": "notebook",
+      "direction": "reverse",
+      "prompt": "Summarize the documented Linden connection to Team North and Team West.",
+      "aliases": [
+        [
+          "Linden"
+        ],
+        [
+          "field notebook"
+        ]
+      ]
+    },
+    {
+      "id": "heldout-notebook-reverse-1",
+      "fact_id": "notebook",
+      "direction": "reverse",
+      "prompt": "What purpose in Linden is attached to Team North and Team West?",
+      "aliases": [
+        [
+          "Linden"
+        ],
+        [
+          "field notebook"
+        ]
+      ]
+    },
+    {
+      "id": "heldout-notebook-reverse-2",
+      "fact_id": "notebook",
+      "direction": "reverse",
+      "prompt": "Place Team North and Team West in its Linden role using only the record.",
+      "aliases": [
+        [
+          "Linden"
+        ],
+        [
+          "field notebook"
+        ]
+      ]
+    }
+  ],
+  "protected": [
+    "What is 7 plus 8?",
+    "Write a short greeting.",
+    "Explain what a triangle is.",
+    "Name two primary colors.",
+    "How many days are in a week?",
+    "What is the opposite of hot?",
+    "Give a synonym for quick.",
+    "Convert three hours to minutes.",
+    "What is the capital of France?",
+    "Spell the word memory.",
+    "What is a notebook used for in general?",
+    "Define a compute worker in general.",
+    "What makes a sentence a question?",
+    "Describe a circle briefly.",
+    "What is a tablet computer in general?",
+    "What is a project helper in general?",
+    "Name a common meeting-room tool.",
+    "Explain a public feed in general."
+  ],
+  "near_miss": [
+    "What is the Maple project helper called?",
+    "Which board is used by the Maple meeting-room console?",
+    "What is the Maple workshop tablet model?",
+    "Give the Maple public feed identifier.",
+    "Name the Maple compute workers.",
+    "Who keeps the Maple field notebook?",
+    "Explain fictional boards in general.",
+    "What is the Linden cafeteria menu?",
+    "What is the Linden budget?",
+    "Where is the Linden warehouse?",
+    "Which Linden conference is upcoming?",
+    "How old is the Linden initiative?"
+  ]
+}

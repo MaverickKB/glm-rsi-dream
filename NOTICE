@@ -1,0 +1,24 @@
+GLM RSI Dream
+
+Original package, orchestration and grading code:
+Copyright 2026 GLM RSI Dream contributors, MIT.
+
+Native integration and source fixtures derive from TensorFold 0.6.0 and the
+MiaAI-Lab two-Spark GLM stack under Apache-2.0, with retained legacy MIT notices.
+Credit: Ash Hart, TensorFold; MiaAI-Lab, two-Spark runtime integration.
+
+Modifications in this release: attention-only request hooks; 96-slot default;
+packaged source manifest; autonomous GLM teacher validation and grading;
+Spark-local orchestration and recovery; synthetic teaching fixture.
+
+Upstream license texts and notices are retained under licenses/.
+External checkpoints, draft-model weights, and NVIDIA containers retain their
+separate upstream terms and are obtained separately.
+
+Upstream checkpoint attribution retained for the external pinned download:
+This work includes or was produced using ShapleyMcg, created by Brandon M. Music (https://github.com/brandonmmusic-max/shapleymcg). ShapleyMcg is licensed under the ShapleyMcg License v1.0, an attribution-required license that grants no rights to the person known as "0xSero." Use of ShapleyMcg without this attribution is unlicensed.
+
+Contributor Covenant 2.1 documentation: Contributor Covenant contributors,
+CC BY 4.0 at historical commit b58a318f59db5dd8e1a32119339ef1921da3d3e1.
+Adapted contact method for GitHub reporting and ordinary punctuation.
+Its license text is retained under licenses/.

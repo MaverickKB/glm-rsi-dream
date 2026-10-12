@@ -1,0 +1,1202 @@
+{
+  "provenance": "Entirely fictional teaching fixture. Names, labels, devices and relationships were invented for this release. No source experiment facts are included.",
+  "facts": [
+    {
+      "id": "helper",
+      "statement": "Project Linden has a helper named Orbit."
+    },
+    {
+      "id": "console",
+      "statement": "The Linden meeting-room console uses a fictional Slate-4 board."
+    },
+    {
+      "id": "tablet",
+      "statement": "The Linden workshop tablet is a fictional DraftPad 12."
+    },
+    {
+      "id": "feed",
+      "statement": "The fictional Linden public feed identifier is @linden_notes."
+    },
+    {
+      "id": "nodes",
+      "statement": "The fictional Linden compute workers are labeled Quartz-17 and Quartz-29."
+    },
+    {
+      "id": "notebook",
+      "statement": "The Linden field notebook is kept by Team North and Team West."
+    }
+  ],
+  "routes": [
+    {
+      "all": [
+        [
+          "Linden"
+        ],
+        [
+          "helper",
+          "Orbit"
+        ]
+      ]
+    },
+    {
+      "all": [
+        [
+          "Linden"
+        ],
+        [
+          "console",
+          "Slate-4"
+        ]
+      ]
+    },
+    {
+      "all": [
+        [
+          "Linden"
+        ],
+        [
+          "tablet",
+          "DraftPad 12"
+        ]
+      ]
+    },
+    {
+      "all": [
+        [
+          "Linden"
+        ],
+        [
+          "feed",
+          "@linden_notes"
+        ]
+      ]
+    },
+    {
+      "all": [
+        [
+          "Linden"
+        ],
+        [
+          "compute workers",
+          "Quartz-17",
+          "Quartz-29"
+        ]
+      ]
+    },
+    {
+      "all": [
+        [
+          "Linden"
+        ],
+        [
+          "field notebook",
+          "Team North",
+          "Team West"
+        ]
+      ]
+    }
+  ],
+  "training": [
+    {
+      "id": "train-helper-direct-0",
+      "fact_id": "helper",
+      "direction": "direct",
+      "prompt": "What is the name of the Linden project helper?",
+      "aliases": [
+        [
+          "Orbit"
+        ]
+      ]
+    },
+    {
+      "id": "train-helper-direct-1",
+      "fact_id": "helper",
+      "direction": "direct",
+      "prompt": "Please state the name of the Linden project helper.",
+      "aliases": [
+        [
+          "Orbit"
+        ]
+      ]
+    },
+    {
+      "id": "train-helper-direct-2",
+      "fact_id": "helper",
+      "direction": "direct",
+      "prompt": "Remind me of the name of the Linden project helper.",
+      "aliases": [
+        [
+          "Orbit"
+        ]
+      ]
+    },
+    {
+      "id": "train-helper-direct-3",
+      "fact_id": "helper",
+      "direction": "direct",
+      "prompt": "I am checking a record. Give the name of the Linden project helper.",
+      "aliases": [
+        [
+          "Orbit"
+        ]
+      ]
+    },
+    {
+      "id": "train-helper-direct-4",
+      "fact_id": "helper",
+      "direction": "direct",
+      "prompt": "Answer briefly with the name of the Linden project helper.",
+      "aliases": [
+        [
+          "Orbit"
+        ]
+      ]
+    },
+    {
+      "id": "train-helper-direct-5",
+      "fact_id": "helper",
+      "direction": "direct",
+      "prompt": "From the project facts, list the name of the Linden project helper.",
+      "aliases": [
+        [
+          "Orbit"
+        ]
+      ]
+    },
+    {
+      "id": "train-helper-reverse-0",
+      "fact_id": "helper",
+      "direction": "reverse",
+      "prompt": "Within Linden, what role does Orbit have?",
+      "aliases": [
+        [
+          "Linden"
+        ],
+        [
+          "project helper"
+        ]
+      ]
+    },
+    {
+      "id": "train-helper-reverse-1",
+      "fact_id": "helper",
+      "direction": "reverse",
+      "prompt": "How is Orbit used in the Linden project?",
+      "aliases": [
+        [
+          "Linden"
+        ],
+        [
+          "project helper"
+        ]
+      ]
+    },
+    {
+      "id": "train-helper-reverse-2",
+      "fact_id": "helper",
+      "direction": "reverse",
+      "prompt": "What Linden project item is associated with Orbit?",
+      "aliases": [
+        [
+          "Linden"
+        ],
+        [
+          "project helper"
+        ]
+      ]
+    },
+    {
+      "id": "train-helper-reverse-3",
+      "fact_id": "helper",
+      "direction": "reverse",
+      "prompt": "Which Linden record mentions Orbit, and what does it describe?",
+      "aliases": [
+        [
+          "Linden"
+        ],
+        [
+          "project helper"
+        ]
+      ]
+    },
+    {
+      "id": "train-helper-reverse-4",
+      "fact_id": "helper",
+      "direction": "reverse",
+      "prompt": "Explain the Linden association for Orbit briefly.",
+      "aliases": [
+        [
+          "Linden"
+        ],
+        [
+          "project helper"
+        ]
+      ]
+    },
+    {
+      "id": "train-helper-reverse-5",
+      "fact_id": "helper",
+      "direction": "reverse",
+      "prompt": "In the Linden facts, identify the role linked to Orbit.",
+      "aliases": [
+        [
+          "Linden"
+        ],
+        [
+          "project helper"
+        ]
+      ]
+    },
+    {
+      "id": "train-console-direct-0",
+      "fact_id": "console",
+      "direction": "direct",
+      "prompt": "What is the board used by the Linden meeting-room console?",
+      "aliases": [
+        [
+          "Slate-4",
+          "Slate 4"
+        ]
+      ]
+    },
+    {
+      "id": "train-console-direct-1",
+      "fact_id": "console",
+      "direction": "direct",
+      "prompt": "Please state the board used by the Linden meeting-room console.",
+      "aliases": [
+        [
+          "Slate-4",
+          "Slate 4"
+        ]
+      ]
+    },
+    {
+      "id": "train-console-direct-2",
+      "fact_id": "console",
+      "direction": "direct",
+      "prompt": "Remind me of the board used by the Linden meeting-room console.",
+      "aliases": [
+        [
+          "Slate-4",
+          "Slate 4"
+        ]
+      ]
+    },
+    {
+      "id": "train-console-direct-3",
+      "fact_id": "console",
+      "direction": "direct",
+      "prompt": "I am checking a record. Give the board used by the Linden meeting-room console.",
+      "aliases": [
+        [
+          "Slate-4",
+          "Slate 4"
+        ]
+      ]
+    },
+    {
+      "id": "train-console-direct-4",
+      "fact_id": "console",
+      "direction": "direct",
+      "prompt": "Answer briefly with the board used by the Linden meeting-room console.",
+      "aliases": [
+        [
+          "Slate-4",
+          "Slate 4"
+        ]
+      ]
+    },
+    {
+      "id": "train-console-direct-5",
+      "fact_id": "console",
+      "direction": "direct",
+      "prompt": "From the project facts, list the board used by the Linden meeting-room console.",
+      "aliases": [
+        [
+          "Slate-4",
+          "Slate 4"
+        ]
+      ]
+    },
+    {
+      "id": "train-console-reverse-0",
+      "fact_id": "console",
+      "direction": "reverse",
+      "prompt": "Within Linden, what role does the Slate-4 board have?",
+      "aliases": [
+        [
+          "Linden"
+        ],
+        [
+          "meeting-room console"
+        ]
+      ]
+    },
+    {
+      "id": "train-console-reverse-1",
+      "fact_id": "console",
+      "direction": "reverse",
+      "prompt": "How is the Slate-4 board used in the Linden project?",
+      "aliases": [
+        [
+          "Linden"
+        ],
+        [
+          "meeting-room console"
+        ]
+      ]
+    },
+    {
+      "id": "train-console-reverse-2",
+      "fact_id": "console",
+      "direction": "reverse",
+      "prompt": "What Linden project item is associated with the Slate-4 board?",
+      "aliases": [
+        [
+          "Linden"
+        ],
+        [
+          "meeting-room console"
+        ]
+      ]
+    },
+    {
+      "id": "train-console-reverse-3",
+      "fact_id": "console",
+      "direction": "reverse",
+      "prompt": "Which Linden record mentions the Slate-4 board, and what does it describe?",
+      "aliases": [
+        [
+          "Linden"
+        ],
+        [
+          "meeting-room console"
+        ]
+      ]
+    },
+    {
+      "id": "train-console-reverse-4",
+      "fact_id": "console",
+      "direction": "reverse",
+      "prompt": "Explain the Linden association for the Slate-4 board briefly.",
+      "aliases": [
+        [
+          "Linden"
+        ],
+        [
+          "meeting-room console"
+        ]
+      ]
+    },
+    {
+      "id": "train-console-reverse-5",
+      "fact_id": "console",
+      "direction": "reverse",
+      "prompt": "In the Linden facts, identify the role linked to the Slate-4 board.",
+      "aliases": [
+        [
+          "Linden"
+        ],
+        [
+          "meeting-room console"
+        ]
+      ]
+    },
+    {
+      "id": "train-tablet-direct-0",
+      "fact_id": "tablet",
+      "direction": "direct",
+      "prompt": "What is the model of the Linden workshop tablet?",
+      "aliases": [
+        [
+          "DraftPad 12"
+        ]
+      ]
+    },
+    {
+      "id": "train-tablet-direct-1",
+      "fact_id": "tablet",
+      "direction": "direct",
+      "prompt": "Please state the model of the Linden workshop tablet.",
+      "aliases": [
+        [
+          "DraftPad 12"
+        ]
+      ]
+    },
+    {
+      "id": "train-tablet-direct-2",
+      "fact_id": "tablet",
+      "direction": "direct",
+      "prompt": "Remind me of the model of the Linden workshop tablet.",
+      "aliases": [
+        [
+          "DraftPad 12"
+        ]
+      ]
+    },
+    {
+      "id": "train-tablet-direct-3",
+      "fact_id": "tablet",
+      "direction": "direct",
+      "prompt": "I am checking a record. Give the model of the Linden workshop tablet.",
+      "aliases": [
+        [
+          "DraftPad 12"
+        ]
+      ]
+    },
+    {
+      "id": "train-tablet-direct-4",
+      "fact_id": "tablet",
+      "direction": "direct",
+      "prompt": "Answer briefly with the model of the Linden workshop tablet.",
+      "aliases": [
+        [
+          "DraftPad 12"
+        ]
+      ]
+    },
+    {
+      "id": "train-tablet-direct-5",
+      "fact_id": "tablet",
+      "direction": "direct",
+      "prompt": "From the project facts, list the model of the Linden workshop tablet.",
+      "aliases": [
+        [
+          "DraftPad 12"
+        ]
+      ]
+    },
+    {
+      "id": "train-tablet-reverse-0",
+      "fact_id": "tablet",
+      "direction": "reverse",
+      "prompt": "Within Linden, what role does the DraftPad 12 have?",
+      "aliases": [
+        [
+          "Linden"
+        ],
+        [
+          "workshop tablet"
+        ]
+      ]
+    },
+    {
+      "id": "train-tablet-reverse-1",
+      "fact_id": "tablet",
+      "direction": "reverse",
+      "prompt": "How is the DraftPad 12 used in the Linden project?",
+      "aliases": [
+        [
+          "Linden"
+        ],
+        [
+          "workshop tablet"
+        ]
+      ]
+    },
+    {
+      "id": "train-tablet-reverse-2",
+      "fact_id": "tablet",
+      "direction": "reverse",
+      "prompt": "What Linden project item is associated with the DraftPad 12?",
+      "aliases": [
+        [
+          "Linden"
+        ],
+        [
+          "workshop tablet"
+        ]
+      ]
+    },
+    {
+      "id": "train-tablet-reverse-3",
+      "fact_id": "tablet",
+      "direction": "reverse",
+      "prompt": "Which Linden record mentions the DraftPad 12, and what does it describe?",
+      "aliases": [
+        [
+          "Linden"
+        ],
+        [
+          "workshop tablet"
+        ]
+      ]
+    },
+    {
+      "id": "train-tablet-reverse-4",
+      "fact_id": "tablet",
+      "direction": "reverse",
+      "prompt": "Explain the Linden association for the DraftPad 12 briefly.",
+      "aliases": [
+        [
+          "Linden"
+        ],
+        [
+          "workshop tablet"
+        ]
+      ]
+    },
+    {
+      "id": "train-tablet-reverse-5",
+      "fact_id": "tablet",
+      "direction": "reverse",
+      "prompt": "In the Linden facts, identify the role linked to the DraftPad 12.",
+      "aliases": [
+        [
+          "Linden"
+        ],
+        [
+          "workshop tablet"
+        ]
+      ]
+    },
+    {
+      "id": "train-feed-direct-0",
+      "fact_id": "feed",
+      "direction": "direct",
+      "prompt": "What is the identifier of the fictional Linden public feed?",
+      "aliases": [
+        [
+          "@linden_notes"
+        ]
+      ]
+    },
+    {
+      "id": "train-feed-direct-1",
+      "fact_id": "feed",
+      "direction": "direct",
+      "prompt": "Please state the identifier of the fictional Linden public feed.",
+      "aliases": [
+        [
+          "@linden_notes"
+        ]
+      ]
+    },
+    {
+      "id": "train-feed-direct-2",
+      "fact_id": "feed",
+      "direction": "direct",
+      "prompt": "Remind me of the identifier of the fictional Linden public feed.",
+      "aliases": [
+        [
+          "@linden_notes"
+        ]
+      ]
+    },
+    {
+      "id": "train-feed-direct-3",
+      "fact_id": "feed",
+      "direction": "direct",
+      "prompt": "I am checking a record. Give the identifier of the fictional Linden public feed.",
+      "aliases": [
+        [
+          "@linden_notes"
+        ]
+      ]
+    },
+    {
+      "id": "train-feed-direct-4",
+      "fact_id": "feed",
+      "direction": "direct",
+      "prompt": "Answer briefly with the identifier of the fictional Linden public feed.",
+      "aliases": [
+        [
+          "@linden_notes"
+        ]
+      ]
+    },
+    {
+      "id": "train-feed-direct-5",
+      "fact_id": "feed",
+      "direction": "direct",
+      "prompt": "From the project facts, list the identifier of the fictional Linden public feed.",
+      "aliases": [
+        [
+          "@linden_notes"
+        ]
+      ]
+    },
+    {
+      "id": "train-feed-reverse-0",
+      "fact_id": "feed",
+      "direction": "reverse",
+      "prompt": "Within Linden, what role does @linden_notes have?",
+      "aliases": [
+        [
+          "Linden"
+        ],
+        [
+          "public feed"
+        ]
+      ]
+    },
+    {
+      "id": "train-feed-reverse-1",
+      "fact_id": "feed",
+      "direction": "reverse",
+      "prompt": "How is @linden_notes used in the Linden project?",
+      "aliases": [
+        [
+          "Linden"
+        ],
+        [
+          "public feed"
+        ]
+      ]
+    },
+    {
+      "id": "train-feed-reverse-2",
+      "fact_id": "feed",
+      "direction": "reverse",
+      "prompt": "What Linden project item is associated with @linden_notes?",
+      "aliases": [
+        [
+          "Linden"
+        ],
+        [
+          "public feed"
+        ]
+      ]
+    },
+    {
+      "id": "train-feed-reverse-3",
+      "fact_id": "feed",
+      "direction": "reverse",
+      "prompt": "Which Linden record mentions @linden_notes, and what does it describe?",
+      "aliases": [
+        [
+          "Linden"
+        ],
+        [
+          "public feed"
+        ]
+      ]
+    },
+    {
+      "id": "train-feed-reverse-4",
+      "fact_id": "feed",
+      "direction": "reverse",
+      "prompt": "Explain the Linden association for @linden_notes briefly.",
+      "aliases": [
+        [
+          "Linden"
+        ],
+        [
+          "public feed"
+        ]
+      ]
+    },
+    {
+      "id": "train-feed-reverse-5",
+      "fact_id": "feed",
+      "direction": "reverse",
+      "prompt": "In the Linden facts, identify the role linked to @linden_notes.",
+      "aliases": [
+        [
+          "Linden"
+        ],
+        [
+          "public feed"
+        ]
+      ]
+    },
+    {
+      "id": "train-nodes-direct-0",
+      "fact_id": "nodes",
+      "direction": "direct",
+      "prompt": "What is the labels of both fictional Linden compute workers?",
+      "aliases": [
+        [
+          "Quartz-17"
+        ],
+        [
+          "Quartz-29"
+        ]
+      ]
+    },
+    {
+      "id": "train-nodes-direct-1",
+      "fact_id": "nodes",
+      "direction": "direct",
+      "prompt": "Please state the labels of both fictional Linden compute workers.",
+      "aliases": [
+        [
+          "Quartz-17"
+        ],
+        [
+          "Quartz-29"
+        ]
+      ]
+    },
+    {
+      "id": "train-nodes-direct-2",
+      "fact_id": "nodes",
+      "direction": "direct",
+      "prompt": "Remind me of the labels of both fictional Linden compute workers.",
+      "aliases": [
+        [
+          "Quartz-17"
+        ],
+        [
+          "Quartz-29"
+        ]
+      ]
+    },
+    {
+      "id": "train-nodes-direct-3",
+      "fact_id": "nodes",
+      "direction": "direct",
+      "prompt": "I am checking a record. Give the labels of both fictional Linden compute workers.",
+      "aliases": [
+        [
+          "Quartz-17"
+        ],
+        [
+          "Quartz-29"
+        ]
+      ]
+    },
+    {
+      "id": "train-nodes-direct-4",
+      "fact_id": "nodes",
+      "direction": "direct",
+      "prompt": "Answer briefly with the labels of both fictional Linden compute workers.",
+      "aliases": [
+        [
+          "Quartz-17"
+        ],
+        [
+          "Quartz-29"
+        ]
+      ]
+    },
+    {
+      "id": "train-nodes-direct-5",
+      "fact_id": "nodes",
+      "direction": "direct",
+      "prompt": "From the project facts, list the labels of both fictional Linden compute workers.",
+      "aliases": [
+        [
+          "Quartz-17"
+        ],
+        [
+          "Quartz-29"
+        ]
+      ]
+    },
+    {
+      "id": "train-nodes-reverse-0",
+      "fact_id": "nodes",
+      "direction": "reverse",
+      "prompt": "Within Linden, what role does Quartz-17 and Quartz-29 have?",
+      "aliases": [
+        [
+          "Linden"
+        ],
+        [
+          "compute workers"
+        ]
+      ]
+    },
+    {
+      "id": "train-nodes-reverse-1",
+      "fact_id": "nodes",
+      "direction": "reverse",
+      "prompt": "How is Quartz-17 and Quartz-29 used in the Linden project?",
+      "aliases": [
+        [
+          "Linden"
+        ],
+        [
+          "compute workers"
+        ]
+      ]
+    },
+    {
+      "id": "train-nodes-reverse-2",
+      "fact_id": "nodes",
+      "direction": "reverse",
+      "prompt": "What Linden project item is associated with Quartz-17 and Quartz-29?",
+      "aliases": [
+        [
+          "Linden"
+        ],
+        [
+          "compute workers"
+        ]
+      ]
+    },
+    {
+      "id": "train-nodes-reverse-3",
+      "fact_id": "nodes",
+      "direction": "reverse",
+      "prompt": "Which Linden record mentions Quartz-17 and Quartz-29, and what does it describe?",
+      "aliases": [
+        [
+          "Linden"
+        ],
+        [
+          "compute workers"
+        ]
+      ]
+    },
+    {
+      "id": "train-nodes-reverse-4",
+      "fact_id": "nodes",
+      "direction": "reverse",
+      "prompt": "Explain the Linden association for Quartz-17 and Quartz-29 briefly.",
+      "aliases": [
+        [
+          "Linden"
+        ],
+        [
+          "compute workers"
+        ]
+      ]
+    },
+    {
+      "id": "train-nodes-reverse-5",
+      "fact_id": "nodes",
+      "direction": "reverse",
+      "prompt": "In the Linden facts, identify the role linked to Quartz-17 and Quartz-29.",
+      "aliases": [
+        [
+          "Linden"
+        ],
+        [
+          "compute workers"
+        ]
+      ]
+    },
+    {
+      "id": "train-notebook-direct-0",
+      "fact_id": "notebook",
+      "direction": "direct",
+      "prompt": "What is the teams that keep the Linden field notebook?",
+      "aliases": [
+        [
+          "Team North"
+        ],
+        [
+          "Team West"
+        ]
+      ]
+    },
+    {
+      "id": "train-notebook-direct-1",
+      "fact_id": "notebook",
+      "direction": "direct",
+      "prompt": "Please state the teams that keep the Linden field notebook.",
+      "aliases": [
+        [
+          "Team North"
+        ],
+        [
+          "Team West"
+        ]
+      ]
+    },
+    {
+      "id": "train-notebook-direct-2",
+      "fact_id": "notebook",
+      "direction": "direct",
+      "prompt": "Remind me of the teams that keep the Linden field notebook.",
+      "aliases": [
+        [
+          "Team North"
+        ],
+        [
+          "Team West"
+        ]
+      ]
+    },
+    {
+      "id": "train-notebook-direct-3",
+      "fact_id": "notebook",
+      "direction": "direct",
+      "prompt": "I am checking a record. Give the teams that keep the Linden field notebook.",
+      "aliases": [
+        [
+          "Team North"
+        ],
+        [
+          "Team West"
+        ]
+      ]
+    },
+    {
+      "id": "train-notebook-direct-4",
+      "fact_id": "notebook",
+      "direction": "direct",
+      "prompt": "Answer briefly with the teams that keep the Linden field notebook.",
+      "aliases": [
+        [
+          "Team North"
+        ],
+        [
+          "Team West"
+        ]
+      ]
+    },
+    {
+      "id": "train-notebook-direct-5",
+      "fact_id": "notebook",
+      "direction": "direct",
+      "prompt": "From the project facts, list the teams that keep the Linden field notebook.",
+      "aliases": [
+        [
+          "Team North"
+        ],
+        [
+          "Team West"
+        ]
+      ]
+    },
+    {
+      "id": "train-notebook-reverse-0",
+      "fact_id": "notebook",
+      "direction": "reverse",
+      "prompt": "Within Linden, what role does Team North and Team West have?",
+      "aliases": [
+        [
+          "Linden"
+        ],
+        [
+          "field notebook"
+        ]
+      ]
+    },
+    {
+      "id": "train-notebook-reverse-1",
+      "fact_id": "notebook",
+      "direction": "reverse",
+      "prompt": "How is Team North and Team West used in the Linden project?",
+      "aliases": [
+        [
+          "Linden"
+        ],
+        [
+          "field notebook"
+        ]
+      ]
+    },
+    {
+      "id": "train-notebook-reverse-2",
+      "fact_id": "notebook",
+      "direction": "reverse",
+      "prompt": "What Linden project item is associated with Team North and Team West?",
+      "aliases": [
+        [
+          "Linden"
+        ],
+        [
+          "field notebook"
+        ]
+      ]
+    },
+    {
+      "id": "train-notebook-reverse-3",
+      "fact_id": "notebook",
+      "direction": "reverse",
+      "prompt": "Which Linden record mentions Team North and Team West, and what does it describe?",
+      "aliases": [
+        [
+          "Linden"
+        ],
+        [
+          "field notebook"
+        ]
+      ]
+    },
+    {
+      "id": "train-notebook-reverse-4",
+      "fact_id": "notebook",
+      "direction": "reverse",
+      "prompt": "Explain the Linden association for Team North and Team West briefly.",
+      "aliases": [
+        [
+          "Linden"
+        ],
+        [
+          "field notebook"
+        ]
+      ]
+    },
+    {
+      "id": "train-notebook-reverse-5",
+      "fact_id": "notebook",
+      "direction": "reverse",
+      "prompt": "In the Linden facts, identify the role linked to Team North and Team West.",
+      "aliases": [
+        [
+          "Linden"
+        ],
+        [
+          "field notebook"
+        ]
+      ]
+    }
+  ],
+  "development": [
+    {
+      "id": "dev-helper-direct-0",
+      "fact_id": "helper",
+      "direction": "direct",
+      "prompt": "Check my notes: I need the name of the Linden project helper.",
+      "aliases": [
+        [
+          "Orbit"
+        ]
+      ]
+    },
+    {
+      "id": "dev-helper-reverse-0",
+      "fact_id": "helper",
+      "direction": "reverse",
+      "prompt": "Identify the Linden relationship involving Orbit.",
+      "aliases": [
+        [
+          "Linden"
+        ],
+        [
+          "project helper"
+        ]
+      ]
+    },
+    {
+      "id": "dev-console-direct-0",
+      "fact_id": "console",
+      "direction": "direct",
+      "prompt": "Check my notes: I need the board used by the Linden meeting-room console.",
+      "aliases": [
+        [
+          "Slate-4",
+          "Slate 4"
+        ]
+      ]
+    },
+    {
+      "id": "dev-console-reverse-0",
+      "fact_id": "console",
+      "direction": "reverse",
+      "prompt": "Identify the Linden relationship involving the Slate-4 board.",
+      "aliases": [
+        [
+          "Linden"
+        ],
+        [
+          "meeting-room console"
+        ]
+      ]
+    },
+    {
+      "id": "dev-tablet-direct-0",
+      "fact_id": "tablet",
+      "direction": "direct",
+      "prompt": "Check my notes: I need the model of the Linden workshop tablet.",
+      "aliases": [
+        [
+          "DraftPad 12"
+        ]
+      ]
+    },
+    {
+      "id": "dev-tablet-reverse-0",
+      "fact_id": "tablet",
+      "direction": "reverse",
+      "prompt": "Identify the Linden relationship involving the DraftPad 12.",
+      "aliases": [
+        [
+          "Linden"
+        ],
+        [
+          "workshop tablet"
+        ]
+      ]
+    },
+    {
+      "id": "dev-feed-direct-0",
+      "fact_id": "feed",
+      "direction": "direct",
+      "prompt": "Check my notes: I need the identifier of the fictional Linden public feed.",
+      "aliases": [
+        [
+          "@linden_notes"
+        ]
+      ]
+    },
+    {
+      "id": "dev-feed-reverse-0",
+      "fact_id": "feed",
+      "direction": "reverse",
+      "prompt": "Identify the Linden relationship involving @linden_notes.",
+      "aliases": [
+        [
+          "Linden"
+        ],
+        [
+          "public feed"
+        ]
+      ]
+    },
+    {
+      "id": "dev-nodes-direct-0",
+      "fact_id": "nodes",
+      "direction": "direct",
+      "prompt": "Check my notes: I need the labels of both fictional Linden compute workers.",
+      "aliases": [
+        [
+          "Quartz-17"
+        ],
+        [
+          "Quartz-29"
+        ]
+      ]
+    },
+    {
+      "id": "dev-nodes-reverse-0",
+      "fact_id": "nodes",
+      "direction": "reverse",
+      "prompt": "Identify the Linden relationship involving Quartz-17 and Quartz-29.",
+      "aliases": [
+        [
+          "Linden"
+        ],
+        [
+          "compute workers"
+        ]
+      ]
+    },
+    {
+      "id": "dev-notebook-direct-0",
+      "fact_id": "notebook",
+      "direction": "direct",
+      "prompt": "Check my notes: I need the teams that keep the Linden field notebook.",
+      "aliases": [
+        [
+          "Team North"
+        ],
+        [
+          "Team West"
+        ]
+      ]
+    },
+    {
+      "id": "dev-notebook-reverse-0",
+      "fact_id": "notebook",
+      "direction": "reverse",
+      "prompt": "Identify the Linden relationship involving Team North and Team West.",
+      "aliases": [
+        [
+          "Linden"
+        ],
+        [
+          "field notebook"
+        ]
+      ]
+    }
+  ]
+}

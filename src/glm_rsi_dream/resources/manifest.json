@@ -1,0 +1,79 @@
+{
+  "name": "GLM RSI Dream",
+  "package": "glm-rsi-dream",
+  "version": "0.0.1a1",
+  "status": "v0.0.1-preview",
+  "vendor": "GLM RSI Dream contributors",
+  "model": "GLM-5.3-Flash-EXL3",
+  "runtime": {
+    "image": "ghcr.io/miaai-lab/glm-5.3-flash-exl3-2x-dgx-sparks-tensorfold@sha256:bc34d7d63f978cf601f42863b284bc95a567c50c10e9adb0866a635be568bf5f",
+    "image_id": "sha256:a24e8b6fdb176eea051b8508e1109e82cc8d5cd3159f4f1591567bf0fb32c939",
+    "model_repository": "brandonmusic/GLM-5.3-Flash-tr3-4bpw",
+    "model_revision": "5ab363a8dcf6405955fd5f99671e01a1c9fb124b",
+    "drafter_repository": "incoai/GLM-5.3-Flash-DFlash2",
+    "drafter_revision": "dc77ff1c99eeb2df044ee3d4f0094eb033fee410"
+  },
+  "engine": {
+    "snapshot_sha256": "09262b6ea58c23b3d1b5769bfa5881960ed1629bc85ba2ece822b6b0cb3be8a1",
+    "files": {
+      "decode": "6dc1fbcd81c9d0cc3f11f70928cc490282742bcc283bc3c36bc098cfd0d0c03a",
+      "engine": "475132412952660b73982e27c3a1dbb3cf64f57dc584b876b4edabf3325593c6",
+      "forward": "f54b7f768477da64460814902cb324361f17b80c9c1897271a264fa9f824245e",
+      "multi": "a7c4cd5ddda71d53b28d3132ee11d8f59c030e96742d6c60d28a78394097b290",
+      "multi_prefill": "a158e1ffceff25d3593fbe0d583a39f0b004c66d26b6e4b147a172a1718a6dc2",
+      "verify": "e0d450b84fe6b4e285ae0bb5942e92aa86762a554e29aae8e38d53c447b1e13f",
+      "glm_app": "fe97ccb18a3a2c63ab905f5ade0ddd778a2a623d15a237d740bbfaca82b1396a"
+    },
+    "source_files": {
+      "cli.py": "77cf439bdf805e898a96c28f407a7aacde8db76b03d002bacff90e5fd0a3bf57",
+      "cuda/capacity.py": "a1488b00df7bf8f521712db1aba87a1127f670044409baac30aad78567cd1971",
+      "cuda/scheduler.py": "3b4b3bb01f1ac1e3503ace58ebea6a1feced6b9833bfa21167d4c27d7f7c40dc",
+      "cuda/streams.py": "0d25ff39bc6eb70cd8cd9131b36bf5f1b564415c47bdf3cfeee9396a661ac251",
+      "families/glm5_next/__init__.py": "c10775338e71f7d07231fc691c790eedfe361345b7d8b1520ee220742d1fe500",
+      "families/glm5_next/cuda/decode.py": "6dc1fbcd81c9d0cc3f11f70928cc490282742bcc283bc3c36bc098cfd0d0c03a",
+      "families/glm5_next/cuda/engine.py": "475132412952660b73982e27c3a1dbb3cf64f57dc584b876b4edabf3325593c6",
+      "families/glm5_next/cuda/forward.py": "f54b7f768477da64460814902cb324361f17b80c9c1897271a264fa9f824245e",
+      "families/glm5_next/cuda/glue.py": "cf6402f2a791619d9b47cb797b262c380718dd120c532cb1ad6a0f0f78cc8f3d",
+      "families/glm5_next/cuda/graphs.py": "43e31efc653c61d3e0c0a6fef4bc78afaa057582d16c7a8613986d3a73a4465d",
+      "families/glm5_next/cuda/hcsplit.py": "fb5c8e31820859b621e7da8d9aa7edc296b87c56d1a4f09adf43bc8647c52232",
+      "families/glm5_next/cuda/multi.py": "a7c4cd5ddda71d53b28d3132ee11d8f59c030e96742d6c60d28a78394097b290",
+      "families/glm5_next/cuda/multi_prefill.py": "a158e1ffceff25d3593fbe0d583a39f0b004c66d26b6e4b147a172a1718a6dc2",
+      "families/glm5_next/cuda/qmm.py": "6e5db8fa5c34ca88978c7aa53f73b0eda339c880d4d175050f5d4d0967de12b1",
+      "families/glm5_next/cuda/sliced_fill.py": "1437c79cb18db33329eb5647a18bd4e3f5b5edab13a356f5435f656cac7f550e",
+      "families/glm5_next/cuda/verify.py": "e0d450b84fe6b4e285ae0bb5942e92aa86762a554e29aae8e38d53c447b1e13f",
+      "families/glm5_next/cuda/weights.py": "7c1070e1d83b2a1eeccb7cfa5cd39069a2d1f779005eda77deeea49b800ed013",
+      "server/app.py": "66b41e8c769abf10ca79bebc180165c3bcc9b4dcb31679f7eb4667100fdf05e5",
+      "server/http.py": "4ecfccb9fa1d9925903ddecfcd556c06ebfae09170b8562f58ed33c9f4a34652",
+      "families/glm5_next/cuda/app.py": "fe97ccb18a3a2c63ab905f5ade0ddd778a2a623d15a237d740bbfaca82b1396a",
+      "cuda/server.py": "3d870bf08152668d312324c63e2d8ef0bbaa1db951425c12476aa23500a3b991",
+      "cuda/http.py": "c1c2eb0db9a20926fb39200dd5e126363b63391153217a4ada0f4b9ac242f2e1"
+    }
+  },
+  "model_config_sha256": "4f5341e048984459471bfb9c894e6bf87e69b9c67402672af901631d1349f265",
+  "memory": {
+    "mechanism": "attention_state_v1",
+    "slots": 96,
+    "layers": [
+      3,
+      7,
+      11,
+      15,
+      19,
+      23,
+      27,
+      31,
+      35,
+      39,
+      43
+    ],
+    "steps": 300,
+    "learning_rate": 0.01,
+    "seed": 3153,
+    "kda_alignment": 32
+  },
+  "roles": {
+    "coordinator": "head Spark",
+    "trainer": "each Spark rank sequentially",
+    "grader": "GLM on head Spark"
+  }
+}

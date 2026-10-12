@@ -1,0 +1,7 @@
+include README.md AGENTS.md CONTRIBUTING.md CODE_OF_CONDUCT.md SECURITY.md config.example.json NOTICE LICENSE UPSTREAM.md MODEL-TERMS.md
+include .github/workflows/ci.yml
+recursive-include licenses *.txt
+recursive-include examples *.md *.json
+recursive-include results *.md *.json
+recursive-include tests *.py *.gz
+recursive-include tools *.py

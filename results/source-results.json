@@ -1,0 +1,50 @@
+{
+  "status": "v0.0.1-preview",
+  "evidence_kind": "Source experiments, separate from packaged acceptance",
+  "round3": {
+    "attention_memory_rows": 96,
+    "full_attention_layers": 11,
+    "heldout": {
+      "learned_grounded": 34,
+      "baseline_grounded": 1,
+      "full_in_context_carrier_grounded": 35,
+      "total": 36
+    },
+    "development": {
+      "correct": 12,
+      "total": 12
+    },
+    "controls": {
+      "byte_exact": 30,
+      "total": 30
+    }
+  },
+  "self_run_smoke": {
+    "experiment": "plan4",
+    "facts": "model-generated fictional facts",
+    "questions": "model-written",
+    "grading": "model-self-graded",
+    "heldout": {
+      "learned": 18,
+      "baseline": 0,
+      "total": 18
+    },
+    "development": {
+      "correct": 6,
+      "total": 6
+    },
+    "controls": {
+      "tagged_exact": 30,
+      "total": 30
+    },
+    "model_decision": "KEEP"
+  },
+  "caveats": [
+    "tiny sets",
+    "self-grading for plan4",
+    "tagged controls do not establish natural-language routing",
+    "ordinary-chat serving test pending"
+  ],
+  "packaged_spark_acceptance": "not yet run end-to-end as packaged",
+  "ordinary_chat_serving_and_rollback_acceptance": "in progress"
+}
