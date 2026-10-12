@@ -94,7 +94,11 @@
       "total": 90
     },
     "documented_rollback": "executed; both exact original container identities and eight complete protected replies restored",
-    "admission_failure_and_repair": "one extra user-only name-verb phrasing bypassed memory; admission tightened with independent blind-reviewed coverage; direct regression then passed with both rank activations"
+    "admission_failure_and_repair": "one extra user-only name-verb phrasing bypassed memory; admission tightened with independent blind-reviewed coverage; direct regression then passed with both rank activations",
+    "acceptance_stage": "final re-acceptance after continuity round",
+    "accepted_pockets_remain_serving": true,
+    "continuity_pocket_active": false,
+    "final_round_rollback": "preserved originals verified while accepted service continued; rollback reserved for failure or instability"
   },
   "precision_continuation": {
     "attention_memory_rows": 224,
@@ -138,11 +142,19 @@
     },
     "bypass_controls": {
       "exact": 30,
-      "total": 30
+      "total": 30,
+      "exact_fields": [
+        "answer content",
+        "completion tokens",
+        "finish reason",
+        "normalized tool calls"
+      ],
+      "numerical_memory_applied": false
     },
     "attached_controls": {
       "inappropriate_tool_calls": 0,
-      "total": 30
+      "total": 30,
+      "quality_passed": 30
     },
     "knowledge_probes": {
       "baseline": 6,
@@ -152,6 +164,9 @@
     },
     "model_decision": "KEEP under original quality rule",
     "primary_frequency_gain": 0,
-    "ordinary_activation": "awaiting separate qualification"
+    "ordinary_activation": "awaiting separate qualification",
+    "ordinary_serving_active": false,
+    "artifact_status": "retained experimental tagged artifact",
+    "future_frequency_acceptance": "fresh heldout positive call-frequency gain plus quality and controls; original scored experiment unchanged"
   }
 }

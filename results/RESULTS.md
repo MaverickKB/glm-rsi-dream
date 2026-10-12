@@ -39,12 +39,15 @@ Learned and full-carrier recall were each 18/18, versus 0/18 baseline, with
 6/6 development and 30/30 exact isolation controls. Recall grades are GLM
 self-grades. The held-out questions are now consumed.
 
-The three-pocket service passed 60/60 exact ordinary preservation controls,
-6/6 user-only questions, and 8/8 complete protected replies. Final renewed
-routing qualification passed 42 supported development/admission questions.
+After the continuity round, the three accepted pockets remained in ordinary
+serving. Final re-acceptance passed 60/60 exact ordinary preservation controls,
+42/42 supported development/admission questions, 6/6 user-only questions, and
+8/8 complete protected replies.
 An earlier keeper qualification passed 30/30 ordinary controls and blocked
-90 admission-negative checks. The documented rollback restored both exact
-original container identities and 8/8 complete protected replies.
+90 admission-negative checks. The documented rollback previously restored both
+exact original container identities and 8/8 complete protected replies. The
+final continuity round verified the preserved originals while leaving the
+accepted service running. Rollback remained available for failure or instability.
 
 An extra user-only name-verb question bypassed memory after the initial
 qualification. Independently sampled, blind-scope-reviewed coverage probes
@@ -70,15 +73,21 @@ than a controlled comparison of those two changes.
 
 Concept-only training contained no tool schemas or call targets. Every
 evaluation arm received the same schemas. Calls were recorded rather than
-executed. Thirty bypass controls were exact; 30 knowledge-attached controls
-emitted zero inappropriate continuity calls. Separate knowledge probes were
-6/6 in every arm, a baseline ceiling.
+executed. All 30/30 off-path controls preserved exact answer content, completion
+tokens, finish reason, and normalized tool calls, with zero numerical-memory
+application. All 30/30 knowledge-attached controls passed model quality grades
+and emitted zero inappropriate continuity calls. These are distinct isolation
+and behavior checks. Separate knowledge probes were 6/6 in every arm, a
+baseline ceiling.
 
 GLM chose KEEP under the original quality rule. The primary call-frequency
 hypothesis received no gain. Semantic quality is self-graded, and this early
 first-action result establishes neither new conceptual knowledge nor complete
-workflow competence. The concept memory remains an experimental tagged
-artifact, with ordinary activation awaiting separate qualification.
+workflow competence. The concept memory remains a retained experimental tagged
+artifact. It is inactive in ordinary serving, with activation awaiting separate
+qualification. Future fresh runs whose primary goal is frequency require a
+positive held-out call-frequency gain alongside quality and controls. The
+original freeze, grades, and quality-based KEEP remain unchanged.
 
 ## Public checkout acceptance
 

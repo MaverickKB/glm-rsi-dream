@@ -132,12 +132,15 @@ questions were sealed before fitting and are now consumed. The precision run
 changed both teacher style and compression density, so it does not isolate
 their individual effects.
 
-The later source bundle's three-pocket ordinary service passed 60/60 exact
-preservation controls, 6/6 user-only probes, and 8/8 complete protected replies.
-Its final routing qualification passed 42 supported development/admission
-questions. An earlier keeper qualification blocked all 90 admission-negative
-checks. The documented rollback was actually executed and restored both exact
-original container identities and 8/8 protected replies.
+After the continuity experiment, the later source bundle's three accepted
+pockets remained in ordinary serving. Final re-acceptance passed 60/60 exact
+ordinary preservation controls, 42/42 supported development/admission questions,
+6/6 user-only probes, and 8/8 complete protected replies. An earlier keeper
+qualification blocked all 90 admission-negative checks. The documented rollback
+was previously executed and restored both exact original container identities
+and 8/8 protected replies. The final continuity round verified the preserved
+originals while keeping the accepted service running; rollback remained available
+for failure or instability.
 
 An extra user-only name-verb question bypassed memory after the initial serving
 gate. Admission was tightened with independently sampled, blind-scope-reviewed
@@ -151,6 +154,16 @@ grounded first actions rose from 14/18 to 16/18; the complete concept carrier
 scored 17/18. GLM chose KEEP under the original quality rule. The primary
 call-frequency hypothesis received no gain. Calls were recorded, not executed,
 and this is first-action evidence rather than complete workflow evidence.
+
+The continuity controls measured two distinct properties: 30/30 off-path
+controls preserved exact answer content, completion tokens, finish reason, and
+normalized tool calls; 30/30 knowledge-attached controls passed model quality
+grades and emitted zero inappropriate continuity calls. The continuity pocket
+remains a retained experimental artifact used in tagged evaluation. It is inactive
+in ordinary serving, with activation awaiting separate qualification. Its KEEP
+decision represents the secondary quality result. Future fresh experiments whose
+primary goal is call frequency require a positive held-out frequency gain as
+well as quality and controls; the scored experiment remains unchanged.
 
 Tiny sets, model-authored questions, self-grading bias, and consumed holdouts
 limit every result. Tagged controls alone do not establish natural-language
@@ -193,6 +206,23 @@ and belong only in private run storage.
 - **KDA:** the model's recurrent attention state retained from the teacher prefix.
 - **Carrier:** the full fact-conditioned prefix used as a comparison.
 - **Grounded:** a complete supported answer without unsupported additions.
+- **Pocket:** a separately retained numerical memory with learned attention
+  rows and a recurrent anchor.
+- **Continuity:** using current project context and prior decisions when
+  continuing work; this experiment measures first-turn tool use.
+- **Admission:** checks that determine whether a request can use a pocket.
+- **Protected reply:** a complete response to a preservation probe that must
+  match the original response byte for byte.
+- **Call rate (call frequency):** the fraction of tasks emitting a continuity tool call in the
+  first turn, counted separately from semantic quality.
+- **First-action quality:** the fraction of tasks whose first proposed action
+  is self-graded correct and grounded.
+- **Off-path control:** a request that bypasses numerical-memory application
+  and must preserve its original response.
+- **Knowledge-attached control:** an unrelated task evaluated with concept
+  memory active to check quality and inappropriate tool use.
+- **Tagged evaluation:** an evaluation request carrying explicit memory-routing
+  metadata.
 - **Tagged control:** a request carrying the package's evaluation metadata while
   its policy keeps memory off.
 - **Held-out:** questions excluded from fitting and selection, consumed once.

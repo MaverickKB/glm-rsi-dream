@@ -11,6 +11,19 @@ that implementation distinction when describing native acceptance. CPU dry runs
 must open no process or network connection and create no run directory. Live
 execution must be explicitly requested and use the configured pair.
 
+Final source re-acceptance preserved three ordinary-serving pockets: 60/60
+exact ordinary controls, 42/42 supported development/admission questions,
+6/6 user-only probes, and 8/8 complete protected replies. The concept-only
+continuity pocket is a retained experimental tagged artifact, inactive in
+ordinary serving pending separate qualification. Its first-turn call rate
+stayed 17/18; self-graded first-action quality rose from 14/18 to 16/18.
+Off-path controls were 30/30 exact; knowledge-attached controls passed 30/30
+model quality grades with zero inappropriate continuity calls. Keep these
+control meanings, emitted calls, executed workflows, and semantic grades distinct.
+When call frequency is the primary goal, future fresh runs require positive
+held-out frequency gain alongside quality and controls. Preserve the completed
+experiment's original freeze, grades, and secondary-quality KEEP.
+
 The head Spark coordinates orchestration and grading; both ranks own capture
 and fitting. Generation uses only the head API. Verify that the worker has no
 generation listener. Host addresses, SSH identity, paths, and ports belong in
