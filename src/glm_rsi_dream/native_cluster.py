@@ -89,7 +89,7 @@ class AttentionCluster(Cluster):
             self.save()
             raise
 
-    def infer(self, body: Any, policy: Any=None) -> Any:
+    def infer(self, body: Any, policy: Any = None) -> Any:
         policy = dict(policy or {})
         tag = body.get('metadata', {}).get('dream_eval')
         if tag and policy.get('use_memory'):

@@ -31,6 +31,25 @@ routing hook. This checkout provides the `glm-rsi-dream` supplied-dataset loop
 and tagged `ask` path. The results below identify the tested implementation;
 native qualification of this checkout's exact CLI remains a verification target.
 
+RSI Dreambox adds a password-protected portal, a local admin API, knowledge
+intake and review, configurable extraction and grading, and an optional traffic
+tap that is disabled by default. The [head-host guide](examples/predream/dreambox-head.md)
+and [portal guide](examples/predream/admin-portal.md) describe local setup.
+
+**Shared-expert dream learning: Under development.** The dream-to-neurons path
+has not been delivered. `glm-dream-trigger` exercises artifact preparation and
+paired lifecycle contracts on fictional CPU fixtures. Export and inference-loader
+checks exercise supplied numerical additions. Those checks do not establish
+native factual learning or an end-to-end consolidation capability. Dream and
+schedule controls remain closed by default until the owner verifies pocket-OFF
+recall and opens the host gate. See [the lifecycle contract](docs/DREAM_LIFECYCLE.md).
+
+The [RSI Dreambox manual](docs/admin/README.md) covers Rules, Queue, Dreams and
+schedule, Pockets, Autonomy and System in Simple and Advanced. The
+[operator runbook](docs/DREAM_OPERATOR_RUNBOOK.md) covers manual consolidation,
+activation, retirement and exact recovery. Portal help and manual pages share
+the packaged `resources/admin_portal/help.json` content.
+
 ## Quick start
 
 Two ways in. A laptop can plan the loop and run the CPU checks. Fitting,
@@ -601,3 +620,21 @@ retain their Apache-2.0 and legacy MIT attribution. The Contributor Covenant
 has its own documentation license. External weights and containers have
 separate terms. [NOTICE](NOTICE), [licenses](licenses), and
 [UPSTREAM.md](UPSTREAM.md) record provenance and licensing boundaries.
+
+
+### Opt-in traffic intake tap (offline qualified)
+
+The optional `glm-traffic-tap` command and completed-request callbacks collect
+current user text into a private bounded spool and then the existing pending
+queue. Capture requires administrator enable, an allowlisted principal and
+trusted per-request consent. The supplied policy is disabled. The collector
+leaves approval and retention decisions with the existing funnel. See
+[the tap operator guide](examples/predream/traffic-tap.md) for the two modes,
+privacy rules, offline replay and deployment boundary. Live installation is a
+separate approval and acceptance step.
+## Portable personalization bundles
+
+`glm-pocket-bundle export`, `verify`, and `import` carry both attention ranks and
+optional shared-expert additions with versioned base identity and file hashes.
+See [POCKET-BUNDLE.md](POCKET-BUNDLE.md) for editable sources, relocated imports,
+recovery, consumer requirements and the CPU/native acceptance boundary.

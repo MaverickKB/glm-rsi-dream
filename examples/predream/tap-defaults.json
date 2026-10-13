@@ -1,0 +1,17 @@
+{
+  "enabled": false,
+  "mode": "harness",
+  "endpoint": "",
+  "principals": [],
+  "denied_terms": [],
+  "max_text_bytes": 8192,
+  "max_events": 256,
+  "max_spool_bytes": 2000000,
+  "retention_seconds": 86400,
+  "events_per_minute": 12,
+  "principal_events_per_minute": 4,
+  "model_calls_per_minute": 24,
+  "calls_per_event": 24,
+  "candidates_per_event": 8,
+  "pending_candidates": 256
+}

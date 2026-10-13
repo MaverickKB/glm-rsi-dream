@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+- Add the RSI Dreambox portal, locked host sessions, local API, prepared intake,
+  configurable extraction/grading, and a disabled-by-default traffic tap.
+- Integrate experimental dream lifecycle, neuron research, knowledge revision,
+  export, and inference-loader lanes. Shared-expert dream learning remains
+  Under development, with new dream and schedule actions gated off by default.
+- Use portable operator configuration and verify both distributions on CPU.
+
 - Run Ruff, strict mypy, Hypothesis checks, and CPU coverage on Python 3.11, 3.12, and 3.13.
 - Reject admission geometry that does not fit the signed int32 rank exchange, and release only that request. An overflowing field no longer marks the pair broken.
 - Compare memory context limits using the one generated token native admission substitutes for a nonpositive count. Non-integer counts fail closed.

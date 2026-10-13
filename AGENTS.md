@@ -1,5 +1,71 @@
 # Coding contract
 
+Bind evaluation wording to its explicit fact and required value before sealing.
+Verify frozen bytes, case IDs, provenance and full required coverage before a
+native scored run. Admit exact controls only when both replies are complete;
+semantic grade fields require actual booleans and an explicit reason.
+An incomplete factual answer is a measured recall failure. Continue the other
+questions when paired runtime proof stays valid. Lost runtime proof closes
+generation; incomplete exact-control baselines close promotion.
+Capture and fitting must verify the frozen positive and negative membership,
+exclude development/fresh IDs, and preserve rank/world identity end to end.
+
+For DREAM checkpoint identity, read both live serving commands, their HF
+snapshot directories, exact config bytes and checkpoint file inventories.
+The packaged model repository/revision labels are historical until they match
+that paired runtime evidence. Bind portability and neuron acceptance to the
+observed checkpoint, preserving any conflicting packaged labels as provenance.
+
+The neuron architecture uses attention
+pockets are staging knowledge pills. Consolidate into exactly one pocket of
+trainable extra gate/up/down neurons in GLM's existing always-on shared expert,
+with base weights frozen. Measure layer placement and width. Use its clamped
+SwiGLU form, preserve routed-expert count and TP=2, and prove recall with every
+attention pocket disabled. A separately routed expert or alternate MLP adapter
+does not satisfy this branch's architecture contract.
+
+The operator policy protects serving on weekdays from 06:30 to 17:00
+America/New_York. GPU fits, captures, research probes and serving stops
+during that window require explicit owner approval. Evenings, nights and
+weekends are open. Check the clock before each serving transition and
+admit research only with enough margin to restore serving before the
+next weekday 06:30. Recovery remains available. Preserve the last saved
+optimizer when a study is interrupted and resume its remaining updates.
+
+The active placement study excludes layers 33/34/36. Keep DSA-adjacent
+11/23/35. Train the added neurons on final-answer tokens through a validated
+frozen downstream backward path, and write across all four native residual
+streams using the existing mHC mixing. A local residual MSE or one post
+direction is diagnostic evidence, not the active answer-training method.
+
+Final-answer captures must use the same native chat framing as acceptance.
+User-only acceptance requires the serving image's one-user template with
+thinking disabled, without the inherited study system prefix. Seal the
+tokenized prefixes beside the approved answer membership before capture.
+Compare user-only native recall during development, before opening fresh data.
+
+Before a numeric DREAM launch, bind the actual staged entrypoint to its source
+hash and require the mounted decoded-weight cache at /fixed-matrices. A host
+symlink under /workspace does not identify an accessible container cache.
+Preserve failed attempts and restore the accepted pair before retrying.
+
+Give every approved answer token equal cross-entropy weight. Record objective
+changes beside saved updates. Inspect factual-token and ending-token losses
+when teacher-forced improvement fails to produce grounded free recall.
+
+Preservation replay must cover complete native replies with the acceptance
+chat framing. A shortened teacher answer can leave free-generation states
+outside its constraint. Keep changed replay inputs in a separately sealed
+study. Initialize from hash-bound added weights with a fresh optimizer,
+preserve the prior study, and verify native recall and complete exact replies.
+Preservation claims require measured decode states as well as prefill replay.
+When exact native replies change despite near-zero prefill replay loss, capture
+the actual bare autoregressive path before assuming those states are equivalent.
+Decode tracing is an explicit request option with a cumulative row bound.
+Interleave unequal fact groups proportionally through the entire answer pass.
+Record ordering in the fit recipe. A larger group must not become an exclusive
+tail that overwrites other groups; changed ordering requires explicit lineage.
+
 GLM RSI Dream is an experimental two-node NVIDIA DGX Spark GB10 attention-memory
 loop using TP=2. Preserve the capture, real 96-row gradients at all 11
 full-attention sites, generated-answer checking, and keep/reject path.
@@ -65,3 +131,53 @@ tensors, STOP, coordinator loss, memory pressure, and rank failure restore the
 original identities. Check protected reply bytes and enumerate owned candidates,
 trainers, guards, and listeners. Keep failure evidence visible. Report CPU and
 native acceptance separately. Follow CONTRIBUTING.md and SECURITY.md.
+
+## Dream availability
+
+Dream, schedule and consolidation surfaces report Under development. The host-owned dream_features_enabled flag defaults off; requests and browser controls cannot enable it. The opening criterion belongs to dream-neurons: passing pocket-OFF recall. Preserve both Simple and Advanced UI gates and API denial tests. Queue, grading, rules and raw-fact pockets remain usable. Signed rollback/recovery of an existing epoch stays available as a bounded restoration path.
+
+## Product terminology
+
+Use RSI Dreambox for the portal. Autonomy levels are manual, supervised and automatic; the final level's UI label is Automatic. Use plain capability wording in code, API schemas, tests, documentation and help. Product names and slogans from other companies belong outside these surfaces. Keep signed grants and sealed policies immutable; the renamed level requires a fresh grant and workspace policy.
+
+## Approved portal artwork
+
+The approved artwork uses a matte Zz synapse. The single swappable
+flat icon is favicon.png, copied unchanged from the approved icon-zz-64.png.
+Sidebar and browser favicon share it. Login and first-run use the unchanged
+hero-zz-256.png as hero.png. Keep both entry-screen art files public while
+portal content and admin APIs retain the session gate.
+
+## RSI Dreambox portal hosting
+
+The default portal targets the Spark head in its own small process and port.
+The engine credential stays in a private host file. Simple has one password
+and reuses the server session. The portal lock defaults on. Advanced alone
+can disable it with a short warning or select another engine by URL and key;
+that connection uses the host proxy and keeps API traffic on the same origin.
+The single session_seconds value defaults to86400, validates300..86400, and
+applies to new logins. Existing login and expiry times remain unchanged by
+activity or settings edits. Simple exposes15min/1hour/8hours/1day presets;
+Advanced exposes a custom value. Build and test locally. Deployment waits for
+the explicit owner go specified in the shared contract.
+## Inference loader lane
+
+`inference-loader/` is a separate inference-only distribution. Its wheel may
+contain only `dream_loader`, fixed source pins, and serving/bundle entry points.
+Keep training, capture, queue management and attention teacher code out of it.
+The only supported source profile is the packaged pin set. Startup disagreement
+must fail visibly before generation. Preserve GLM TP=2 and head-only API ownership.
+GPU or serving validation needs a grant in `../DREAM-neurons/GPU-QUEUE.md` from the
+job root; restarting live serving also needs owner approval.
+
+## Publication audit boundary
+
+Shipped source, documentation, help, fixtures and unpublished commit history use
+operator-neutral authority and configurable host addresses. Keep personal names,
+private hosts, local deployment paths, credentials and real traffic outside the
+publication tree. Use only fictional examples. Integrate research lanes locally,
+then publish a sanitized branch from current main when lane history retains
+private or superseded material. Preserve that local history without rewriting
+published history. Shared-expert dream learning remains Under development, and
+the traffic tap defaults off. The full portable CPU suite includes the main
+package and the separate inference-loader tests.

@@ -1,0 +1,27 @@
+[build-system]
+requires = ["setuptools==80.9.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "glm-dream-loader"
+version = "0.2.0"
+description = "Inference-only GLM shared-expert addition for pinned stock TensorFold EXL3"
+requires-python = ">=3.11"
+license = "MIT AND Apache-2.0"
+license-files = ["LICENSE", "licenses/*.txt"]
+# PyTorch and TensorFold are supplied by the stock serving image.
+dependencies = []
+
+[project.scripts]
+glm-dream-loader = "dream_loader.bundle:main"
+glm-dream-serve = "dream_loader.serve:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+dream_loader = ["pins.json"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]

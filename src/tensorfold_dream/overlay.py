@@ -85,4 +85,5 @@ def extend(name: Any, source: Any, replace: Any) -> Any:
                          "        g = None if _eval.has_main(w, b) else self.graphs.get(R)\n")
     from .attention_overlay import extend_attention
     source = extend_attention(name, source, replace)
-    return source
+    from glm_rsi_dream.neurons.overlay import extend as extend_neurons
+    return extend_neurons(name, source, replace)

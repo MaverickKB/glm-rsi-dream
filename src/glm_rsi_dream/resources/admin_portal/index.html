@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light" />
+    <title>RSI Dreambox</title>
+    <link rel="icon" href="favicon.png" type="image/png" sizes="64x64" />
+    <link rel="stylesheet" href="portal.css" />
+    <script src="portal.js" defer></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to workspace</a>
+    <aside class="sidebar">
+      <a class="brand" href="#rules" aria-label="RSI Dreambox, Rules">
+        <img class="brand-symbol" src="favicon.png" alt="" aria-hidden="true" />
+        <span>RSI <span class="brand-name">Dreambox</span></span>
+      </a>
+      <nav aria-label="Main navigation">
+        <a href="#rules" data-page="rules"
+          ><span class="nav-icon">◇</span>Rules</a
+        >
+        <a href="#queue" data-page="queue"
+          ><span class="nav-icon">≡</span>Queue<span
+            id="queue-count"
+            class="nav-count"
+            >0</span
+          ></a
+        >
+        <a href="#dreams" data-page="dreams"
+          ><span class="nav-icon">☾</span>Dreams &amp; schedule</a
+        >
+        <a href="#pockets" data-page="pockets"
+          ><span class="nav-icon">▤</span>Pockets</a
+        >
+        <a href="#autonomy" data-page="autonomy"
+          ><span class="nav-icon">◎</span>Autonomy</a
+        >
+        <a href="#system" data-page="system"
+          ><span class="nav-icon">⚙</span>System</a
+        >
+      </nav>
+      <div class="sidebar-bottom">
+        <div class="collection-state">
+          <span class="status-dot quiet"></span>Traffic collection off
+        </div>
+        <button class="sidebar-help" data-action="manual">
+          <span aria-hidden="true">?</span>User manual
+        </button>
+        <span class="sidebar-version">Local admin workspace</span>
+      </div>
+    </aside>
+    <div class="workspace">
+      <header class="topbar">
+        <button class="connection" data-action="connection">
+          <span id="connection-dot" class="status-dot quiet"></span
+          ><span id="connection-label">API disconnected</span>
+        </button>
+        <div class="topbar-actions">
+          <div class="view-switch" role="group" aria-label="Detail level">
+            <button data-action="simple" aria-pressed="true">Simple</button>
+            <button data-action="advanced" aria-pressed="false">
+              Advanced
+            </button>
+          </div>
+          <button
+            class="icon-button"
+            data-action="help"
+            aria-label="Help for this page"
+          >
+            ?
+          </button>
+          <button class="admin-button" data-action="connection">
+            <span class="avatar">A</span
+            ><span id="admin-label">Admin access</span>
+          </button>
+        </div>
+      </header>
+      <div id="mode-note" class="mode-note" hidden></div>
+      <main id="main" tabindex="-1" aria-live="polite"></main>
+      <footer class="workspace-footer">
+        <span id="footer-status">Waiting for admin API</span
+        ><button data-action="help">Page help</button>
+      </footer>
+    </div>
+    <dialog id="drawer" class="drawer" aria-labelledby="drawer-title">
+      <div class="drawer-heading">
+        <div>
+          <span id="drawer-kicker" class="muted"></span>
+          <h2 id="drawer-title"></h2>
+        </div>
+        <button
+          class="icon-button"
+          data-action="close"
+          aria-label="Close panel"
+        >
+          ×
+        </button>
+      </div>
+      <div id="drawer-body"></div>
+    </dialog>
+    <div id="toast" role="status" class="toast" hidden></div>
+  </body>
+</html>

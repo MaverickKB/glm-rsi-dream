@@ -1,0 +1,245 @@
+{
+  "about": "Operator-attested synthetic catalog for development checks, not proof of model weight learning.",
+  "facts": [
+    {
+      "id": "prior-candidate-0006",
+      "statement": "Lumen's current inspection code is QUARTZ-418.",
+      "receipt": "synthetic-operator-fixture:candidate-0006"
+    },
+    {
+      "id": "saved-record-0001",
+      "statement": "Lumen's spare fuses are kept in tray A1.",
+      "receipt": "synthetic-operator-fixture:candidate-0007"
+    },
+    {
+      "id": "prior-candidate-0013",
+      "statement": "Harbor's inventory room is East 2.",
+      "receipt": "synthetic-operator-fixture:candidate-0013"
+    },
+    {
+      "id": "saved-record-0002",
+      "statement": "Harbor's service bell is mounted beside the east doorway.",
+      "receipt": "synthetic-operator-fixture:candidate-0014"
+    },
+    {
+      "id": "prior-candidate-0020",
+      "statement": "Willow's alert threshold is 12 seconds.",
+      "receipt": "synthetic-operator-fixture:candidate-0020"
+    },
+    {
+      "id": "saved-record-0003",
+      "statement": "Willow's reusable shipping crates are painted green.",
+      "receipt": "synthetic-operator-fixture:candidate-0021"
+    },
+    {
+      "id": "prior-candidate-0027",
+      "statement": "Aster's humidity sample interval is 45 seconds.",
+      "receipt": "synthetic-operator-fixture:candidate-0027"
+    },
+    {
+      "id": "saved-record-0004",
+      "statement": "Aster's test gauges use an orange protective cover.",
+      "receipt": "synthetic-operator-fixture:candidate-0028"
+    },
+    {
+      "id": "prior-candidate-0034",
+      "statement": "Tern's archive glove drawer is B2.",
+      "receipt": "synthetic-operator-fixture:candidate-0034"
+    },
+    {
+      "id": "saved-record-0005",
+      "statement": "Tern's visitor badges are returned to the reception basket.",
+      "receipt": "synthetic-operator-fixture:candidate-0035"
+    },
+    {
+      "id": "prior-candidate-0041",
+      "statement": "Cobalt's intake cutoff is 17:30.",
+      "receipt": "synthetic-operator-fixture:candidate-0041"
+    },
+    {
+      "id": "saved-record-0006",
+      "statement": "Cobalt's printed manuals are stored on the top shelf.",
+      "receipt": "synthetic-operator-fixture:candidate-0042"
+    },
+    {
+      "id": "prior-candidate-0048",
+      "statement": "Maple's safety checklist revision is R8.",
+      "receipt": "synthetic-operator-fixture:candidate-0048"
+    },
+    {
+      "id": "saved-record-0007",
+      "statement": "Maple's calibration weights are stored in a padded blue case.",
+      "receipt": "synthetic-operator-fixture:candidate-0049"
+    },
+    {
+      "id": "prior-candidate-0055",
+      "statement": "Dune's dispatch desk is floor 1.",
+      "receipt": "synthetic-operator-fixture:candidate-0055"
+    },
+    {
+      "id": "saved-record-0008",
+      "statement": "Dune's water valve is behind the south access panel.",
+      "receipt": "synthetic-operator-fixture:candidate-0056"
+    },
+    {
+      "id": "prior-candidate-0062",
+      "statement": "Moss's current duty manager is Priya.",
+      "receipt": "synthetic-operator-fixture:candidate-0062"
+    },
+    {
+      "id": "saved-record-0009",
+      "statement": "Moss's label printer uses rolls marked M-80.",
+      "receipt": "synthetic-operator-fixture:candidate-0063"
+    },
+    {
+      "id": "prior-candidate-0069",
+      "statement": "Flint's backup retention is 14 days.",
+      "receipt": "synthetic-operator-fixture:candidate-0069"
+    },
+    {
+      "id": "saved-record-0010",
+      "statement": "Flint's archive labels use black text on white stock.",
+      "receipt": "synthetic-operator-fixture:candidate-0070"
+    },
+    {
+      "id": "prior-candidate-0076",
+      "statement": "Clover's current humidity target is 50 percent.",
+      "receipt": "synthetic-operator-fixture:candidate-0076"
+    },
+    {
+      "id": "saved-record-0011",
+      "statement": "Clover's reusable bins carry a CL prefix.",
+      "receipt": "synthetic-operator-fixture:candidate-0077"
+    },
+    {
+      "id": "prior-candidate-0083",
+      "statement": "Kestrel's instrument cabinet is K5.",
+      "receipt": "synthetic-operator-fixture:candidate-0083"
+    },
+    {
+      "id": "saved-record-0012",
+      "statement": "Kestrel's spare sensor cables are stored in locker K2.",
+      "receipt": "synthetic-operator-fixture:candidate-0084"
+    },
+    {
+      "id": "prior-candidate-0090",
+      "statement": "Saffron's official shift handoff time is 07:00.",
+      "receipt": "synthetic-operator-fixture:candidate-0090"
+    },
+    {
+      "id": "saved-record-0013",
+      "statement": "Saffron's cleaning brushes hang beside the wash basin.",
+      "receipt": "synthetic-operator-fixture:candidate-0091"
+    },
+    {
+      "id": "prior-candidate-0097",
+      "statement": "Birch's inspection form is version 2.",
+      "receipt": "synthetic-operator-fixture:candidate-0097"
+    },
+    {
+      "id": "saved-record-0014",
+      "statement": "Birch's reference ruler is made of stainless steel.",
+      "receipt": "synthetic-operator-fixture:candidate-0098"
+    },
+    {
+      "id": "prior-candidate-0104",
+      "statement": "Reef's current serial prefix is RF7.",
+      "receipt": "synthetic-operator-fixture:candidate-0104"
+    },
+    {
+      "id": "saved-record-0015",
+      "statement": "Reef's tool checkout book is a red binder.",
+      "receipt": "synthetic-operator-fixture:candidate-0105"
+    },
+    {
+      "id": "prior-candidate-0111",
+      "statement": "Hearth's public opening time is 09:00.",
+      "receipt": "synthetic-operator-fixture:candidate-0111"
+    },
+    {
+      "id": "saved-record-0016",
+      "statement": "Hearth's sample jars are stored upside down after cleaning.",
+      "receipt": "synthetic-operator-fixture:candidate-0112"
+    },
+    {
+      "id": "prior-candidate-0118",
+      "statement": "Orchid's return shelf is Green.",
+      "receipt": "synthetic-operator-fixture:candidate-0118"
+    },
+    {
+      "id": "saved-record-0017",
+      "statement": "Orchid's receipt folders are arranged by month.",
+      "receipt": "synthetic-operator-fixture:candidate-0119"
+    },
+    {
+      "id": "prior-candidate-0125",
+      "statement": "Tamarind's pump filter is 40 microns.",
+      "receipt": "synthetic-operator-fixture:candidate-0125"
+    },
+    {
+      "id": "saved-record-0018",
+      "statement": "Tamarind's inspection lamp has a yellow handle.",
+      "receipt": "synthetic-operator-fixture:candidate-0126"
+    },
+    {
+      "id": "prior-candidate-0132",
+      "statement": "Quartz's calibration unit is volts.",
+      "receipt": "synthetic-operator-fixture:candidate-0132"
+    },
+    {
+      "id": "saved-record-0019",
+      "statement": "Quartz's spare probes are wrapped in clear sleeves.",
+      "receipt": "synthetic-operator-fixture:candidate-0133"
+    },
+    {
+      "id": "prior-candidate-0139",
+      "statement": "Briar's maintenance day is Tuesday.",
+      "receipt": "synthetic-operator-fixture:candidate-0139"
+    },
+    {
+      "id": "saved-record-0020",
+      "statement": "Briar's door contact sensor is labeled DC-6.",
+      "receipt": "synthetic-operator-fixture:candidate-0140"
+    },
+    {
+      "id": "prior-candidate-0146",
+      "statement": "Cedar's current map edition is 2026.",
+      "receipt": "synthetic-operator-fixture:candidate-0146"
+    },
+    {
+      "id": "saved-record-0021",
+      "statement": "Cedar's map cabinet is locked after each shift.",
+      "receipt": "synthetic-operator-fixture:candidate-0147"
+    },
+    {
+      "id": "prior-candidate-0153",
+      "statement": "Elm's collection bin capacity is 50 liters.",
+      "receipt": "synthetic-operator-fixture:candidate-0153"
+    },
+    {
+      "id": "saved-record-0022",
+      "statement": "Elm's stationery cupboard contains the spare marker pens.",
+      "receipt": "synthetic-operator-fixture:candidate-0154"
+    },
+    {
+      "id": "prior-candidate-0160",
+      "statement": "Garnet's hardware label is G4A.",
+      "receipt": "synthetic-operator-fixture:candidate-0160"
+    },
+    {
+      "id": "saved-record-0023",
+      "statement": "Garnet's counting board uses removable numbered tiles.",
+      "receipt": "synthetic-operator-fixture:candidate-0161"
+    },
+    {
+      "id": "prior-candidate-0167",
+      "statement": "Lotus's check-in office is room 104.",
+      "receipt": "synthetic-operator-fixture:candidate-0167"
+    },
+    {
+      "id": "saved-record-0024",
+      "statement": "Lotus's visitor log is kept in the north reception drawer.",
+      "receipt": "synthetic-operator-fixture:candidate-0168"
+    }
+  ]
+}

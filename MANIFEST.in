@@ -3,5 +3,8 @@ recursive-include .github *.yml
 recursive-include licenses *.txt
 recursive-include examples *.md *.json
 recursive-include results *.md *.json
-recursive-include tests *.py *.gz
+recursive-include tests *.py *.gz *.json *.jsonl *.txt *.cjs
 recursive-include tools *.py
+
+include tests/predream/fixtures/tap_recorded.jsonl
+recursive-include docs *.md

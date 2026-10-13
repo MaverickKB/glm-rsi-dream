@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "name": "sampled-closed-book",
+  "extract": {
+    "strategy": "closed_book",
+    "probe_samples": 2,
+    "probe_temperature": 0.7,
+    "agreement_threshold": 1.0
+  },
+  "grade": {
+    "strategy": "evidence_first"
+  }
+}

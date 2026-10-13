@@ -197,6 +197,10 @@ def select_decode(w: Any, b: Any, segments: Any) -> Any:
 
 
 def has_main(w: Any, b: Any) -> Any:
+    from glm_rsi_dream.neurons.runtime import neurons_enabled
+
+    if neurons_enabled(w):
+        return True
     for st, offset, count in getattr(b, "_eval_pieces", ()):
         record = spec_for(w, st)
         if record is not None and record["spec"]["arm"] == "main":
@@ -225,6 +229,9 @@ def _finished(decoder: Any, sid: Any) -> Any:
 
     if not record.get("admission_error"):
         receipt.update(finalize(decoder.w, record))
+        from glm_rsi_dream.neurons.native import finished as finish_neurons
+
+        receipt.update(finish_neurons(decoder.w, record))
     path = state["receipts"] / (
         receipt["request_id"] + "-rank" + str(decoder.w.rank) + ".json"
     )

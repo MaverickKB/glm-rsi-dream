@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "name": "broader-durable-weights",
+  "extract": {
+    "strategy": "closed_book"
+  },
+  "grade": {
+    "strategy": "evidence_first",
+    "routing_rules": "4. Destination hypothesis: retain all supported durable factual knowledge in weights, including stable named household and equipment facts. Retain temporary states and one-off schedules in memory. Use a named pocket only when the source explicitly asks for a topic pocket. Do not change evidence, novelty, or acceptance requirements."
+  }
+}

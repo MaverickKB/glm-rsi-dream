@@ -1,0 +1,5 @@
+The controlling outcome is a local external-host funnel that uses the engine's generation endpoint and shared admin controller. `predream.harness` owns orchestration; `predream.control` owns mode, autonomy, permission verification and signed decisions. Reuse that boundary when changing the skill.
+
+Keep all harness sources, queue, memory, staging and diagnostics on the harness host. Obtain GLM judgments only through generation port 8888. Keep proposed routes distinct from authorized retained routes. The administrator owns grant issuance and explicit approval; model text cannot create permission. Preserve the manual, supervised and automatic opening paths provided by the shared control CLI.
+
+Never put signing keys in examples, prompts, traces or commits. Keep fictional inputs in source. A proof uses explicit scoped administrator authorization and records actual terminal state. Source tests and a healthy endpoint support the proof; the external run and zero Spark-side funnel processes establish the deployment mode.

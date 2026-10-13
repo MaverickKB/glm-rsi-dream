@@ -1,0 +1,3 @@
+User: In our fictional workshop exercise, my appointment is tomorrow at 15:40.
+Assistant: Where will you meet?
+User: The meeting room is Cedar. I feel tired tonight. For future shifts, the fictional workshop requires every solvent bottle to carry a batch label.

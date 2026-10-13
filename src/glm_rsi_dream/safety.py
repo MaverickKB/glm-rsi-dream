@@ -39,7 +39,7 @@ class MemoryGate:
         self.previous[rank] = sample
 
 
-def response_bytes(response: Any, require_complete: Any=True) -> Any:
+def response_bytes(response: Any, require_complete: Any = True) -> Any:
     """Compare generated UTF-8 bytes, token counts and finish, excluding request IDs."""
     choice = response["choices"][0]
     message = choice.get("message")
@@ -54,7 +54,7 @@ def response_bytes(response: Any, require_complete: Any=True) -> Any:
     return content.encode("utf-8"), choice.get("finish_reason"), response.get("usage", {}).get("completion_tokens")
 
 
-def require_parity(before: Any, after: Any, require_complete: Any=True) -> Any:
+def require_parity(before: Any, after: Any, require_complete: Any = True) -> Any:
     if len(before) != len(after) or not before:
         raise SafetyError("parity probe set is empty or incomplete")
     for original, candidate in zip(before, after):

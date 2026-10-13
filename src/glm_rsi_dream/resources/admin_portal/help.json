@@ -1,0 +1,949 @@
+{
+  "schema_version": 1,
+  "source": {
+    "api": "RSI Dreambox API 0.1.0",
+    "capabilities": "Prepared knowledge queues for GLM review and signed decisions. Dream and schedule surfaces are Under development by default. Pocket operations manage raw facts. Traffic collection is off.",
+    "trigger": "DreamLifecycle with the default-off host gate",
+    "specification_digest": "730f024168705b85276b0a620b3c0ee100d54a1ab7323effbf0d56b090a0c703"
+  },
+  "pages": [
+    {
+      "id": "rules",
+      "title": "Rules",
+      "intro": "Choose what is worth keeping. Start with a small rule, then check it against a sample before relying on it.",
+      "simple": [
+        {
+          "title": "Make a rule",
+          "body": "Create a rule or choose a companion or persona preset. Give it a useful name, choose a destination and save. Open its details to check who and what it covers."
+        },
+        {
+          "title": "Try it first",
+          "body": "Use the rule check with a sample user, source and text. Review the selected match. The check evaluates proposal settings; collection remains off."
+        }
+      ],
+      "advanced": [
+        {
+          "title": "Narrow the match",
+          "body": "Open the rule editor to set exclusions, source kinds, literal patterns and precedence. Disable a rule when you want to keep it for later."
+        },
+        {
+          "title": "Tune the pipeline",
+          "body": "Open collection, novelty and grading settings. Export your policy for a new run root. The active experiment keeps its original policy and source snapshot. Keep the defaults until you have a specific hypothesis to test."
+        }
+      ],
+      "topic_ids": [
+        "rule-name",
+        "rule-enabled",
+        "rule-domain",
+        "rule-action",
+        "rule-destination",
+        "rule-priority",
+        "rule-users",
+        "rule-exclusions",
+        "rule-sources",
+        "rule-patterns",
+        "rule-notes",
+        "rule-preset",
+        "rule-check",
+        "policy-envelope",
+        "extract-instructions",
+        "novelty-strategy",
+        "probe-samples",
+        "probe-temperature",
+        "agreement-threshold",
+        "prior-instructions",
+        "comparison-instructions",
+        "assessment-instructions",
+        "grade-strategy",
+        "grade-instructions",
+        "routing-rules",
+        "grade-attempts",
+        "policy-draft"
+      ]
+    },
+    {
+      "id": "queue",
+      "title": "Queue",
+      "intro": "Review one claim at a time. Read its evidence and proposed destination before deciding what should move forward.",
+      "simple": [
+        {
+          "title": "Learn prepared knowledge",
+          "body": "Choose Learn this, paste a note or upload a UTF-8 text or JSON file, then select Add for review. GLM extracts text into facts, checks safety and grounding, and proposes a destination. Open Review fact to approve or reject the proposal under your current autonomy policy."
+        },
+        {
+          "title": "Review a proposal",
+          "body": "Find a pending item and open its details. Compare the claim with the source evidence, then read the model's reason. Approve a suitable proposal, reject an unsuitable one with a reason, or use Hold when you need more information."
+        },
+        {
+          "title": "Correct the evidence",
+          "body": "Edit the claim and literal evidence together. Saving creates a pending replacement and holds the original. The replacement needs fresh model review and admin approval."
+        }
+      ],
+      "advanced": [
+        {
+          "title": "Submit a prepared pack",
+          "body": "Choose Learn this to set an explicit input format and source reference. Upload a pack or paste its JSON. Retrying the same reference and content reuses the queue IDs. If a grade fails, open the pending fact and choose Grade fact; later facts remain available for their own review."
+        },
+        {
+          "title": "Inspect the trail",
+          "body": "Use filters and the raw detail view to inspect proposals, approvals, update links and receipts. Select rows for the bulk actions offered by the portal; review any failed row before retrying."
+        },
+        {
+          "title": "Change completed knowledge",
+          "body": "Prepare a linked update for a staged, absorbed or learned item. Keep the previous receipt intact while the replacement is reviewed. A learned receipt records the consolidation artifact; an accepted or staged row still awaits the relevant handoff."
+        }
+      ],
+      "topic_ids": [
+        "queue-text",
+        "queue-evidence",
+        "queue-hold",
+        "queue-note",
+        "queue-proposal",
+        "queue-status",
+        "queue-selection",
+        "revision",
+        "queue-reject",
+        "learn-content",
+        "learn-format",
+        "learn-source",
+        "learn-grading"
+      ]
+    },
+    {
+      "id": "dreams",
+      "title": "Dreams and schedule",
+      "intro": "Under development. Dream, schedule and consolidation actions are closed by default on the server. The dream-neurons owner must pass the pocket-OFF recall bar before the host opens development access.",
+      "simple": [
+        {
+          "title": "Check availability",
+          "body": "Open Dreams and schedule to see Under development. Continue reviewing the queue and managing raw-fact pockets. Accepted or staged facts are preparation records; they do not show knowledge moving into neurons."
+        },
+        {
+          "title": "Review a development plan after opening",
+          "body": "When the owner qualification passes and the host explicitly opens the flag, choose a nonempty staged run to prepare a manual plan. Check its waiting reasons. The API performs plan preparation; native training and qualification remain separate operator work."
+        }
+      ],
+      "advanced": [
+        {
+          "title": "Inspect the server gate",
+          "body": "Read the feature status and opening criterion. Browser settings cannot open this flag. Gated API operations return feature_unavailable: under development."
+        },
+        {
+          "title": "Configure development scheduling after opening",
+          "body": "After the host opens qualified development access, inspect time zone, approved windows, idle threshold and active requests. Readiness uses supplied context and the signed stage permission; it produces a manual plan."
+        }
+      ],
+      "topic_ids": [
+        "dream-development-gate",
+        "schedule-enabled",
+        "schedule-timezone",
+        "schedule-days",
+        "schedule-hours",
+        "schedule-idle",
+        "schedule-active",
+        "dream-run",
+        "dream-not-before",
+        "dream-context",
+        "dream-result"
+      ]
+    },
+    {
+      "id": "pockets",
+      "title": "Pockets",
+      "intro": "Keep reusable facts together by topic. These portal pockets are portable raw-fact collections with provenance.",
+      "simple": [
+        {
+          "title": "Create and fill a pocket",
+          "body": "Create a pocket for one topic. Select approved reusable queue items and extract them into it. Open the member list to check the statements and remaining capacity."
+        },
+        {
+          "title": "Share a pocket",
+          "body": "Export a pocket package. To add a shared pocket, import its package under a new ID. Inspect the facts and provenance before using them in your learning workflow."
+        }
+      ],
+      "advanced": [
+        {
+          "title": "Copy or combine",
+          "body": "Copy all members or selected facts into a new pocket. Merge pockets that share the same declared topic into a new collection with enough capacity. The sources remain available."
+        },
+        {
+          "title": "Continue a full pocket",
+          "body": "Rollover seals a full open pocket and creates an empty successor for the same topic. Export before removing a catalog pocket you want to preserve. Native teacher retirement uses the separate trigger runbook after recall qualification."
+        }
+      ],
+      "topic_ids": [
+        "identity",
+        "pocket-topic",
+        "pocket-capacity",
+        "pocket-candidates",
+        "pocket-facts",
+        "pocket-sources",
+        "pocket-package",
+        "pocket-state"
+      ]
+    },
+    {
+      "id": "autonomy",
+      "title": "Autonomy",
+      "intro": "Choose how facts are saved. Select Manual, Supervised or Automatic to apply that level.",
+      "simple": [
+        {
+          "title": "Keep review in your hands",
+          "body": "Select Manual. Review pending proposals in Queue and approve or reject each fact."
+        },
+        {
+          "title": "Allow automatic saving",
+          "body": "Select Supervised or Automatic to apply the level. If the option says Needs your approval to turn on, choose its Approve button. Supervised asks you to review uncertain facts and changes."
+        }
+      ],
+      "advanced": [
+        {
+          "title": "Use Automatic deliberately",
+          "body": "Select Automatic to save facts after the usual checks. Open Access details for scope and expiry. The controller continues to enforce safety, candidate review and handoff evidence."
+        },
+        {
+          "title": "Change control settings",
+          "body": "Open Edit settings to choose destinations and the confidence needed. Future decisions use the saved settings. Completed staged, absorbed and learned facts keep their sealed state; pending and accepted proposals reopen for review when settings change."
+        }
+      ],
+      "topic_ids": [
+        "autonomy-level",
+        "auto-routes",
+        "min-score",
+        "permission",
+        "authority"
+      ]
+    },
+    {
+      "id": "system",
+      "title": "System",
+      "intro": "Check the connection, execution mode and current capabilities. Start here when an action cannot proceed.",
+      "simple": [
+        {
+          "title": "Open the portal",
+          "body": "Set one password on the first visit, then sign in once. Your browser keeps an HttpOnly session cookie. The engine credential stays on the host. A valid session covers navigation and changes without another password prompt."
+        },
+        {
+          "title": "Choose a session timeout",
+          "body": "Security in System or Portal settings offers 15 min, 1 hour, 8 hours and 1 day. The timeout applies to new sign-ins. Activity never extends the original expiry. Sign out other sessions keeps this browser signed in."
+        },
+        {
+          "title": "Resolve a failed save",
+          "body": "Sign in when your session expires. An expired host grant can show one Approve action next to the requested level. For a changed item, refresh its current values and review your edit."
+        }
+      ],
+      "advanced": [
+        {
+          "title": "Inspect values and API",
+          "body": "Open the raw values and API view to compare responses with /openapi.json. Export a policy for a fresh run when changing experiment settings. Host-owned runtime values remain visible according to the connected API's capabilities."
+        },
+        {
+          "title": "Check collection boundaries",
+          "body": "Traffic collection stays off and undeployed during development. The future collection design requires per-user exclusions and an approved time window. Enabling a rule or schedule only changes its own planning state."
+        },
+        {
+          "title": "Security and another engine",
+          "body": "Advanced offers a custom timeout from 5 min to 1 day and can turn the portal lock off after a short warning. Connect to an engine accepts its URL and key once; the host saves them privately and proxies requests on the same origin."
+        }
+      ],
+      "topic_ids": [
+        "connection-url",
+        "bearer",
+        "mode",
+        "runtime-model",
+        "runtime-endpoint",
+        "runtime-timeout",
+        "traffic-policy",
+        "demo",
+        "api-errors",
+        "keyboard",
+        "api-host-settings",
+        "portal-session"
+      ]
+    }
+  ],
+  "topics": [
+    {
+      "id": "rule-name",
+      "page": "rules",
+      "label": "Rule name",
+      "body": "A readable label, 1 to 100 characters. Choose words that tell you what the rule covers.",
+      "fields": [
+        "rules.name"
+      ]
+    },
+    {
+      "id": "rule-enabled",
+      "page": "rules",
+      "label": "Rule enabled",
+      "body": "Enabled rules participate in rule checks. Disabled rules stay saved. The default is enabled.",
+      "fields": [
+        "rules.enabled"
+      ]
+    },
+    {
+      "id": "rule-domain",
+      "page": "rules",
+      "label": "Domain",
+      "body": "General matches every checked domain. Companion and persona match their own domain. Choose the scope that fits the rule.",
+      "fields": [
+        "rules.domain"
+      ]
+    },
+    {
+      "id": "rule-action",
+      "page": "rules",
+      "label": "Action",
+      "body": "Propose records an intended retention policy; ignore records an intended exclusion. Rule checks return the selected policy for review.",
+      "fields": [
+        "rules.action"
+      ]
+    },
+    {
+      "id": "rule-destination",
+      "page": "rules",
+      "label": "Destination and pocket",
+      "body": "Weights means reusable general knowledge; pocket means reusable topic knowledge; memory means personal or transient information. Pocket requires a safe topic ID. The other routes require a null pocket. A rule expresses a proposal policy; model review and admin approval still govern candidate handoff.",
+      "fields": [
+        "rules.route",
+        "rules.pocket"
+      ]
+    },
+    {
+      "id": "rule-priority",
+      "page": "rules",
+      "label": "Priority",
+      "body": "Lower numbers are checked first, from 0 to 1000. The default is 100. Ties use the rule ID in alphabetical order.",
+      "fields": [
+        "rules.priority"
+      ]
+    },
+    {
+      "id": "rule-users",
+      "page": "rules",
+      "label": "Included users",
+      "body": "A list limits the rule to those user IDs. An empty list includes every user who passes the exclusion check.",
+      "fields": [
+        "rules.user_ids"
+      ]
+    },
+    {
+      "id": "rule-exclusions",
+      "page": "rules",
+      "label": "Excluded users",
+      "body": "These user IDs never match this rule, even when also included. Exclusions are checked before other matching conditions.",
+      "fields": [
+        "rules.exclude_user_ids"
+      ]
+    },
+    {
+      "id": "rule-sources",
+      "page": "rules",
+      "label": "Source kinds",
+      "body": "Choose one or more of prompt, conversation and manual. The default includes all three. This filters a rule check by the source kind supplied to it.",
+      "fields": [
+        "rules.source_kinds"
+      ]
+    },
+    {
+      "id": "rule-patterns",
+      "page": "rules",
+      "label": "Literal patterns",
+      "body": "Any listed phrase may match the sample text, ignoring letter case. These are literal substrings. An empty list adds no text restriction.",
+      "fields": [
+        "rules.patterns"
+      ]
+    },
+    {
+      "id": "rule-notes",
+      "page": "rules",
+      "label": "Rule notes",
+      "body": "An optional explanation for the next reviewer, up to 2000 characters. Notes stay with the rule.",
+      "fields": [
+        "rules.notes"
+      ]
+    },
+    {
+      "id": "rule-preset",
+      "page": "rules",
+      "label": "Preset",
+      "body": "Companion and persona provide editable starter rules. Inspect the resulting destination, topic and match scope before saving further changes.",
+      "fields": [
+        "preset.preset"
+      ]
+    },
+    {
+      "id": "rule-check",
+      "page": "rules",
+      "label": "Rule check inputs",
+      "body": "Supply the exact user ID, domain, source kind and sample text. The result lists matching rules and the first selected rule. It reports collection_enabled:false.",
+      "fields": [
+        "rule_check.user_id",
+        "rule_check.domain",
+        "rule_check.source_kind",
+        "rule_check.text"
+      ]
+    },
+    {
+      "id": "policy-envelope",
+      "page": "rules",
+      "label": "Policy identity",
+      "body": "Schema version is 1. Name is a nonempty experiment label. Optional _comments are saved metadata and stay outside model prompts. Every changed policy, including comments, uses a fresh run root.",
+      "fields": [
+        "policy.schema_version",
+        "policy.name",
+        "policy._comments"
+      ]
+    },
+    {
+      "id": "extract-instructions",
+      "page": "rules",
+      "label": "Collection instructions",
+      "body": "Nonempty instructions for extracting atomic source claims. The literal evidence and answer-free question checks still apply. Keep the full instruction text in the focused editor.",
+      "fields": [
+        "extract.extraction_instructions"
+      ]
+    },
+    {
+      "id": "novelty-strategy",
+      "page": "rules",
+      "label": "Novelty strategy",
+      "body": "Closed_book, the default, asks an answer-free question before comparing the prior answer with the claim. Claim_assessment shows the claim while asking about prior knowledge. That setting requires samples 1, temperature null and threshold 1.",
+      "fields": [
+        "extract.strategy"
+      ]
+    },
+    {
+      "id": "probe-samples",
+      "page": "rules",
+      "label": "Prior samples",
+      "body": "A positive integer, default 1. Closed-book novelty makes this many prior requests for each candidate. More samples add requests and latency.",
+      "fields": [
+        "extract.probe_samples"
+      ]
+    },
+    {
+      "id": "probe-temperature",
+      "page": "rules",
+      "label": "Prior temperature",
+      "body": "Null uses the client default of 0. A finite nonnegative value controls closed-book prior sampling.",
+      "fields": [
+        "extract.probe_temperature"
+      ]
+    },
+    {
+      "id": "agreement-threshold",
+      "page": "rules",
+      "label": "Agreement threshold",
+      "body": "Greater than 0 and at most 1, default 1. For multiple prior answers, the model is instructed to use this supporting or contradicting fraction when judging novelty.",
+      "fields": [
+        "extract.agreement_threshold"
+      ]
+    },
+    {
+      "id": "prior-instructions",
+      "page": "rules",
+      "label": "Prior instructions",
+      "body": "Nonempty closed-book instructions. The user input contains only the neutral probe question, so the prior request receives no proposed answer.",
+      "fields": [
+        "extract.prior_instructions"
+      ]
+    },
+    {
+      "id": "comparison-instructions",
+      "page": "rules",
+      "label": "Comparison instructions",
+      "body": "Nonempty instructions for comparing the claim with the independent prior answer. The runner adds a reason request and, for multiple samples, the threshold guidance. Novelty and agreement output checks remain enforced.",
+      "fields": [
+        "extract.comparison_instructions"
+      ]
+    },
+    {
+      "id": "assessment-instructions",
+      "page": "rules",
+      "label": "Assessment instructions",
+      "body": "Nonempty instructions used by claim_assessment. They request a prior answer, agreement, novelty and reason while the claim is visible.",
+      "fields": [
+        "extract.assessment_instructions"
+      ]
+    },
+    {
+      "id": "grade-strategy",
+      "page": "rules",
+      "label": "Grading strategy",
+      "body": "Evidence_first, the default, checks grounding, lifetime, novelty, destination and retention. Custom uses your replacement rubric. The model proposes the verdict and route in either case.",
+      "fields": [
+        "grade.strategy"
+      ]
+    },
+    {
+      "id": "grade-instructions",
+      "page": "rules",
+      "label": "Custom grading instructions",
+      "body": "Required nonempty text for custom grading. Keep null with evidence_first. Custom instructions also own routing; the output protocol is appended separately.",
+      "fields": [
+        "grade.instructions"
+      ]
+    },
+    {
+      "id": "routing-rules",
+      "page": "rules",
+      "label": "Routing instructions",
+      "body": "With evidence_first, null uses the built-in destination rubric; nonempty text replaces that hypothesis. Keep null with custom grading.",
+      "fields": [
+        "grade.routing_rules"
+      ]
+    },
+    {
+      "id": "grade-attempts",
+      "page": "rules",
+      "label": "Grading attempts",
+      "body": "An integer from 1 to 3, default 3, for obtaining a valid model grade. Exhaustion records an error and leaves the item pending for a deliberate next attempt.",
+      "fields": [
+        "grade.max_attempts"
+      ]
+    },
+    {
+      "id": "queue-text",
+      "page": "queue",
+      "label": "Claim text",
+      "body": "A self-contained statement, 1 to 16000 characters. Editing it requires the literal evidence at the same time and creates a new candidate identity.",
+      "fields": [
+        "queue.text"
+      ]
+    },
+    {
+      "id": "queue-evidence",
+      "page": "queue",
+      "label": "Literal evidence",
+      "body": "The source span that supports the claim, 1 to 16000 characters. Supply it together with claim text when editing knowledge. Credential-shaped input is rejected before storage.",
+      "fields": [
+        "queue.prompt_evidence"
+      ]
+    },
+    {
+      "id": "queue-hold",
+      "page": "queue",
+      "label": "Hold",
+      "body": "Stops this candidate from approval or handoff while you review it. Editing a review field clears applied approval. Releasing a hold leaves the proposal awaiting a fresh decision.",
+      "fields": [
+        "queue.hold"
+      ]
+    },
+    {
+      "id": "queue-note",
+      "page": "queue",
+      "label": "Review note",
+      "body": "Optional admin context, up to 2000 characters. Saving a review edit returns the candidate to pending review.",
+      "fields": [
+        "queue.note"
+      ]
+    },
+    {
+      "id": "queue-proposal",
+      "page": "queue",
+      "label": "Model proposal",
+      "body": "The model's accept or reject verdict, destination, reason and score are review evidence. Approve applies that proposal with an admin receipt. An explicit admin rejection records a separate veto and preserves the model judgment. Hold keeps an item pending.",
+      "fields": []
+    },
+    {
+      "id": "queue-status",
+      "page": "queue",
+      "label": "Queue status",
+      "body": "Pending awaits review; accepted or rejected records an applied decision; staged holds raw reusable knowledge; absorbed records a memory handoff; learned requires a provenance receipt. Staging alone records preparation.",
+      "fields": []
+    },
+    {
+      "id": "queue-selection",
+      "page": "queue",
+      "label": "Search and selection",
+      "body": "Search and filters narrow the visible table. Row selection chooses candidates for the actions displayed by the portal. Review their IDs and individual outcomes before a bulk save.",
+      "fields": []
+    },
+    {
+      "id": "revision",
+      "page": "queue",
+      "label": "Revision",
+      "body": "The API binds an edit to the version you read. Queue revisions are SHA-256 strings; other item revisions are integers. A 409 means the item changed. Reload it and reconsider your edit.",
+      "fields": [
+        "revision.expected_revision"
+      ]
+    },
+    {
+      "id": "schedule-enabled",
+      "page": "dreams",
+      "label": "Schedule enabled",
+      "body": "Development setting, available after the server gate opens. Enables eligibility checks. The default is false. Enabling requires at least one approved window and keeps training execution under the manual operator workflow.",
+      "fields": [
+        "schedule.enabled"
+      ]
+    },
+    {
+      "id": "schedule-timezone",
+      "page": "dreams",
+      "label": "Timezone",
+      "body": "Development setting, available after the server gate opens. An IANA timezone such as America/New_York, the default. Approved hours are interpreted in that zone, including its daylight-saving changes.",
+      "fields": [
+        "schedule.timezone"
+      ]
+    },
+    {
+      "id": "schedule-days",
+      "page": "dreams",
+      "label": "Approved days",
+      "body": "Development setting, available after the server gate opens. Choose the days on which a window starts. API values are Monday 0 through Sunday 6. An overnight window continues into the following day.",
+      "fields": [
+        "window.days"
+      ]
+    },
+    {
+      "id": "schedule-hours",
+      "page": "dreams",
+      "label": "Approved hours",
+      "body": "Development setting, available after the server gate opens. Start and end use local 24-hour HH:MM. Start is included and end is excluded. An earlier end crosses midnight. Equal start and end are rejected. Up to 30 windows are supported.",
+      "fields": [
+        "window.start",
+        "window.end",
+        "schedule.windows"
+      ]
+    },
+    {
+      "id": "schedule-idle",
+      "page": "dreams",
+      "label": "Minimum idle time",
+      "body": "Development setting, available after the server gate opens. Required idle seconds before eligibility, from 0 to 604800. The default is 900, or 15 minutes.",
+      "fields": [
+        "schedule.min_idle_seconds"
+      ]
+    },
+    {
+      "id": "schedule-active",
+      "page": "dreams",
+      "label": "Maximum active requests",
+      "body": "Development setting, available after the server gate opens. The largest supplied active-request count permitted for eligibility, from 0 to 1000. The default 0 requires an empty request count.",
+      "fields": [
+        "schedule.max_active_requests"
+      ]
+    },
+    {
+      "id": "dream-run",
+      "page": "dreams",
+      "label": "Staged run",
+      "body": "Development setting, available after the server gate opens. Run_id selects an existing nonempty sealed staging manifest. A dream job receives its own new ID and records who approved the plan.",
+      "fields": [
+        "dream.run_id"
+      ]
+    },
+    {
+      "id": "dream-not-before",
+      "page": "dreams",
+      "label": "Earliest time",
+      "body": "Development setting, available after the server gate opens. A timezone-aware timestamp. Readiness stays not_due until this time; the schedule window and idle checks must also pass.",
+      "fields": [
+        "dream.not_before"
+      ]
+    },
+    {
+      "id": "dream-context",
+      "page": "dreams",
+      "label": "Readiness inputs",
+      "body": "Development setting, available after the server gate opens. At is a timezone-aware check time. Idle_seconds and active_requests are nonnegative counts supplied by the admin. These values describe the check; the API does not measure live idle state.",
+      "fields": [
+        "dream_check.at",
+        "dream_check.idle_seconds",
+        "dream_check.active_requests"
+      ]
+    },
+    {
+      "id": "dream-result",
+      "page": "dreams",
+      "label": "Readiness result",
+      "body": "Development setting, available after the server gate opens. Eligible means the supplied context, approved window, stage permission and nonempty staging passed. Next_action is human_confirm. The result includes executes_training:false and each waiting reason.",
+      "fields": []
+    },
+    {
+      "id": "identity",
+      "page": "pockets",
+      "label": "Item ID",
+      "body": "A new ID uses 1 to 64 lowercase letters, numbers, underscores or hyphens, starting with a letter or number. IDs identify rules, jobs and pockets. Copies, imports, merges and successors need an unused target ID.",
+      "fields": [
+        "identity.id"
+      ]
+    },
+    {
+      "id": "pocket-topic",
+      "page": "pockets",
+      "label": "Topic",
+      "body": "A safe ID for the pocket's single declared topic. Merges require all source topics to match. Topic is a declared label; review the members for relevance.",
+      "fields": [
+        "pocket.topic"
+      ]
+    },
+    {
+      "id": "pocket-capacity",
+      "page": "pockets",
+      "label": "Capacity",
+      "body": "The maximum number of raw facts, from 1 to 2000. Extraction, import, copy and merge enforce it. A full open pocket can roll over to an empty successor with its own capacity.",
+      "fields": [
+        "pocket.capacity"
+      ]
+    },
+    {
+      "id": "pocket-candidates",
+      "page": "pockets",
+      "label": "Candidate IDs",
+      "body": "Select 1 to 200 approved reusable queue items. Extraction verifies their current approval and update targets, then records their source provenance. Memory-routed items belong in the memory handoff.",
+      "fields": [
+        "pocket.candidate_ids"
+      ]
+    },
+    {
+      "id": "pocket-facts",
+      "page": "pockets",
+      "label": "Fact IDs",
+      "body": "Copy selected existing members by ID, or omit the selection to copy every member. Unknown or repeated IDs are rejected.",
+      "fields": [
+        "pocket.fact_ids"
+      ]
+    },
+    {
+      "id": "pocket-sources",
+      "page": "pockets",
+      "label": "Merge sources",
+      "body": "Choose at least two source pockets of the same topic. Identical fact IDs with identical content are kept once; conflicting content under one ID blocks the merge.",
+      "fields": [
+        "pocket.sources"
+      ]
+    },
+    {
+      "id": "pocket-package",
+      "page": "pockets",
+      "label": "Shared package",
+      "body": "A version-1 raw_facts package carries ID, topic, capacity, statements, provenance and a SHA-256 content seal. Import verifies the seal and creates a local shared catalog. Tensor acceptance and learning remain separate lifecycle steps.",
+      "fields": [
+        "pocket.package"
+      ]
+    },
+    {
+      "id": "pocket-state",
+      "page": "pockets",
+      "label": "Pocket state",
+      "body": "Open pockets accept approved members. Rollover seals the full source and records its successor. Shared marks an imported package. Removing a portal catalog entry changes admin storage; native teacher slots are owned by the trigger lifecycle.",
+      "fields": []
+    },
+    {
+      "id": "autonomy-level",
+      "page": "autonomy",
+      "label": "Autonomy level",
+      "body": "Manual requires explicit candidate approval. Supervised permits grant-backed decisions within route and score limits, holding conflicts and updates for review. Automatic permits automatic decisions within its signed grant. The default is manual.",
+      "fields": [
+        "control.autonomy"
+      ]
+    },
+    {
+      "id": "auto-routes",
+      "page": "autonomy",
+      "label": "Automatic routes",
+      "body": "Supervised destinations allowed for automatic approval: weights, pocket and memory. The default is memory only. The model still proposes the destination.",
+      "fields": [
+        "control.auto_routes"
+      ]
+    },
+    {
+      "id": "min-score",
+      "page": "autonomy",
+      "label": "Minimum score",
+      "body": "Supervised approval requires a model score at or above this value, from 0 to 1. The default is 0.9. The score is a model judgment; inspect its reason.",
+      "fields": [
+        "control.min_score"
+      ]
+    },
+    {
+      "id": "permission",
+      "page": "autonomy",
+      "label": "Permission file",
+      "body": "A host-admin signed grant binds the storage root, execution mode, autonomy, allowed actions and expiry. The host provisions its private path. An explicit null policy value closes retention; omitting the field allows the host environment setting.",
+      "fields": [
+        "control.permission_file"
+      ]
+    },
+    {
+      "id": "authority",
+      "page": "autonomy",
+      "label": "Signed authority",
+      "body": "Available means the controller verified a grant for the checked action. Inspect the admin ID and expiry. Separate bearer access lets the browser reach the API; action authority comes from this grant.",
+      "fields": []
+    },
+    {
+      "id": "connection-url",
+      "page": "system",
+      "label": "Engine connection",
+      "body": "The default portal runs beside the engine on the Spark head. Advanced can select another engine by URL and API key. The host stores that target privately and proxies API requests; the browser stays on the same origin.",
+      "fields": [
+        "connection.url",
+        "runtime.port"
+      ]
+    },
+    {
+      "id": "bearer",
+      "page": "system",
+      "label": "Engine API key",
+      "body": "The host loads its private mode0600 engine credential. Simple uses the portal password and session instead. Advanced Connect to an engine can accept a separate key, which the host saves privately. Keep keys out of shared exports and URLs.",
+      "fields": [
+        "connection.token"
+      ]
+    },
+    {
+      "id": "mode",
+      "page": "system",
+      "label": "Execution mode",
+      "body": "Harness runs the portable funnel outside the engine host; spark runs it beside the engine. The host-controlled mode must match the policy. Selecting a mode describes where the process runs; relocating it is an operator action.",
+      "fields": [
+        "control.mode"
+      ]
+    },
+    {
+      "id": "runtime-model",
+      "page": "system",
+      "label": "Model",
+      "body": "The generation model name supplied to the funnel client. It is a runtime argument, separate from policy fields. Verify the connected host's current identity before a native operation.",
+      "fields": [
+        "runtime.model"
+      ]
+    },
+    {
+      "id": "runtime-endpoint",
+      "page": "system",
+      "label": "Generation endpoint",
+      "body": "The head-owned chat endpoint used by the funnel client. The client appends /v1 when needed. The TP=2 worker participates in serving and has no generation API.",
+      "fields": [
+        "runtime.endpoint"
+      ]
+    },
+    {
+      "id": "runtime-timeout",
+      "page": "system",
+      "label": "Request timeout",
+      "body": "The host sets seconds allowed per model request. Extraction CLI defaults to 180; the admin API defaults to 120 through --timeout. The local portal proxy allows 900 seconds per API operation through --api-timeout (positive and finite), covering bounded model protocol retries. A timeout remains visible; the same source can be retried without duplicate queue insertion.",
+      "fields": [
+        "runtime.timeout"
+      ]
+    },
+    {
+      "id": "traffic-policy",
+      "page": "system",
+      "label": "Traffic collection design",
+      "body": "Collection is OFF by default. Enabling capture requires explicit owner approval, an approved window, trusted per-request consent and configured per-user exclusions. Rule and schedule editors keep their own planning scope.",
+      "fields": [
+        "traffic.enabled",
+        "traffic.exclude_user_ids",
+        "traffic.windows"
+      ]
+    },
+    {
+      "id": "demo",
+      "page": "system",
+      "label": "Demo mode",
+      "body": "Fictional data and edits live in browser memory. The portal labels Demo explicitly. Connect to the API to work with its stored data and authority.",
+      "fields": [
+        "connection.demo"
+      ]
+    },
+    {
+      "id": "api-errors",
+      "page": "system",
+      "label": "API errors",
+      "body": "400 means invalid input;401 requires sign-in or a valid Advanced connection;403 means the requested action or origin was denied;404 means the item or route is missing;409 means changed or conflicting data;429 means wait before another sign-in attempt. Refresh current data before resolving a conflict.",
+      "fields": []
+    },
+    {
+      "id": "keyboard",
+      "page": "system",
+      "label": "Keyboard controls",
+      "body": "Outside an input or open panel, A switches Simple and Advanced. In Queue, / focuses search. Escape closes a panel. In Advanced Queue, Ctrl+Enter or Command+Enter reviews selected rows for bulk approval.",
+      "fields": []
+    },
+    {
+      "id": "queue-reject",
+      "page": "queue",
+      "label": "Rejection reason",
+      "body": "Required nonempty text for an explicit admin veto. The API records the admin identity and time while preserving the model proposal. Completed handoffs require a linked update.",
+      "fields": [
+        "queue.reason"
+      ]
+    },
+    {
+      "id": "policy-draft",
+      "page": "rules",
+      "label": "Next-run policy",
+      "body": "Save the full version-1 policy as a next-run draft. The active run retains its immutable policy. Export the draft and use it with a fresh run root to test the change.",
+      "fields": [
+        "policy.policy"
+      ]
+    },
+    {
+      "id": "api-host-settings",
+      "page": "system",
+      "label": "Host API settings",
+      "body": "The backend owner selects a fixed storage root at startup and exact allowed browser origins with --allow-origin. Maximum request bytes is a positive host setting, default 67108864 (64 MiB), changed with --max-body-bytes. HTTP 413 means the request exceeded that limit. The portal preserves the host boundary.",
+      "fields": [
+        "runtime.root",
+        "runtime.allowed_origins",
+        "runtime.max_body_bytes"
+      ]
+    },
+    {
+      "id": "learn-content",
+      "page": "queue",
+      "label": "Prepared content",
+      "body": "Paste text or upload a UTF-8 .txt, .md or .json file. The API accepts up to 1000000 characters; the portal file limit is 1 MB. JSON has exactly a facts array with 1 to 2000 objects containing statement and optional prompt_evidence. Each statement and evidence is nonempty and at most 16000 characters. Omitted evidence uses the supplied statement as the user assertion. Extra fields and duplicate statements are rejected. Example: {\"facts\":[{\"statement\":\"Fictional Lumen has three sample bays.\",\"prompt_evidence\":\"The Lumen specification lists three sample bays.\"}]}. Credential-shaped input is rejected before storage or model access.",
+      "fields": [
+        "learn.content"
+      ]
+    },
+    {
+      "id": "learn-format",
+      "page": "queue",
+      "label": "Input format",
+      "body": "Text asks GLM to discover atomic facts and verify literal evidence spans. JSON declares the facts directly. Manual intake records unmeasured novelty and skips blind novelty probes; GLM safety, grounding, relationship and destination grading still apply.",
+      "fields": [
+        "learn.format"
+      ]
+    },
+    {
+      "id": "learn-source",
+      "page": "queue",
+      "label": "Source reference",
+      "body": "A nonempty label, up to 512 characters, identifying your prepared source. Simple paste uses manual:portal; an upload uses manual:file: plus its filename. Advanced can set your own reference. The queue adds manual intent and the content hash. Keep the same reference for retry, and use a distinct reference for a distinct source.",
+      "fields": [
+        "learn.source_ref"
+      ]
+    },
+    {
+      "id": "learn-grading",
+      "page": "queue",
+      "label": "Prepared grading and retry",
+      "body": "Add for review queues the submitted version and grades its facts in order. A failed model review leaves the fact pending, shows an error and stops that pass. Grade fact retries an ungraded manual candidate against its current queue revision. Existing proposals and decided items keep their judgments on replay. Manual autonomy waits for explicit admin approval; supervised and Automatic use their signed permission bounds. Grading prepares knowledge for the normal memory or staging handoff.",
+      "fields": []
+    },
+    {
+      "id": "dream-development-gate",
+      "page": "dreams",
+      "label": "Dream availability",
+      "body": "The single host-owned dream_features_enabled flag defaults to false. The API startup option --enable-dream-features opens development access only after dream-neurons passes its pocket-OFF recall bar. GET /system reports features.dream with enabled, label, status, owner and opening_criterion. All schedule and dream endpoints return HTTP 503 feature_unavailable: under development while closed. The browser reads this state and exposes no dream or schedule action in either layer. Queue, grading, rules and raw-fact pockets remain usable.",
+      "fields": [
+        "features.dream"
+      ]
+    },
+    {
+      "id": "portal-session",
+      "page": "system",
+      "label": "Portal security",
+      "body": "The lock is on by default. One password uses salted scrypt storage. The server persists hashes of random session tokens. Cookies are HttpOnly and SameSite=Strict, with Secure underHTTPS. One session_seconds value defaults to86400 and validates300..86400. New logins use the setting; existing login and expiry times remain unchanged by activity or settings edits. Logout, password change and Sign out other sessions revoke the appropriate sessions. Host and Origin checks protect changes; login attempts are rate-limited.",
+      "fields": [
+        "session.password_enabled",
+        "session.session_seconds"
+      ]
+    }
+  ]
+}
