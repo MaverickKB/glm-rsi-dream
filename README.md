@@ -1,9 +1,21 @@
 # GLM RSI Dream
 
-An experimental attention-memory loop for GLM on two NVIDIA DGX Spark (GB10)
-nodes with tensor parallelism of two (TP=2). It captures fact-conditioned teacher
-answers, fits numerical attention-memory rows with real gradients, checks
-free answers, and records a keep or reject decision. Backbone weights stay frozen.
+GLM RSI Dream fits a small attention-memory pocket for GLM-5.3-Flash EXL3 and
+serves it on two NVIDIA DGX Spark GB10 nodes, with the model split across the
+pair (tensor parallelism of two). A pocket is learned memory loaded alongside
+the model, like prefix tuning. The base weights stay frozen. The checkpoint
+you started with is the checkpoint you still have when the window closes.
+
+The working loop is ordinary and specific. The lesson facts are written into
+a prompt. The frozen model answers from that prompt. The trainer then fits 96
+key and value rows at each of 11 full-attention layers so those rows reproduce
+the attention readout of the longer prompt. A later tagged question can load
+the pocket, answer from the head node, and put the original containers back.
+
+The project name looks ahead to a dream consolidation step. That step is
+planned and is not built. Nothing in this checkout folds a pocket into the
+base weights. What you can run is capture, a real gradient fit, a keep or
+reject decision, tagged recall, and rollback of the original pair.
 
 ## Status
 
@@ -17,7 +29,13 @@ routing hook. This checkout provides the `glm-rsi-dream` supplied-dataset loop
 and tagged `ask` path. The results below identify the tested implementation;
 native qualification of this checkout's exact CLI remains a verification target.
 
-## Quick start: CPU dry run
+## Quick start
+
+Two ways in. A laptop can plan the loop and run the CPU checks. Fitting,
+recall, and rollback need the Spark pair, and they run only when you pass
+`--live`.
+
+### On a laptop
 
 From this checkout, use Python 3.11 or 3.12:
 
@@ -31,37 +49,45 @@ glm-rsi-dream --config config.example.json --dry-run run
 python tools/prepare_baseline.py --config config.example.json
 ```
 
+The dry run prints a plan. It lists capture, a fit of 96 rows at 11
+full-attention layers, grading, a keep or reject decision, and restoration of
+the original pair. `prepare_baseline.py` without `--live` prints the
+provisioning plan and does not pull images or create containers.
+
 These two planning commands open no subprocess or network connection and create
 no run directory. The CPU tests exercise local contracts and attention gradients.
-They do not load GLM weights or test native Spark serving.
+They do not load GLM weights or test native Spark serving. A green CPU run
+confirms those local contracts. Learning acceptance still depends on generated
+answers and exact controls on the pair.
 
-## Quick start: Spark pair
+### On the Spark pair
 
-Live work requires exactly two NVIDIA DGX Spark GB10 nodes, Linux ARM64,
-working SSH between the coordinator and both ranks, Docker access through the
-standard Unix socket, and the external compatible TensorFold runtime and model
-files described in [UPSTREAM.md](UPSTREAM.md). The native containers supply CUDA,
-PyTorch, and their serving dependencies. Install `.[dev]` on the head if using the
-CPU checks there. Read [MODEL-TERMS.md](MODEL-TERMS.md) before any downloads.
+Live work needs exactly two NVIDIA DGX Spark GB10 nodes, Linux ARM64, working
+SSH between the coordinator and both ranks, Docker through the standard Unix
+socket, and the external TensorFold runtime and model files described in
+[UPSTREAM.md](UPSTREAM.md). The native containers supply CUDA, PyTorch, and
+their serving dependencies. Install `.[dev]` on the head if you want the CPU
+checks there. Read [MODEL-TERMS.md](MODEL-TERMS.md) before any downloads.
 
-Copy the checkout to the head Spark. Configure your own SSH identity, containers,
-head API address and port, fabric address/interface settings, and protected
-service probes:
+Copy the checkout to the head Spark. Put your own SSH identity, containers,
+head API address and port, fabric address and interface, and protected service
+probes in a local config file:
 
 ```sh
 cp config.example.json config.json
 # Edit config.json for this pair before using --live.
 ```
 
-Every operator host, storage directory, and listener port is configured in
-`config.json`. The `.example` addresses and angle-bracket fields are placeholders.
-Set each `work_dir` to an absolute, writable directory owned by your operator
-account. The example uses `/var/tmp/glm-rsi-dream`. Choose a private run directory,
-for example under `~/.cache/glm-rsi-dream`. Keep configuration and run data out of
-source control. Set dashboard and protected-service URLs to services you own on
-the pair. The worker remains rank 1 and exposes no generation API.
+Every operator host, storage directory, and listener port lives in
+`config.json`. The `.example` addresses and angle-bracket fields are
+placeholders. Set each `work_dir` to an absolute, writable directory owned by
+your operator account. The example uses `/var/tmp/glm-rsi-dream`. Choose a
+private run directory, for example under `~/.cache/glm-rsi-dream`. Keep
+configuration and run data out of source control. Point dashboard and
+protected-service URLs at services you own on the pair. The worker stays rank
+1 and exposes no generation API.
 
-For an existing compatible serving pair, run on the head Spark:
+For a pair that is already serving a compatible runtime, run on the head Spark:
 
 ```sh
 glm-rsi-dream --config config.json --run ~/.cache/glm-rsi-dream/synthetic-1 \
@@ -69,53 +95,215 @@ glm-rsi-dream --config config.json --run ~/.cache/glm-rsi-dream/synthetic-1 \
   --live run
 ```
 
-The supplied example is fictional. Its fixed teaching and evaluation questions
-are separate from the model-generated plan4 source smoke and have no published
-accuracy score. The packaged loop consumes the supplied lesson and evaluation
-files; it does not generate those files for you.
+The supplied lesson is fictional. Its teaching and evaluation questions are
+fixed files, separate from the model-generated plan4 smoke, and they have no
+published accuracy score. The packaged loop reads the lesson and evaluation
+you pass. It does not write those files for you.
+
+The loop trains each rank one after the other, grades development answers,
+closes fitting before the held-out pass, checks controls, and restores the
+original containers. A completed rejection returns exit code 2. An operation
+failure returns 1. Afterward, read `check.json` and `restore-parity.json` in
+the run directory. `check.json` holds the keep or reject verdict. A missing
+`restore-parity.json` means the original pair was not accepted back.
 
 For a fresh pair, first inspect the offline provisioning plan, then use
 `python tools/prepare_baseline.py --config config.json --live` after reviewing
 its external download terms and launch settings. Fresh provisioning and the
-pinned image/checkpoint compatibility still need native qualification.
+pinned image and checkpoint compatibility still need native qualification.
+Existing container names stop provisioning before anything is created.
 
-The loop trains each rank sequentially, checks development answers, closes
-fitting before the held-out pass, checks controls, and restores the original
-containers. A completed rejection returns exit code 2; an operation failure
-returns 1. Inspect `check.json` and `restore-parity.json` inside your run directory.
+### Read a kept pocket
 
-A kept, restored memory can be read in another temporary serving window:
+A pocket that was kept, and whose window restored the originals, can be read
+in another temporary serving window:
 
 ```sh
 glm-rsi-dream --config config.json --run ~/.cache/glm-rsi-dream/synthetic-1 \
   --question 'What is the Linden project helper called?' --live ask
 ```
 
-The `ask` command uses this package's tagged evaluation path. An ordinary
-untagged request bypasses its memory installation. The later source bundle's
-ordinary-chat routing passed the bounded qualification described below; that
-routing hook is separate from this checkout's `ask` command.
+`ask` uses this package's tagged evaluation path. The question still has to
+match the lesson's route terms, or the pocket stays unloaded. An ordinary
+untagged request does not install the pocket. The later source bundle's
+ordinary-chat routing passed the bounded qualification in
+[results/RESULTS.md](results/RESULTS.md). That routing hook is a different
+path from this checkout's `ask` command.
 
-## How it works
+When the ask window ends, the original containers are started again. The
+pocket files remain in the private run directory. They are not written into
+the model.
 
-At each of 11 full-attention layers, the trainer fits 96 shared key/value memory
-rows to the attention readout of fact-conditioned teacher trajectories. The
-objective is attention-output mean squared error, with frozen teacher queries
-and causal suffix history. Native readout and directional-gradient checks run
-before fitting. Learned rows use the runtime's FP8 cache format; recurrent KDA
-state from the full teacher prefix remains an anchor.
+### Put the originals back by hand
 
-The coordinator runs on the head Spark. Capture and training run on both native
-ranks; generation and model grading use the head API. Deterministic assertion
-checks and GLM semantic judgments both contribute to acceptance. The package
-requires configured recall and gain thresholds, per-fact coverage, and exact
-control preservation. Scope admission uses explicit route terms and request
-tags. A passing test suite or lower fitting loss alone cannot accept a memory.
+STOP requests and restoration stay explicit:
 
-## Source results
+```sh
+glm-rsi-dream --config config.json --run ~/.cache/glm-rsi-dream/synthetic-1 \
+  --live restore
+```
 
-These are source experiments on small sets, supplied for this release. Model
-self-grading is explicitly identified below. See [results/RESULTS.md](results/RESULTS.md).
+A `STOP` file in the run directory requests restoration during an active loop.
+
+## How a pocket is trained, loaded, recalled, and rolled back
+
+A pocket stands in for a long fact prefix. Training compares the model's own
+attention, on answers the model just wrote while the facts were still in the
+prompt, with the same attention using only 96 learned rows. The base weights
+are not parameters of that fit.
+
+```mermaid
+flowchart TD
+  facts["Lesson facts written into the teacher prefix"]
+  prefill["Both ranks prefill that prefix on the frozen model"]
+  answers["The head generates the model's own answers with the facts still in the prompt"]
+  review["GLM keeps only grounded teacher answers"]
+  capture["Queries and native attention outputs are captured along those answers"]
+  fit["Gradients update only 96 key and value rows at each of 11 full-attention layers"]
+  pocket["The pocket is saved beside the checkpoint"]
+  dev["Development questions are graded with the pocket loaded"]
+  holdout["Fitting closes, then the sealed holdout is graded"]
+  gate{"Recall, gain, per-fact coverage, and exact controls"}
+  keep["KEEP stores the pocket in the private run directory"]
+  reject["REJECT leaves no pocket for a later ask"]
+  back["Candidate containers stop and the original pair starts"]
+  load["A later ask loads the pocket into the request cache on both ranks"]
+  reply["The head API answers the tagged question"]
+  back2["The window ends and the original pair starts again"]
+
+  facts --> prefill --> answers --> review --> capture --> fit --> pocket
+  pocket --> dev --> holdout --> gate
+  gate -->|pass| keep
+  gate -->|fail| reject
+  keep --> back
+  reject --> back
+  keep --> load --> reply --> back2
+```
+
+The dream consolidation step is absent from this diagram on purpose. It is
+planned, and this repository does not implement it.
+
+### Train
+
+On the head, the coordinator freezes the lesson and the evaluation file into
+a new private run directory. Training, development, and held-out questions
+must not share ids or wording. Every split must cover every fact. Protected
+prompts and near misses must fall outside the lesson's route terms.
+
+The teacher prefix is the system prompt plus the lesson statements under
+`Reference facts:`. Newline tokens pad it until it covers the 96 memory slots
+and its length is a multiple of 128. Both ranks prefill that prefix on the
+frozen model and snapshot the full key/value cache and the recurrent state.
+The backbone tensors are left untouched.
+
+For each training question, the head generates an answer with that full prefix
+installed, so the facts are still in the prompt. GLM grades the answer. If
+the answer is outside the fact scope, capture stops. The accepted answer is
+then appended, and a second forward records the queries, the cache, and the
+native attention output along the answer span.
+
+Each rank then fits, one rank after the other. Torch is seeded from the
+manifest value 3153. At layers 3, 7, 11, 15, 19, 23, 27, 31, 35, 39, and 43,
+the trainer takes 96 rows spaced along the teacher prefix cache and treats
+only those rows as parameters. The target is the attention readout of the
+full teacher cache on the frozen queries from the model's own answer, with
+the causal suffix history held fixed. The loss is mean squared error of that
+readout. The objective recorded with the fit is native attention-output
+matching on frozen teacher queries.
+
+Before the fitting loop, the relative residual norm against the native
+attention output has to stay at or below 0.01, and a directional
+finite-difference check has to agree with the analytic gradient within a
+relative error of 0.08. The fitting loop runs Adam for 300 steps at learning
+rate 0.01. The rows are stored in the runtime's FP8 cache format. The
+recurrent KDA state from the full teacher prefix is kept as an anchor and
+restored with the pocket. A lower fitting loss, by itself, does not accept
+a memory.
+
+### Load
+
+The pocket is a pair of rank-owned tensor files in the private run directory,
+plus the frozen prefix the KDA anchor came from. Loading happens inside a
+temporary serving window. The original containers are cloned, the originals
+are stopped, and the candidates serve. Candidate restart is turned off, so a
+failed candidate cannot come back after a planned restore.
+
+On a tagged request that asks for memory, both ranks reserve the prompt
+extent and agree on the geometry before any model forward. They then install
+the 96 learned rows into that request's cache and restore the teacher-prefix
+KDA anchor. Those rows take the place of the long fact prefix, and the
+question tokens follow them. The ordinary system prefix has to match the
+frozen template before that swap, or the install is refused. If the ranks
+do not agree, that request's slot is released and the head refuses the
+request. A failed rank exchange marks the decoder broken. Health then
+reports the pair desynchronized, and the head returns HTTP 503 until
+recovery. The base weights stay as they were throughout.
+
+An untagged request does not install the pocket. A tagged request whose
+wording misses the lesson routes does not install it either. In this
+checkout, route terms are explicit word groups on the lesson, and the request
+carries evaluation metadata. The worker remains rank 1 and has no generation
+listener. Only the head API generates.
+
+### Recall
+
+Recall is the `ask` command, or the held-out and development passes inside
+`run`. The pocket is used only when the request is tagged, the route admits
+the question, and a selected pocket is named. The head then generates with
+temperature 0.
+
+Inside `run`, development questions are graded first. If grounded development
+recall is below the configured bar, the held-out questions stay unopened and
+the verdict is reject. When development passes, fitting is closed and the
+sealed held-out questions are scored three ways: the pocket, the same
+questions with no memory, and the full fact prefix still in the prompt.
+Protected prompts and near misses must match the no-memory replies, and their
+receipts must show that memory was not installed.
+
+The example config asks for held-out grounded recall of at least 0.8, a gain
+of at least 0.2 over the no-memory baseline, development recall of at least
+0.8, and at least one grounded held-out answer for every fact. Deterministic
+alias checks and GLM's own semantic judgment both have to agree before an
+answer counts as grounded. A passing CPU suite cannot substitute for that.
+
+`ask` opens a window only for a run whose verdict was keep, whose restore
+already succeeded, and whose frozen lesson contract, package manifest, and
+tensor hashes still match. It answers one question and restores the originals
+again.
+
+### Roll back
+
+Rollback puts the original containers back. The checkpoint was never updated,
+and the lesson remains in the pocket files. The controller stops every owned
+candidate and trainer, starts the original worker and then the original head,
+and checks that each original is running with the same
+container id, Config, HostConfig, and image recorded at the start. Protected
+probes run again. The preservation check compares reply text bytes, finish
+reason, and completion-token count for the configured protected prompts.
+
+Host-local guards watch memory, sustained swap-out, dashboard and protected
+services, and the recovery deadline. They restore the originals on a failed
+probe or when that deadline arrives. If the coordinator itself is lost, a
+window can stay up until a guard sees a failure or reaches the deadline. A
+`STOP` file is the explicit request to restore during a live loop.
+
+The later installed source bundle demonstrated retained memory and exact
+rollback on its configured pair, including both original container identities
+and 8/8 complete protected replies. Real interruption, paired corruption,
+fresh provisioning, and this checkout's own recovery path remain native
+verification targets.
+
+## What the source experiments found
+
+The source experiments are small, and they are the evidence this release has.
+On Round 3, a 96-row pocket answered 34 of 36 held-out questions in a grounded
+way. The same questions scored 35 of 36 with the full fact prefix still in
+the prompt, and 1 of 36 with neither. That comparison is what this method
+measures: a short learned cache standing in for a longer document prefix.
+The set is consumed, so it stays a result about that set.
+
+Model self-grading is identified below wherever it was used. The full record
+is [results/RESULTS.md](results/RESULTS.md).
 
 | Experiment | Learned held-out | Baseline | Full in-context carrier | Development | Controls |
 | --- | --- | --- | --- | --- | --- |
@@ -176,43 +364,58 @@ identity. Candidate restart is disabled. The controller monitors memory,
 sustained swap-out, and head health. Host-local guards also check dashboard and
 protected services and restore their original on a failed probe or the recovery
 deadline. Coordinator loss can leave a window active until a guard observes a
-failure or reaches that deadline. STOP requests and restoration remain explicit:
-
-```sh
-glm-rsi-dream --config config.json --run ~/.cache/glm-rsi-dream/synthetic-1 \
-  --live restore
-```
-
-A `STOP` file in the run directory requests restoration during an active loop.
-The later installed source bundle demonstrated retained memory and exact
-rollback on its configured pair. Real interruption, paired corruption, fresh
-provisioning, and this checkout's own recovery path remain native verification
-targets.
+failure or reaches that deadline.
 
 This is short-context attention-output distillation with a retained recurrent
-anchor. It is not full-model answer-loss training. Dense-context readout, explicit
-scope terms, tiny consumed sets, quantized decoding, malformed model grading,
-and self-grading bias bound its evidence. Broad generalization and many-memory
-composition remain unverified. Ordinary-chat source serving has the finite
-qualification above. Captured tensors and prompts can contain private facts
-and belong only in private run storage.
+anchor. It is attention matching against the model's own docs-in-prompt
+answers, with the base weights frozen. Captured tensors and prompts can
+contain private facts and belong only in private run storage.
+
+Dense-context readout, explicit scope terms, tiny consumed sets, quantized
+decoding, malformed model grading, and self-grading bias bound the evidence.
+Broad generalization and many-memory composition remain unverified.
+Ordinary-chat source serving has the finite qualification above. The dream
+consolidation step that the project name points at is still only a plan.
 
 ## Glossary
 
+- **Pocket:** a separately retained numerical memory. It holds 96 learned key
+  and value rows at each fitted full-attention layer, plus the recurrent KDA
+  anchor from the teacher prefix. It is loaded into a request's attention
+  cache beside the frozen model.
+- **Base weights:** the GLM-5.3-Flash EXL3 checkpoint. Training, loading,
+  recall, and rollback leave these tensors as they were.
+- **Teacher prefix:** the system prompt plus the lesson facts, written out as
+  text and prefilled so the model can answer with the documents in the prompt.
+  The pocket is trained to match the attention readout of this prefix.
+- **Docs-in-prompt answer:** an answer the frozen model generated while that
+  teacher prefix was installed. Those answers, after a groundedness check,
+  are the trajectories the pocket is fitted to.
+- **Dream consolidation:** a future step, named by the project, that is not
+  implemented. This checkout stops at a separate pocket, a keep or reject
+  decision, and restoration of the original containers.
 - **RSI:** recursive self-improvement, used here for the bounded capture, fit,
   check, and keep/reject cycle.
 - **TP=2:** one model partitioned across two ranks.
-- **DSA:** the model's full-attention sites where memory rows are fitted.
+- **Rank:** one Spark in the pair. Rank 0 is the head. Rank 1 is the worker
+  and has no generation listener.
+- **DSA:** the model's full-attention sites where memory rows are fitted. This
+  release fits layers 3, 7, 11, 15, 19, 23, 27, 31, 35, 39, and 43.
 - **KDA:** the model's recurrent attention state retained from the teacher prefix.
 - **Carrier:** the full fact-conditioned prefix used as a comparison.
 - **Grounded:** a complete supported answer without unsupported additions.
-- **Pocket:** a separately retained numerical memory with learned attention
-  rows and a recurrent anchor.
+  In this checkout an answer counts as grounded only when a deterministic alias
+  check and GLM's semantic judgment both pass.
+- **KEEP / reject:** the loop's decision. KEEP means the pocket files may be
+  loaded later by `ask`. Reject means they may not. The window always attempts
+  to restore the original containers, and a later `ask` requires that restore
+  to have succeeded.
 - **Continuity:** using current project context and prior decisions when
   continuing work; this experiment measures first-turn tool use.
 - **Admission:** checks that determine whether a request can use a pocket.
-- **Protected reply:** a complete response to a preservation probe that must
-  match the original response byte for byte.
+- **Protected reply:** a complete response to a preservation probe. The check
+  compares reply text bytes, finish reason, and completion-token count with
+  the original response.
 - **Call rate (call frequency):** the fraction of tasks emitting a continuity tool call in the
   first turn, counted separately from semantic quality.
 - **First-action quality:** the fraction of tasks whose first proposed action
@@ -226,6 +429,100 @@ and belong only in private run storage.
 - **Tagged control:** a request carrying the package's evaluation metadata while
   its policy keeps memory off.
 - **Held-out:** questions excluded from fitting and selection, consumed once.
+- **Development:** questions used as a gate before the held-out set is opened.
+  Acceptance is decided on the held-out questions.
+
+## FAQ
+
+### Does this write the lesson into GLM's weights?
+
+The lesson stays in the pocket. The fit's only parameters are those rows.
+The base checkpoint stays frozen while the pocket is trained, loaded, and
+recalled. Rollback restores the original serving containers. The checkpoint
+was never edited, so there is no weight change to undo.
+
+### What is a pocket, in one sentence?
+
+A pocket is a small learned key/value memory, plus a recurrent anchor from
+the fact prefix, that the pair loads beside GLM for an admitted request, in
+like prefix tuning.
+
+### Is the dream step working?
+
+That step is planned, and this repository does not implement it. A kept
+pocket remains a file loaded alongside the model. These docs describe the
+capture, fit, recall, and rollback path that exists today.
+
+### Why do the learned scores sit so close to the full prompt?
+
+That is what the loss asks for. The rows are trained so their attention
+readout matches the model's own readout when the facts are still written in
+the prompt. On Round 3 the pocket reached 34/36 grounded held-out answers
+and the full carrier reached 35/36, against a 1/36 baseline. The set is
+small and already consumed.
+
+### Which numbers belong to this checkout?
+
+The CPU checks belong to this checkout. The live scores in the table above
+are source experiments, and the ordinary-chat serving numbers belong to the
+later `glm-attnmem` bundle with its own routing hook. This checkout's live
+command is the supplied-dataset loop and the tagged `ask` path. Native
+qualification of this exact CLI is still open. The fictional Linden lesson
+ships so you can run the loop. It has no published score.
+
+### Will a normal chat message use the pocket?
+
+In this checkout, memory is installed for a tagged request whose wording
+matches the lesson routes. An ordinary untagged request bypasses the pocket.
+The later bundle's ordinary-chat hook is a separate path, and its routing
+evidence stays the finite checks in the results: a preserved miss on one
+name-verb phrasing, a repair, and no general guarantee.
+
+### What does KEEP actually save?
+
+KEEP writes the verdict after the original containers are back. The pocket
+tensors and the frozen lesson stay in the private run directory. A later
+`ask` opens a new temporary window, loads those files, answers, and restores
+the originals again. The candidate pair is stopped as part of that restore.
+The tensors can encode the lesson, so they stay private.
+
+### What does rollback put back?
+
+The original containers, with the same id, Config, HostConfig, and image, and
+the same protected-reply bytes the window recorded before the swap. Pocket
+files in the run directory are left in place. Whether they can be loaded
+again depends on the keep verdict and on those hashes still matching.
+
+### Why was the continuity pocket kept if call rate did not move?
+
+Call rate stayed 17/18 before and after teaching. GLM's KEEP followed the
+original quality rule: self-graded grounded first actions moved from 14/18
+to 16/18, with the full concept carrier at 17/18. Calls were recorded, not
+executed. The pocket is a tagged experimental artifact and is inactive in
+ordinary serving. A future experiment whose main goal is call frequency
+needs a positive held-out frequency gain as well as quality and controls.
+The scored run stays as it was.
+
+### What has to be true before a new lesson counts as learned?
+
+Use a fresh private run and a held-out set that was sealed before fitting
+and has not been used to train or to choose. The loop has to clear the
+configured development bar, then the held-out recall, gain, per-fact
+coverage, and exact controls. Generated answers and exact control
+preservation are the acceptance evidence. A lower training loss, a CPU test
+run, or a grade the model gave itself without the deterministic check, is
+not a substitute. Never fit or select against a holdout you have already
+consumed.
+
+### Where do real facts go?
+
+Keep real lessons, evaluation files, and run directories outside source
+control. `config.json` is ignored and holds host addresses, SSH identity,
+and ports. The loop copies the lesson into the private run directory, and
+the pocket tensors can encode those facts. The repository examples are
+fictional. Publish aggregate scores if you share a result, and leave out
+run receipts, captures, prompts, and anything that fingerprints the private
+data.
 
 ## Contributing and licenses
 
