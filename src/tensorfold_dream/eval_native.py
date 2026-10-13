@@ -145,7 +145,8 @@ def parse_admit(record, payload, offset):
         record["eval"] = envelope["eval"]
         return record
 
-    return call(parse, default=record)
+    # Both ranks must see a valid eval tag, including a rank whose observer is disabled.
+    return call(parse, default=record, force=True)
 
 
 def admitted(decoder, record):

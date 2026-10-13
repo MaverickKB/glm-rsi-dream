@@ -4,7 +4,7 @@ GLM RSI Dream is an experimental two-node NVIDIA DGX Spark GB10 attention-memory
 loop using TP=2. Preserve the capture, real 96-row gradients at all 11
 full-attention sites, generated-answer checking, and keep/reject path.
 
-The status is v0.0.1, an experimental release. A later installed source bundle
+The status is v0.0.2, an experimental release. A later installed source bundle
 passed the raw-fact loop, bounded ordinary-chat serving, and exact rollback.
 This checkout retains its supplied-dataset loop and tagged ask path; preserve
 that implementation distinction when describing native acceptance. CPU dry runs

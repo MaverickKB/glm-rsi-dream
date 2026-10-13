@@ -105,6 +105,74 @@ def test_paired_receipts_require_exact_rank_artifact_and_zero_offpath(tmp_path):
             cluster.infer(body, {'use_memory': False})
 
 
+def test_restore_probe_keeps_a_failure_seen_during_the_probe(tmp_path):
+    from glm_rsi_dream.controller import Cluster
+    calls = {'count': 0}
+
+    def infer(body, policy=None):
+        calls['count'] += 1
+        if calls['count'] > 1:
+            cluster.failure = SafetyError('rank exited during restore probe')
+        reply = {'choices': [{'message': {'content': 'Exact'}, 'finish_reason': 'stop'}],
+                 'usage': {'completion_tokens': 1}}
+        return reply, []
+
+    def stage(*args, **kwargs):
+        raise SafetyError('stop before cutover')
+
+    cluster = Cluster(load_config(ROOT / 'config.example.json'), tmp_path / 'run',
+                      transport=SimpleNamespace(stage=stage))
+    cluster.preflight = lambda: {'snapshot_sha256': 'a' * 64}
+    cluster.manifest = lambda: None
+    cluster.restore = lambda: None
+    cluster.infer = infer
+    with pytest.raises(SafetyError, match='stop before cutover'):
+        with cluster.window(['What is 7 plus 8?']):
+            raise AssertionError('window yielded after preflight failed')
+    assert cluster.failure is not None
+    assert 'restore probe' in str(cluster.failure)
+
+
+def test_health_rejects_explicit_rank_desync_body(tmp_path, monkeypatch):
+    import io
+    import urllib.error
+    import urllib.request
+
+    from glm_rsi_dream.controller import Cluster
+    cluster = Cluster(load_config(ROOT / 'config.example.json'), tmp_path / 'run',
+                      transport=SimpleNamespace())
+    url = cluster.config['api_url'] + '/health'
+    body = b'{"ok": false, "rank_desynchronized": true, "streams": {}}'
+
+    class Response:
+        def __init__(self, status, raw):
+            self.status = status
+            self.raw = raw
+
+        def read(self, limit):
+            return self.raw
+
+        def __enter__(self):
+            return self
+
+        def __exit__(self, exc_type, exc, traceback):
+            return False
+
+    monkeypatch.setattr(urllib.request, 'urlopen', lambda *args, **kwargs: Response(200, body))
+    with pytest.raises(SafetyError, match='rank'):
+        cluster.health()
+    monkeypatch.setattr(urllib.request, 'urlopen', lambda *args, **kwargs: Response(200, b'ready'))
+    cluster.health()
+    error_body = io.BytesIO(body)
+
+    def fail(*args, **kwargs):
+        raise urllib.error.HTTPError(url, 503, 'unavailable', {}, error_body)
+
+    monkeypatch.setattr(urllib.request, 'urlopen', fail)
+    with pytest.raises(SafetyError, match='rank'):
+        cluster.health()
+
+
 def test_protected_restore_failure_stays_visible(tmp_path):
     from glm_rsi_dream.controller import Cluster
     from glm_rsi_dream.native_cluster import AttentionCluster

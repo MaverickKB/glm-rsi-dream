@@ -1,10 +1,11 @@
 # Source experiment results
 
-Status: **v0.0.1**, experimental. The later installed research source bundle
+Status: **v0.0.1** evidence, experimental. The later installed research source bundle
 completed a raw-fact learning cycle, retained ordinary-chat serving, and executed
 exact rollback. It uses the `glm-attnmem` updater and an ordinary-chat hook;
 this checkout provides a supplied-dataset loop and tagged `ask` path. Aggregate
 source results identify that distinction rather than certify every public CLI path.
+These scores were not recomputed for package 0.0.2.
 
 ## Round 3
 

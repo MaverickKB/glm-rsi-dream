@@ -228,3 +228,60 @@ def test_failed_rank_exchange_marks_decoder_broken():
     with pytest.raises(RuntimeError, match='rank exchange failed'):
         request_memory.gather_status(value, [1])
     assert value.broken is failure
+
+
+class RowBuffer:
+    def __init__(self, values):
+        self.values = list(values)
+
+    def fill_(self, number):
+        self.values = [number for _ in self.values]
+
+    def zero_(self):
+        self.values = [0 for _ in self.values]
+
+
+def test_rank_exchange_failure_releases_slot_and_clears_installed_rows(monkeypatch):
+    value = decoder()
+    rows = RowBuffer([1, 1, 1])
+    value.lanes[0].st.kc = [rows]
+    value.w.meta[KEY]["active"][0] = {"sid": 0, "effective_length": 97}
+    calls = {"count": 0}
+
+    def gather(words):
+        calls["count"] += 1
+        if calls["count"] == 1:
+            return [list(words), list(words)]
+        raise RuntimeError("rank exchange failed")
+
+    def install(decoder_value, record):
+        decoder_value.lanes[0].st.kc[0].fill_(4)
+        record["memory_activated"] = True
+
+    value.g._gather_ints = gather
+    monkeypatch.setattr(attention_native, "install", install)
+    with pytest.raises(RuntimeError, match="rank exchange failed"):
+        request_memory.complete_admission(value, 0)
+    assert value.broken is not None
+    assert 0 not in value.lanes
+    assert rows.values == [0, 0, 0]
+
+
+def test_agreed_install_keeps_attention_rows(monkeypatch):
+    value = decoder()
+    rows = RowBuffer([0, 0])
+    value.lanes[0].st.kc = [rows]
+    value.w.meta[KEY]["active"][0] = {"sid": 0, "effective_length": 97}
+
+    def gather(words):
+        return [list(words), list(words)]
+
+    def install(decoder_value, record):
+        decoder_value.lanes[0].st.kc[0].fill_(4)
+        record["memory_activated"] = True
+
+    value.g._gather_ints = gather
+    monkeypatch.setattr(attention_native, "install", install)
+    request_memory.complete_admission(value, 0)
+    assert rows.values == [4, 4]
+    assert 0 in value.lanes

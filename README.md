@@ -19,10 +19,12 @@ reject decision, tagged recall, and rollback of the original pair.
 
 ## Status
 
-**v0.0.1** (Python package version `0.0.1`), an experimental release. A clean
+**v0.0.2** (Python package version `0.0.2`), an experimental release. A clean
 installed source bundle completed the raw-fact loop on the Spark pair, from
 model-authored questions through native fitting, generated answers, KEEP, and
 ordinary-chat retention. The documented rollback restored the exact originals.
+The source-result tables below are unchanged aggregates from that bundle. This
+revision does not add a measured score.
 
 That later research bundle uses the `glm-attnmem` updater and an ordinary-chat
 routing hook. This checkout provides the `glm-rsi-dream` supplied-dataset loop

@@ -1,6 +1,7 @@
 # Security
 
-The current review target is v0.0.1. This experimental package starts
+The written security review target is v0.0.1. The package version is 0.0.2.
+That package revision was not a new security review. This experimental package starts
 temporary Docker containers and uses SSH on a two-node Spark pair. CPU checks
 cover local contracts. Later installed-source serving and rollback passed
 bounded qualification; this public checkout's exact native CLI remains a

@@ -3,12 +3,14 @@ import base64
 import json
 import threading
 import time
+import urllib.error
 import urllib.request
 import uuid
 from contextlib import contextmanager
 from pathlib import Path
 
 from .files import digest, read_json, sha, write_json
+from .guard import body_reports_outage
 from .manifest import MANIFEST
 from .safety import MemoryGate, SafetyError, require_parity
 from .transport import Transport
@@ -44,9 +46,20 @@ class Cluster:
             write_json(self.state_path, self.state)
 
     def health(self):
-        with urllib.request.urlopen(self.config["api_url"] + "/health", timeout=5) as response:
-            if response.status != 200 or not response.read(65536):
+        url = self.config["api_url"] + "/health"
+        try:
+            opened = urllib.request.urlopen(url, timeout=5)
+        except urllib.error.HTTPError as error:
+            raw = error.read(65536)
+            if body_reports_outage(raw):
+                raise SafetyError("head health reports rank desynchronization")
+            raise SafetyError("head health failed")
+        with opened as response:
+            raw = response.read(65536)
+            if response.status != 200 or not raw:
                 raise SafetyError("head health failed")
+            if body_reports_outage(raw):
+                raise SafetyError("head health reports rank desynchronization")
 
     def probe(self, serving=True):
         # Sampling and comparison have one owner even with a watcher and caller.
@@ -332,13 +345,14 @@ class Cluster:
                 self.restore()
             after = []
             for prompt in protected:
-                # Failure pressure is historical here; originals must pass the same probe.
+                # Clear an older failure so this probe can run. Keep a failure the probe itself records.
                 saved = self.failure
                 self.failure = None
                 try:
                     reply, _ = self.infer(self.body(prompt))
                     after.append(reply)
                 finally:
-                    self.failure = saved
+                    if self.failure is None:
+                        self.failure = saved
             require_parity(before, after)
             write_json(self.run_dir / "restore-parity.json", {"byte_identical": len(after)})
