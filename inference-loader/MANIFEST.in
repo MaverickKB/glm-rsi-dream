@@ -1,0 +1,4 @@
+include Dockerfile
+recursive-include docs *.md
+recursive-include tests *.py *.txt *.gz
+recursive-include licenses *.txt

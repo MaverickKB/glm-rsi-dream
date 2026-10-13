@@ -27,7 +27,7 @@ class DockerConnection(http.client.HTTPConnection):
         self.sock.connect("/var/run/docker.sock")
 
 
-def docker(method: Any, path: Any, body: Any=None) -> Any:
+def docker(method: Any, path: Any, body: Any = None) -> Any:
     connection = DockerConnection("localhost", timeout=15)
     data = None if body is None else json.dumps(body)
     connection.request(method, path, data, {"Content-Type": "application/json"})

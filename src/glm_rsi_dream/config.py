@@ -45,7 +45,7 @@ def require_spark() -> Any:
         raise ValueError('Live coordinator requires a DGX Spark host')
 
 
-def load_config(path: Any, live: Any=False) -> Any:
+def load_config(path: Any, live: Any = False) -> Any:
     config = read_json(path)
     if live and '<' in json.dumps(config):
         raise ValueError('Replace configuration placeholders before live work')

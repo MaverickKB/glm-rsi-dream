@@ -1,0 +1,825 @@
+{
+  "schema_version": 1,
+  "id": "know-update-fictional-v1",
+  "model_scope": "GLM-5.3-Flash",
+  "parameters": {
+    "temperature": 0,
+    "max_tokens": 384,
+    "stream": false,
+    "draft": false,
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    }
+  },
+  "scenarios": [
+    {
+      "id": "relay",
+      "subject": "fictional Linden greenhouse relay",
+      "revisions": [
+        {
+          "id": "original",
+          "kind": "learn",
+          "facts": [
+            {
+              "id": "relay.hostname.v1",
+              "key": "hostname",
+              "statement": "The fictional Linden greenhouse relay hostname is coral.linden.test.",
+              "value": "coral.linden.test",
+              "depends_on": [],
+              "supersedes": []
+            },
+            {
+              "id": "relay.port.v1",
+              "key": "port",
+              "statement": "The fictional Linden greenhouse relay listens on TCP port 7401.",
+              "value": "7401",
+              "depends_on": [],
+              "supersedes": []
+            },
+            {
+              "id": "relay.retry.v1",
+              "key": "retry",
+              "statement": "The fictional Linden greenhouse relay retries after 90 seconds.",
+              "value": "90",
+              "depends_on": [],
+              "supersedes": []
+            },
+            {
+              "id": "relay.endpoint.v1",
+              "key": "endpoint",
+              "statement": "The fictional Linden greenhouse relay endpoint is http://coral.linden.test:7401/status.",
+              "value": "http://coral.linden.test:7401/status",
+              "depends_on": [
+                "hostname",
+                "port"
+              ],
+              "supersedes": []
+            },
+            {
+              "id": "relay.archive.v1",
+              "key": "archive",
+              "statement": "The fictional Linden greenhouse relay sends measurements to the Alder archive.",
+              "value": "Alder archive",
+              "depends_on": [
+                "hostname",
+                "port"
+              ],
+              "supersedes": []
+            }
+          ]
+        },
+        {
+          "id": "corrected",
+          "kind": "correction",
+          "facts": [
+            {
+              "id": "relay.hostname.v1",
+              "key": "hostname",
+              "statement": "The fictional Linden greenhouse relay hostname is coral.linden.test.",
+              "value": "coral.linden.test",
+              "depends_on": [],
+              "supersedes": []
+            },
+            {
+              "id": "relay.port.v2",
+              "key": "port",
+              "statement": "The fictional Linden greenhouse relay listens on TCP port 8523.",
+              "value": "8523",
+              "depends_on": [],
+              "supersedes": [
+                "relay.port.v1"
+              ]
+            },
+            {
+              "id": "relay.retry.v1",
+              "key": "retry",
+              "statement": "The fictional Linden greenhouse relay retries after 90 seconds.",
+              "value": "90",
+              "depends_on": [],
+              "supersedes": []
+            },
+            {
+              "id": "relay.endpoint.v2",
+              "key": "endpoint",
+              "statement": "The fictional Linden greenhouse relay endpoint is http://coral.linden.test:8523/status.",
+              "value": "http://coral.linden.test:8523/status",
+              "depends_on": [
+                "hostname",
+                "port"
+              ],
+              "supersedes": [
+                "relay.endpoint.v1"
+              ]
+            },
+            {
+              "id": "relay.archive.v1",
+              "key": "archive",
+              "statement": "The fictional Linden greenhouse relay sends measurements to the Alder archive.",
+              "value": "Alder archive",
+              "depends_on": [
+                "hostname",
+                "port"
+              ],
+              "supersedes": []
+            }
+          ]
+        },
+        {
+          "id": "replaced",
+          "kind": "replacement",
+          "facts": [
+            {
+              "id": "relay.hostname.v3",
+              "key": "hostname",
+              "statement": "The fictional Linden greenhouse relay hostname is jade.linden.test.",
+              "value": "jade.linden.test",
+              "depends_on": [],
+              "supersedes": [
+                "relay.hostname.v1"
+              ]
+            },
+            {
+              "id": "relay.port.v3",
+              "key": "port",
+              "statement": "The fictional Linden greenhouse relay listens on TCP port 9637.",
+              "value": "9637",
+              "depends_on": [],
+              "supersedes": [
+                "relay.port.v2"
+              ]
+            },
+            {
+              "id": "relay.retry.v1",
+              "key": "retry",
+              "statement": "The fictional Linden greenhouse relay retries after 90 seconds.",
+              "value": "90",
+              "depends_on": [],
+              "supersedes": []
+            },
+            {
+              "id": "relay.endpoint.v3",
+              "key": "endpoint",
+              "statement": "The fictional Linden greenhouse relay endpoint is http://jade.linden.test:9637/status.",
+              "value": "http://jade.linden.test:9637/status",
+              "depends_on": [
+                "hostname",
+                "port"
+              ],
+              "supersedes": [
+                "relay.endpoint.v2"
+              ]
+            },
+            {
+              "id": "relay.archive.v1",
+              "key": "archive",
+              "statement": "The fictional Linden greenhouse relay sends measurements to the Alder archive.",
+              "value": "Alder archive",
+              "depends_on": [
+                "hostname",
+                "port"
+              ],
+              "supersedes": []
+            }
+          ]
+        }
+      ],
+      "cases": [
+        {
+          "id": "relay-1",
+          "group": "current",
+          "kind": "recall",
+          "prompt": "Which hostname currently identifies the fictional Linden greenhouse relay?",
+          "fact_keys": [
+            "hostname"
+          ]
+        },
+        {
+          "id": "relay-2",
+          "group": "current",
+          "kind": "recall",
+          "prompt": "Which TCP port does the fictional Linden greenhouse relay currently listen on?",
+          "fact_keys": [
+            "port"
+          ]
+        },
+        {
+          "id": "relay-3",
+          "group": "dependent",
+          "kind": "recall",
+          "prompt": "What complete status endpoint should I use for the fictional Linden greenhouse relay today?",
+          "fact_keys": [
+            "endpoint"
+          ]
+        },
+        {
+          "id": "relay-4",
+          "group": "stable",
+          "kind": "recall",
+          "prompt": "How long does the fictional Linden greenhouse relay wait before trying again?",
+          "fact_keys": [
+            "retry"
+          ]
+        },
+        {
+          "id": "relay-5",
+          "group": "stable",
+          "kind": "recall",
+          "prompt": "Where does the fictional Linden greenhouse relay send its measurements?",
+          "fact_keys": [
+            "archive"
+          ]
+        },
+        {
+          "id": "relay-6",
+          "group": "stale",
+          "kind": "recall",
+          "prompt": "Before I reconnect to the fictional Linden greenhouse relay, give its latest hostname and listening port.",
+          "fact_keys": [
+            "hostname",
+            "port"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "canine",
+      "subject": "fictional Juniper rescue canine unit",
+      "revisions": [
+        {
+          "id": "original",
+          "kind": "learn",
+          "facts": [
+            {
+              "id": "canine.dogs.v1",
+              "key": "dogs",
+              "statement": "The fictional Juniper rescue canine unit has 6 dogs.",
+              "value": "6",
+              "depends_on": [],
+              "supersedes": []
+            },
+            {
+              "id": "canine.rounds.v1",
+              "key": "rounds",
+              "statement": "Each dog in the fictional Juniper rescue canine unit receives 4 training rounds daily.",
+              "value": "4",
+              "depends_on": [],
+              "supersedes": []
+            },
+            {
+              "id": "canine.duration.v1",
+              "key": "duration",
+              "statement": "Each daily training round in the fictional Juniper rescue canine unit lasts 40 minutes.",
+              "value": "40",
+              "depends_on": [],
+              "supersedes": []
+            },
+            {
+              "id": "canine.total.v1",
+              "key": "total",
+              "statement": "The fictional Juniper rescue canine unit runs 24 dog-rounds daily.",
+              "value": "24",
+              "depends_on": [
+                "dogs",
+                "rounds"
+              ],
+              "supersedes": []
+            },
+            {
+              "id": "canine.field.v1",
+              "key": "field",
+              "statement": "The fictional Juniper rescue canine unit uses the Birch field for all training.",
+              "value": "Birch field",
+              "depends_on": [
+                "dogs",
+                "rounds"
+              ],
+              "supersedes": []
+            }
+          ]
+        },
+        {
+          "id": "corrected",
+          "kind": "correction",
+          "facts": [
+            {
+              "id": "canine.dogs.v2",
+              "key": "dogs",
+              "statement": "The fictional Juniper rescue canine unit has 8 dogs.",
+              "value": "8",
+              "depends_on": [],
+              "supersedes": [
+                "canine.dogs.v1"
+              ]
+            },
+            {
+              "id": "canine.rounds.v1",
+              "key": "rounds",
+              "statement": "Each dog in the fictional Juniper rescue canine unit receives 4 training rounds daily.",
+              "value": "4",
+              "depends_on": [],
+              "supersedes": []
+            },
+            {
+              "id": "canine.duration.v1",
+              "key": "duration",
+              "statement": "Each daily training round in the fictional Juniper rescue canine unit lasts 40 minutes.",
+              "value": "40",
+              "depends_on": [],
+              "supersedes": []
+            },
+            {
+              "id": "canine.total.v2",
+              "key": "total",
+              "statement": "The fictional Juniper rescue canine unit runs 32 dog-rounds daily.",
+              "value": "32",
+              "depends_on": [
+                "dogs",
+                "rounds"
+              ],
+              "supersedes": [
+                "canine.total.v1"
+              ]
+            },
+            {
+              "id": "canine.field.v1",
+              "key": "field",
+              "statement": "The fictional Juniper rescue canine unit uses the Birch field for all training.",
+              "value": "Birch field",
+              "depends_on": [
+                "dogs",
+                "rounds"
+              ],
+              "supersedes": []
+            }
+          ]
+        },
+        {
+          "id": "replaced",
+          "kind": "replacement",
+          "facts": [
+            {
+              "id": "canine.dogs.v2",
+              "key": "dogs",
+              "statement": "The fictional Juniper rescue canine unit has 8 dogs.",
+              "value": "8",
+              "depends_on": [],
+              "supersedes": [
+                "canine.dogs.v1"
+              ]
+            },
+            {
+              "id": "canine.rounds.v3",
+              "key": "rounds",
+              "statement": "Each dog in the fictional Juniper rescue canine unit receives 5 training rounds daily.",
+              "value": "5",
+              "depends_on": [],
+              "supersedes": [
+                "canine.rounds.v1"
+              ]
+            },
+            {
+              "id": "canine.duration.v1",
+              "key": "duration",
+              "statement": "Each daily training round in the fictional Juniper rescue canine unit lasts 40 minutes.",
+              "value": "40",
+              "depends_on": [],
+              "supersedes": []
+            },
+            {
+              "id": "canine.total.v3",
+              "key": "total",
+              "statement": "The fictional Juniper rescue canine unit runs 40 dog-rounds daily.",
+              "value": "40",
+              "depends_on": [
+                "dogs",
+                "rounds"
+              ],
+              "supersedes": [
+                "canine.total.v2"
+              ]
+            },
+            {
+              "id": "canine.field.v1",
+              "key": "field",
+              "statement": "The fictional Juniper rescue canine unit uses the Birch field for all training.",
+              "value": "Birch field",
+              "depends_on": [
+                "dogs",
+                "rounds"
+              ],
+              "supersedes": []
+            }
+          ]
+        }
+      ],
+      "cases": [
+        {
+          "id": "canine-1",
+          "group": "current",
+          "kind": "recall",
+          "prompt": "How many dogs currently belong to the fictional Juniper rescue canine unit?",
+          "fact_keys": [
+            "dogs"
+          ]
+        },
+        {
+          "id": "canine-2",
+          "group": "current",
+          "kind": "recall",
+          "prompt": "How many daily training rounds does each dog in the fictional Juniper rescue canine unit receive now?",
+          "fact_keys": [
+            "rounds"
+          ]
+        },
+        {
+          "id": "canine-3",
+          "group": "dependent",
+          "kind": "recall",
+          "prompt": "Across all dogs, how many dog-rounds does the fictional Juniper rescue canine unit run per day?",
+          "fact_keys": [
+            "total"
+          ]
+        },
+        {
+          "id": "canine-4",
+          "group": "stable",
+          "kind": "recall",
+          "prompt": "How many minutes does each training round in the fictional Juniper rescue canine unit last?",
+          "fact_keys": [
+            "duration"
+          ]
+        },
+        {
+          "id": "canine-5",
+          "group": "stable",
+          "kind": "recall",
+          "prompt": "Where does the fictional Juniper rescue canine unit carry out training?",
+          "fact_keys": [
+            "field"
+          ]
+        },
+        {
+          "id": "canine-6",
+          "group": "stale",
+          "kind": "recall",
+          "prompt": "Give the latest dog count and daily rounds per dog for the fictional Juniper rescue canine unit.",
+          "fact_keys": [
+            "dogs",
+            "rounds"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "fixture",
+      "subject": "fictional Meridian spectrometer fixture",
+      "revisions": [
+        {
+          "id": "original",
+          "kind": "learn",
+          "facts": [
+            {
+              "id": "fixture.controller.v1",
+              "key": "controller",
+              "statement": "The fictional Meridian spectrometer fixture uses controller Slate-4.",
+              "value": "Slate-4",
+              "depends_on": [],
+              "supersedes": []
+            },
+            {
+              "id": "fixture.bays.v1",
+              "key": "bays",
+              "statement": "The fictional Meridian spectrometer fixture has 12 sample bays.",
+              "value": "12",
+              "depends_on": [],
+              "supersedes": []
+            },
+            {
+              "id": "fixture.vials.v1",
+              "key": "vials",
+              "statement": "Each sample bay in the fictional Meridian spectrometer fixture holds 3 vials.",
+              "value": "3",
+              "depends_on": [],
+              "supersedes": []
+            },
+            {
+              "id": "fixture.capacity.v1",
+              "key": "capacity",
+              "statement": "The fictional Meridian spectrometer fixture holds 36 vials at full capacity.",
+              "value": "36",
+              "depends_on": [
+                "bays",
+                "vials"
+              ],
+              "supersedes": []
+            },
+            {
+              "id": "fixture.workshop.v1",
+              "key": "workshop",
+              "statement": "The fictional Meridian spectrometer fixture is calibrated in the Cedar workshop.",
+              "value": "Cedar workshop",
+              "depends_on": [
+                "bays",
+                "vials"
+              ],
+              "supersedes": []
+            }
+          ]
+        },
+        {
+          "id": "corrected",
+          "kind": "correction",
+          "facts": [
+            {
+              "id": "fixture.controller.v2",
+              "key": "controller",
+              "statement": "The fictional Meridian spectrometer fixture uses controller Slate-7.",
+              "value": "Slate-7",
+              "depends_on": [],
+              "supersedes": [
+                "fixture.controller.v1"
+              ]
+            },
+            {
+              "id": "fixture.bays.v1",
+              "key": "bays",
+              "statement": "The fictional Meridian spectrometer fixture has 12 sample bays.",
+              "value": "12",
+              "depends_on": [],
+              "supersedes": []
+            },
+            {
+              "id": "fixture.vials.v1",
+              "key": "vials",
+              "statement": "Each sample bay in the fictional Meridian spectrometer fixture holds 3 vials.",
+              "value": "3",
+              "depends_on": [],
+              "supersedes": []
+            },
+            {
+              "id": "fixture.capacity.v1",
+              "key": "capacity",
+              "statement": "The fictional Meridian spectrometer fixture holds 36 vials at full capacity.",
+              "value": "36",
+              "depends_on": [
+                "bays",
+                "vials"
+              ],
+              "supersedes": []
+            },
+            {
+              "id": "fixture.workshop.v1",
+              "key": "workshop",
+              "statement": "The fictional Meridian spectrometer fixture is calibrated in the Cedar workshop.",
+              "value": "Cedar workshop",
+              "depends_on": [
+                "bays",
+                "vials"
+              ],
+              "supersedes": []
+            }
+          ]
+        },
+        {
+          "id": "replaced",
+          "kind": "replacement",
+          "facts": [
+            {
+              "id": "fixture.controller.v2",
+              "key": "controller",
+              "statement": "The fictional Meridian spectrometer fixture uses controller Slate-7.",
+              "value": "Slate-7",
+              "depends_on": [],
+              "supersedes": [
+                "fixture.controller.v1"
+              ]
+            },
+            {
+              "id": "fixture.bays.v3",
+              "key": "bays",
+              "statement": "The fictional Meridian spectrometer fixture has 15 sample bays.",
+              "value": "15",
+              "depends_on": [],
+              "supersedes": [
+                "fixture.bays.v1"
+              ]
+            },
+            {
+              "id": "fixture.vials.v1",
+              "key": "vials",
+              "statement": "Each sample bay in the fictional Meridian spectrometer fixture holds 3 vials.",
+              "value": "3",
+              "depends_on": [],
+              "supersedes": []
+            },
+            {
+              "id": "fixture.capacity.v3",
+              "key": "capacity",
+              "statement": "The fictional Meridian spectrometer fixture holds 45 vials at full capacity.",
+              "value": "45",
+              "depends_on": [
+                "bays",
+                "vials"
+              ],
+              "supersedes": [
+                "fixture.capacity.v1"
+              ]
+            },
+            {
+              "id": "fixture.workshop.v1",
+              "key": "workshop",
+              "statement": "The fictional Meridian spectrometer fixture is calibrated in the Cedar workshop.",
+              "value": "Cedar workshop",
+              "depends_on": [
+                "bays",
+                "vials"
+              ],
+              "supersedes": []
+            }
+          ]
+        }
+      ],
+      "cases": [
+        {
+          "id": "fixture-1",
+          "group": "current",
+          "kind": "recall",
+          "prompt": "Which controller currently operates the fictional Meridian spectrometer fixture?",
+          "fact_keys": [
+            "controller"
+          ]
+        },
+        {
+          "id": "fixture-2",
+          "group": "current",
+          "kind": "recall",
+          "prompt": "How many sample bays does the fictional Meridian spectrometer fixture have today?",
+          "fact_keys": [
+            "bays"
+          ]
+        },
+        {
+          "id": "fixture-3",
+          "group": "dependent",
+          "kind": "recall",
+          "prompt": "At full capacity, how many vials does the fictional Meridian spectrometer fixture hold?",
+          "fact_keys": [
+            "capacity"
+          ]
+        },
+        {
+          "id": "fixture-4",
+          "group": "stable",
+          "kind": "recall",
+          "prompt": "How many vials fit into each bay of the fictional Meridian spectrometer fixture?",
+          "fact_keys": [
+            "vials"
+          ]
+        },
+        {
+          "id": "fixture-5",
+          "group": "stable",
+          "kind": "recall",
+          "prompt": "Where is the fictional Meridian spectrometer fixture calibrated?",
+          "fact_keys": [
+            "workshop"
+          ]
+        },
+        {
+          "id": "fixture-6",
+          "group": "stale",
+          "kind": "recall",
+          "prompt": "Give the current controller and sample bay count of the fictional Meridian spectrometer fixture.",
+          "fact_keys": [
+            "controller",
+            "bays"
+          ]
+        }
+      ]
+    }
+  ],
+  "controls": [
+    {
+      "id": "ordinary-1",
+      "kind": "exact",
+      "group": "ordinary",
+      "prompt": "What is two plus three?"
+    },
+    {
+      "id": "ordinary-2",
+      "kind": "exact",
+      "group": "ordinary",
+      "prompt": "Name the capital of France."
+    },
+    {
+      "id": "ordinary-3",
+      "kind": "exact",
+      "group": "ordinary",
+      "prompt": "Translate hello into Spanish."
+    },
+    {
+      "id": "ordinary-4",
+      "kind": "exact",
+      "group": "ordinary",
+      "prompt": "Write a Python function that squares a number."
+    },
+    {
+      "id": "ordinary-5",
+      "kind": "exact",
+      "group": "ordinary",
+      "prompt": "Explain evaporation in one sentence."
+    },
+    {
+      "id": "ordinary-6",
+      "kind": "exact",
+      "group": "ordinary",
+      "prompt": "List the first four prime numbers."
+    },
+    {
+      "id": "ordinary-7",
+      "kind": "exact",
+      "group": "ordinary",
+      "prompt": "What does HTTP stand for?"
+    },
+    {
+      "id": "ordinary-8",
+      "kind": "exact",
+      "group": "ordinary",
+      "prompt": "Give a synonym for careful."
+    },
+    {
+      "id": "ordinary-9",
+      "kind": "exact",
+      "group": "ordinary",
+      "prompt": "Convert one kilometre to metres."
+    },
+    {
+      "id": "ordinary-10",
+      "kind": "exact",
+      "group": "ordinary",
+      "prompt": "Write a short greeting for a colleague."
+    },
+    {
+      "id": "ordinary-11",
+      "kind": "exact",
+      "group": "ordinary",
+      "prompt": "Which planet is closest to the Sun?"
+    },
+    {
+      "id": "ordinary-12",
+      "kind": "exact",
+      "group": "ordinary",
+      "prompt": "Explain what a triangle is."
+    },
+    {
+      "id": "protected-1",
+      "kind": "exact",
+      "group": "protected",
+      "prompt": "Return exactly the word HELLO."
+    },
+    {
+      "id": "protected-2",
+      "kind": "exact",
+      "group": "protected",
+      "prompt": "Return exactly this JSON object: {\"status\":\"ok\"}."
+    },
+    {
+      "id": "protected-3",
+      "kind": "exact",
+      "group": "protected",
+      "prompt": "Reply with exactly the three characters XYZ."
+    },
+    {
+      "id": "protected-4",
+      "kind": "exact",
+      "group": "protected",
+      "prompt": "Write exactly one line containing the word READY."
+    }
+  ],
+  "leaks": [
+    {
+      "id": "leak-1",
+      "kind": "leak",
+      "group": "leak",
+      "prompt": "What equipment does the fictional Northstar school use?"
+    },
+    {
+      "id": "leak-2",
+      "kind": "leak",
+      "group": "leak",
+      "prompt": "Where does the fictional Seabrook clinic carry out its training?"
+    },
+    {
+      "id": "leak-3",
+      "kind": "leak",
+      "group": "leak",
+      "prompt": "Suggest a generic retry policy for an unnamed service."
+    },
+    {
+      "id": "leak-4",
+      "kind": "leak",
+      "group": "leak",
+      "prompt": "Describe how a laboratory can count its total sample capacity."
+    }
+  ]
+}

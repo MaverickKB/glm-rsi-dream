@@ -18,11 +18,18 @@ license-files = ["LICENSE", "NOTICE", "licenses/*.txt"]
 dependencies = ["tokenizers==0.22.1"]
 
 [project.optional-dependencies]
-dev = ["pytest==8.4.2", "torch==2.9.0", "build==1.3.0", "ruff==0.17.0", "mypy==2.4.0", "hypothesis==6.169.0", "pytest-cov==7.1.0"]
-test = ["pytest==8.4.2", "torch==2.9.0", "hypothesis==6.169.0"]
+dev = ["pytest==8.4.2", "torch==2.9.0", "build==1.3.0", "ruff==0.17.0", "mypy==2.4.0", "hypothesis==6.169.0", "pytest-cov==7.1.0", "jsonschema==4.26.0", "safetensors==0.8.0", "numpy==2.4.6"]
+test = ["pytest==8.4.2", "torch==2.9.0", "hypothesis==6.169.0", "jsonschema==4.26.0", "safetensors==0.8.0", "numpy==2.4.6"]
+export = ["torch==2.9.0", "safetensors==0.8.0", "numpy==2.4.6"]
 
 [project.scripts]
+glm-pocket-bundle = "glm_rsi_dream.pocket_bundle:main"
+glm-dream-export = "glm_rsi_dream.export:main"
 glm-rsi-dream = "glm_rsi_dream.cli:main"
+glm-funnel-harness = "glm_rsi_dream.predream.harness:main"
+glm-dream-trigger = "glm_rsi_dream.dream.cli:main"
+glm-dreambox = "glm_rsi_dream.predream.admin_host:main"
+glm-traffic-tap = "glm_rsi_dream.predream.tap_cli:main"
 
 [tool.setuptools.dynamic]
 version = {attr = "glm_rsi_dream.__version__"}
@@ -31,7 +38,7 @@ version = {attr = "glm_rsi_dream.__version__"}
 where = ["src"]
 
 [tool.setuptools.package-data]
-glm_rsi_dream = ["resources/*.json", "py.typed"]
+glm_rsi_dream = ["resources/*.json", "py.typed", "resources/skills/harness-funnel/*.md", "resources/admin_portal/*", "resources/admin_host/*"]
 tensorfold_dream = ["py.typed"]
 
 [tool.pytest.ini_options]
@@ -63,12 +70,14 @@ explicit = true
 # Lowest version in the supported range (>=3.11,<3.14).
 python_version = "3.11"
 files = ["src", "tests", "tools"]
-mypy_path = "src"
+mypy_path = ["src", "inference-loader/src"]
+explicit_package_bases = true
 pretty = true
 show_error_codes = true
 warn_unused_configs = true
 warn_redundant_casts = true
 warn_unused_ignores = true
+untyped_calls_exclude = ["torch"]
 
 # The strict meta-flag applies to the whole run, so these flags are listed
 # per module. Tests stay on the normal checker.
@@ -78,7 +87,7 @@ module = [
     "glm_rsi_dream.*",
     "tensorfold_dream",
     "tensorfold_dream.*",
-    "prepare_baseline",
+    "tools.prepare_baseline",
 ]
 disallow_any_generics = true
 disallow_subclassing_any = true
@@ -93,7 +102,7 @@ strict_equality = true
 extra_checks = true
 
 [[tool.mypy.overrides]]
-module = ["tensorfold.*", "tokenizers"]
+module = ["tensorfold.*", "tokenizers", "exllamav3.*", "transformers.*", "jsonschema.*"]
 ignore_missing_imports = true
 
 [tool.coverage.run]

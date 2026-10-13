@@ -42,7 +42,7 @@ def parse_verdict(raw: Any) -> Any:
     return value
 
 
-def assess(cluster: Any, facts: Any, task: Any, answer: Any, complete: Any=True) -> Any:
+def assess(cluster: Any, facts: Any, task: Any, answer: Any, complete: Any = True) -> Any:
     prompt = verdict_prompt(facts, task['prompt'], answer)
     body = cluster.body(prompt)
     body['max_tokens'] = cluster.config['capture_max_tokens']

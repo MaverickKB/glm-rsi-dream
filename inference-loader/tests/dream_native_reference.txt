@@ -1,0 +1,144 @@
+"""Native FFN application and aligned captures, with no factual text routing."""
+
+import hashlib
+import json
+from pathlib import Path
+
+import torch
+from torch.nn import functional as F
+
+KEY = "tensorfold_dream.eval"
+
+
+def records(w, b):
+    from tensorfold_dream.eval_native import spec_for
+
+    for state, offset, count in getattr(b, "_eval_pieces", ()):
+        record = spec_for(w, state)
+        yield record, state, offset, count
+
+
+def artifact(w, selected):
+    if selected is None:
+        return None
+    root = w.meta[KEY]["root"].resolve()
+    path = (root / selected["path"]).resolve()
+    if not path.is_relative_to(root):
+        raise ValueError("FFN artifact escapes paired manifest")
+    cache = w.meta.setdefault("dream_neurons", {})
+    expected = selected["sha256"]
+    if cache.get("sha256") != expected:
+        raw = path.read_bytes()
+        if hashlib.sha256(raw).hexdigest() != expected:
+            raise ValueError("FFN artifact hash mismatch")
+        value = torch.load(path, weights_only=True, map_location=w.device)
+        if (value.get("mechanism") != "shared_ffn_swiglu_v1" or value.get("rank") != w.rank
+                or value.get("world") != 2 or value.get("base_frozen") is not True):
+            raise ValueError("FFN mechanism or rank ownership mismatch")
+        for index, site in value["layers"].items():
+            if not isinstance(index, int) or not 3 <= index <= 39:
+                raise ValueError("FFN artifact contains a non-middle layer")
+            width, hidden = site["gate"].shape
+            if hidden != w.cfg.hidden or site["down"].shape != (hidden, width):
+                raise ValueError("FFN native shape mismatch")
+            if site["up"].shape != (width, hidden):
+                raise ValueError("FFN up shape mismatch")
+            for tensor in site.values():
+                if not torch.isfinite(tensor).all():
+                    raise ValueError("Nonfinite FFN artifact")
+        cache.update(sha256=expected, artifact=value)
+    return cache["artifact"]
+
+
+def shared(layer, w, b, lo, hi):
+    state = w.meta.get(KEY)
+    if state is None:
+        return
+    current_path = state["root"] / "neurons-current.json"
+    current = None
+    if current_path.exists():
+        current = json.loads(current_path.read_text())["by_rank"][w.rank]
+    for record, owned, offset, count in records(w, b):
+        policy = {} if record is None else record["policy"]
+        selected = policy.get("neurons", current)
+        if policy.get("neurons_off"):
+            selected = None
+        value = artifact(w, selected)
+        if value is None or layer.index not in value["layers"]:
+            continue
+        first = max(lo, offset)
+        stop = min(hi, offset + count)
+        if stop <= first:
+            continue
+        site = value["layers"][layer.index]
+        inputs = b.normed[first:stop].float()
+        gate = F.linear(inputs, site["gate"]).clamp(max=w.cfg.limit)
+        up = F.linear(inputs, site["up"]).clamp(-w.cfg.limit, w.cfg.limit)
+        activation = F.silu(gate) * up
+        correction = F.linear(activation, site["down"])
+        b.sy[first:stop].add_(correction)
+        if record is not None:
+            record["neuron_sha256"] = selected["sha256"]
+            record["neuron_rows"] = record.get("neuron_rows", 0) + stop - first
+
+
+def capture_rows(record, state, offset, count):
+    chosen = []
+    positions = []
+    for position in record["policy"]["neuron_capture"]["rows"]:
+        relative = position - state.pos
+        if 0 <= relative < count:
+            chosen.append(offset + relative)
+            positions.append(position)
+    return chosen, positions
+
+
+def before_ffn(layer, w, b, count):
+    if not b.prefill:
+        return
+    for record, state, offset, size in records(w, b):
+        if record is None:
+            continue
+        spec = record["policy"].get("neuron_capture")
+        if spec is None or layer.index not in spec["layers"]:
+            continue
+        if b.split is not None and b.split.active:
+            raise ValueError("FFN capture requires the declared unsplit paired candidate")
+        chosen, positions = capture_rows(record, state, offset, size)
+        if not chosen:
+            continue
+        if len(chosen) > 512 or len(spec["layers"]) > 12:
+            raise ValueError("FFN capture exceeds bounded geometry")
+        record.setdefault("neuron_pending", {})[layer.index] = {
+            "positions": positions, "input": b.normed[chosen].detach().cpu().clone(),
+            "post": b.post[chosen].detach().cpu().clone()}
+
+
+def after_ffn(layer, w, b, count):
+    if not b.prefill:
+        return
+    for record, state, offset, size in records(w, b):
+        if record is None:
+            continue
+        pending = record.get("neuron_pending", {}).pop(layer.index, None)
+        if pending is None:
+            continue
+        chosen, positions = capture_rows(record, state, offset, size)
+        if positions != pending["positions"]:
+            raise ValueError("FFN capture row identity changed")
+        pending["residual"] = b.x[chosen].detach().cpu().reshape(len(chosen), 4, w.cfg.hidden).clone()
+        record.setdefault("neuron_chunks", {}).setdefault(layer.index, []).append(pending)
+
+
+def finished(w, record):
+    receipt = {"neuron_sha256": record.get("neuron_sha256"),
+               "neuron_rows": record.get("neuron_rows", 0)}
+    chunks = record.pop("neuron_chunks", None)
+    if chunks:
+        packet = {"schema_version": 1, "rank": w.rank, "world": w.world,
+                  "request_id": record["spec"]["request_id"],
+                  "attention_memory": bool(record.get("memory_activated")), "layers": chunks}
+        path = Path("/capture") / ("neurons-" + packet["request_id"] + "-rank" + str(w.rank) + ".pt")
+        torch.save(packet, path)
+        receipt["neuron_capture_sha256"] = hashlib.sha256(path.read_bytes()).hexdigest()
+    return receipt

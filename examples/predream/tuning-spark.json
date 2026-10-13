@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "name": "tuning-spark-comparator",
+  "extract": {
+    "strategy": "closed_book",
+    "probe_samples": 1,
+    "probe_temperature": 0,
+    "agreement_threshold": 1.0
+  },
+  "grade": {
+    "strategy": "evidence_first"
+  },
+  "control": {
+    "mode": "spark",
+    "autonomy": "automatic",
+    "auto_routes": [
+      "memory"
+    ],
+    "min_score": 0.9
+  }
+}

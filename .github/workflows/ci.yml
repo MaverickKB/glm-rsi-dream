@@ -15,6 +15,8 @@ concurrency:
 env:
   CUDA_VISIBLE_DEVICES: ""
   PYTHONDONTWRITEBYTECODE: "1"
+  OMP_NUM_THREADS: "1"
+  MKL_NUM_THREADS: "1"
   UV_LOCKED: "1"
 
 jobs:
@@ -87,6 +89,11 @@ jobs:
         run: uv sync --extra dev --python ${{ matrix.python-version }}
       - name: Test on CPU
         run: uv run python -m pytest -q -p no:cacheprovider --cov --cov-report=term-missing
+      - name: Test inference loader on CPU
+        run: |
+          uv pip install --python .venv/bin/python --no-deps ./inference-loader
+          cd inference-loader
+          ../.venv/bin/python -m pytest -q -p no:cacheprovider
 
   wheel:
     name: Wheel (${{ matrix.python-version }})
@@ -107,20 +114,23 @@ jobs:
           version: "0.13.0"
           enable-cache: true
       - name: Build sdist and wheel
-        run: uv build --python ${{ matrix.python-version }}
+        run: |
+          uv build --python ${{ matrix.python-version }}
+          uv build inference-loader --out-dir loader-dist --python ${{ matrix.python-version }}
       - name: Install the wheel in a clean environment
         run: |
           set -eu
           env_dir="${RUNNER_TEMP}/wheel-env"
           uv venv "$env_dir" --python "${{ matrix.python-version }}"
           UV_PROJECT_ENVIRONMENT="$env_dir" uv sync --extra test --no-install-project --python "${{ matrix.python-version }}"
-          uv pip install --python "$env_dir/bin/python" --no-deps dist/*.whl
+          uv pip install --python "$env_dir/bin/python" --no-deps dist/*.whl loader-dist/*.whl
           "$env_dir/bin/python" -c '
           import pathlib
           import glm_rsi_dream
           import tensorfold_dream
+          import dream_loader
           from glm_rsi_dream.manifest import MANIFEST
-          for module in (glm_rsi_dream, tensorfold_dream):
+          for module in (glm_rsi_dream, tensorfold_dream, dream_loader):
               path = pathlib.Path(module.__file__).resolve()
               if "site-packages" not in path.parts:
                   raise SystemExit("imported the source tree: " + str(path))
@@ -135,3 +145,6 @@ jobs:
           mv src "${RUNNER_TEMP}/src-hidden"
           "$env_dir/bin/python" -m pytest -q -p no:cacheprovider
           "$env_dir/bin/glm-rsi-dream" --config config.example.json --dry-run run
+          mv inference-loader/src "${RUNNER_TEMP}/loader-src-hidden"
+          cd inference-loader
+          "$env_dir/bin/python" -m pytest -q -p no:cacheprovider

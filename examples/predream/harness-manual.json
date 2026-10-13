@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "name": "harness-manual",
+  "extract": {},
+  "grade": {},
+  "control": {
+    "mode": "harness",
+    "autonomy": "manual",
+    "permission_file": null,
+    "auto_routes": ["memory"],
+    "min_score": 0.9
+  },
+  "_comments": {
+    "permission_file": "An administrator supplies a controller-signed permission for this local run scope. Configuration and GLM output cannot grant authority.",
+    "manual": "All GLM grades stay pending proposals until the administrator explicitly approves selected ids through the shared approve CLI.",
+    "supervised": "Permission-bounded automatic approval uses auto_routes and min_score; conflicts/updates require explicit approval.",
+    "automatic": "Permission-bounded automatic decisions use the shared control module. The grant must explicitly authorize automatic and harness.",
+    "settings": "Use policy-defaults.json for all extraction/grading knobs. Model, endpoint and timeout stay CLI options. Run storage and all funnel processes belong on the external host."
+  }
+}

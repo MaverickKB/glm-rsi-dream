@@ -1,0 +1,16 @@
+[Unit]
+Description=RSI Dreambox head portal
+After=network.target
+
+[Service]
+Type=simple
+User=@USER@
+ExecStart="@PYTHON@" -m glm_rsi_dream.predream.admin_host serve --config "@CONFIG@"
+Restart=on-failure
+RestartSec=3
+UMask=0077
+NoNewPrivileges=true
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target

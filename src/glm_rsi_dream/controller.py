@@ -65,12 +65,12 @@ class Cluster:
             if body_reports_outage(raw):
                 raise SafetyError("head health reports rank desynchronization")
 
-    def probe(self, serving: Any=True) -> Any:
+    def probe(self, serving: Any = True) -> Any:
         # Sampling and comparison have one owner even with a watcher and caller.
         with self.probe_lock:
             return self._probe(serving)
 
-    def _probe(self, serving: Any=True) -> Any:
+    def _probe(self, serving: Any = True) -> Any:
         if (self.run_dir / "STOP").exists() and self.state["phase"] not in ("restored", "restoring"):
             raise InterruptedError("STOP requested")
         for rank in range(2):
@@ -103,7 +103,7 @@ class Cluster:
             raise SafetyError("background serving gate failed: " + str(self.failure))
         self.probe()
 
-    def body(self, prompt: Any, tagged: Any=False, arm: Any="none", teacher: Any=None, completion: Any=False) -> Any:
+    def body(self, prompt: Any, tagged: Any = False, arm: Any = "none", teacher: Any = None, completion: Any = False) -> Any:
         if teacher:
             prompt = "Reference facts stated by the user:\n" + teacher + "\n\nQuestion: " + prompt
         body = {"model": self.config["model"], "temperature": 0, "max_tokens": self.config["max_tokens"],
@@ -124,7 +124,7 @@ class Cluster:
                                               "arm": arm, "pair_sha256": pair["pair_sha256"]}}
         return body
 
-    def infer(self, body: Any, policy: Any=None) -> Any:
+    def infer(self, body: Any, policy: Any = None) -> Any:
         self.ensure_safe()
         tagged = body.get("metadata", {}).get("dream_eval")
         if policy is not None:

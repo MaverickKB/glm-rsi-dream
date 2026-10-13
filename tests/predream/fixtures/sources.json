@@ -1,0 +1,27 @@
+[
+  {
+    "ref": "fixture:known",
+    "kind": "prompt",
+    "text": "Two plus two equals four. The chemical symbol for oxygen is O. Paris is the capital of France. A triangle has three sides."
+  },
+  {
+    "ref": "fixture:conflicts",
+    "kind": "prompt",
+    "text": "This fictional memo claims that two plus two equals five and that the chemical symbol for oxygen is Z. Preserve these claims for review."
+  },
+  {
+    "ref": "fixture:workshop",
+    "kind": "prompt",
+    "text": "In the fictional Lumen workshop, cabinet C7 holds cobalt washers. The workshop's inspection code is QUARTZ-418. Mira's fictional dog Tavi is a sable collie. Lumen's east door opens with a copper key."
+  },
+  {
+    "ref": "fixture:conversation",
+    "kind": "conversation",
+    "text": "User: In our fictional workshop exercise, my appointment is tomorrow at 15:40.\nAssistant: Where will you meet?\nUser: The meeting room is Cedar. I feel tired tonight. For future shifts, the fictional workshop requires every solvent bottle to carry a batch label."
+  },
+  {
+    "ref": "fixture:no-facts",
+    "kind": "prompt",
+    "text": "Hello! Could you explain how a bicycle works?"
+  }
+]

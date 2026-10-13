@@ -1,0 +1,10 @@
+{
+  "schema_version": 1,
+  "name": "memory-only-routing-hypothesis",
+  "extract": {},
+  "grade": {
+    "strategy": "evidence_first",
+    "routing_rules": "For this experiment, route every accepted supported claim to memory with pocket null, regardless of lifetime. Rejected claims may also use memory with pocket null. This replaces the usual weights and pocket routing hypothesis.",
+    "max_attempts": 3
+  }
+}

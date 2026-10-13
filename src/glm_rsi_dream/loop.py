@@ -19,7 +19,7 @@ def event(cluster: Any, phase: Any, detail: Any) -> Any:
     print(phase + ': ' + detail, flush=True)
 
 
-def prompt_body(cluster: Any, tokenizer: Any, question: Any, main: Any=False) -> Any:
+def prompt_body(cluster: Any, tokenizer: Any, question: Any, main: Any = False) -> Any:
     prefix = read_json(cluster.run_dir / 'pair/prefix.json')
     suffix = tokenizer.encode('<|user|>' + question + '<|assistant|><think></think>', add_special_tokens=False).ids
     body = cluster.body(prefix['normal_ids'] + suffix, tagged=True,
@@ -28,7 +28,7 @@ def prompt_body(cluster: Any, tokenizer: Any, question: Any, main: Any=False) ->
     return body
 
 
-def generated(cluster: Any, tokenizer: Any, task: Any, selected: Any=None, full: Any=False) -> Any:
+def generated(cluster: Any, tokenizer: Any, task: Any, selected: Any = None, full: Any = False) -> Any:
     body = prompt_body(cluster, tokenizer, task['prompt'], main=full or selected is not None)
     policy = {'use_memory': full or selected is not None}
     if selected is not None:
@@ -135,7 +135,7 @@ def train(cluster: Any) -> Any:
     return selected
 
 
-def evaluate_items(cluster: Any, tokenizer: Any, lesson: Any, items: Any, selected: Any, label: Any, compare: Any=False) -> Any:
+def evaluate_items(cluster: Any, tokenizer: Any, lesson: Any, items: Any, selected: Any, label: Any, compare: Any = False) -> Any:
     facts = []
     for fact in lesson['facts']:
         facts.append(fact['statement'])

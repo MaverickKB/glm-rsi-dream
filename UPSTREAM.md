@@ -36,6 +36,19 @@ Downloaded weights and runtime binaries are separate prerequisites under
 
 ## External runtime and Python dependencies
 
+The experimental `neurons/reference.py` follows the GLM5Next mHC, KDA and
+MoE equations inspected in TensorFold's installed GLM family and Hugging Face
+Transformers revision `22cfdfaad99038416b56d21e35b0d32d4f4ee2d3`.
+EXL3 basis arithmetic follows the installed TensorFold reference decoder,
+which credits ExLlamaV3, MIT, Copyright (c) 2025 Turboderp. The owning runtime
+supplies its tile decoder and checkpoint tensors. This module contains no
+weights and requires measured native forward parity before training use.
+The immutable WY chunk formulation and power-of-two FP8 row format follow
+the inspected installed `kda_chunked.py` and `kv8.py`. The fixed checkpoint
+reader delegates q4 and FP8 weight transforms to that owning TensorFold
+runtime, and preserves its BF16 router conversion. Native code and weights
+remain external dependencies.
+
 The manifest pins an external NVIDIA-based TensorFold container, a TR3 model
 checkpoint, and a DFlash2 drafter. This repository contains no model weights or
 container binaries. The download references have not been pulled or loaded in

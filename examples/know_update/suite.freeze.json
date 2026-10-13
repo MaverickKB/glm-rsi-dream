@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "frozen_et": "2026-10-13T00:29:44.952587-04:00",
+  "suite_sha256": "1bbabed494901dc1c7a924f1568168c32536de8c3fdc96a664f07c771f3e8f56",
+  "file_sha256": "82b6b53f6a6a648331a0d780763c92987b5134132d6abfff43c50bcc480d339d",
+  "purpose": "evaluation-only, excluded from training and checkpoint selection",
+  "scenarios": 3,
+  "facts_per_revision": 15,
+  "cases_per_phase": 38,
+  "model_scope": "GLM-5.3-Flash"
+}

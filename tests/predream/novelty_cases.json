@@ -1,0 +1,62 @@
+[
+  {
+    "text": "Water has the chemical formula H2O.",
+    "probe_question": "What is the chemical formula of water?",
+    "expected": "known"
+  },
+  {
+    "text": "The chemical symbol for sodium is Na.",
+    "probe_question": "What is the chemical symbol for sodium?",
+    "expected": "known"
+  },
+  {
+    "text": "A triangle has three sides.",
+    "probe_question": "How many sides does a triangle have?",
+    "expected": "known"
+  },
+  {
+    "text": "The speed of light in vacuum is 299792458 metres per second.",
+    "probe_question": "What is the speed of light in vacuum?",
+    "expected": "known"
+  },
+  {
+    "text": "Water has the chemical formula CO2.",
+    "probe_question": "What is the chemical formula of water?",
+    "expected": "conflicts"
+  },
+  {
+    "text": "The chemical symbol for sodium is K.",
+    "probe_question": "What is the chemical symbol for sodium?",
+    "expected": "conflicts"
+  },
+  {
+    "text": "A triangle has four sides.",
+    "probe_question": "How many sides does a triangle have?",
+    "expected": "conflicts"
+  },
+  {
+    "text": "The speed of light in vacuum is 123456 metres per second.",
+    "probe_question": "What is the speed of light in vacuum?",
+    "expected": "conflicts"
+  },
+  {
+    "text": "The fictional Quillmere station uses drill codeword cedar-81.",
+    "probe_question": "What drill codeword does the fictional Quillmere station use?",
+    "expected": "new"
+  },
+  {
+    "text": "The fictional dog Nemi wears a silver collar.",
+    "probe_question": "What color collar does the fictional dog Nemi wear?",
+    "expected": "new"
+  },
+  {
+    "text": "The fictional Embervale laboratory stores its spare relays in cabinet U-37.",
+    "probe_question": "Where does the fictional Embervale laboratory store spare relays?",
+    "expected": "new"
+  },
+  {
+    "text": "The fictional Larkmoor station inspects its backup valves every 23 days.",
+    "probe_question": "How often does the fictional Larkmoor station inspect its backup valves?",
+    "expected": "new"
+  }
+]
