@@ -156,6 +156,23 @@ def evaluate_items(cluster, tokenizer, lesson, items, selected, label, compare=F
     return rows
 
 
+def control_receipts(receipts):
+    """Installation, cache writes, and off-path delta are separate measurements."""
+    activated = False
+    cache_ok = True
+    delta_ok = True
+    for receipt in receipts:
+        if receipt.get('memory_activated'):
+            activated = True
+        if receipt.get('cache_writes') != 0:
+            cache_ok = False
+        if receipt.get('offpath_delta') != 0:
+            delta_ok = False
+    return {'zero_installation': not activated,
+            'zero_cache_writes': cache_ok,
+            'zero_offpath_delta': delta_ok}
+
+
 def check(cluster, tokenizer, lesson, evaluation, selected):
     dev = evaluate_items(cluster, tokenizer, lesson, lesson['development'], selected, 'dev')
     count = 0
@@ -172,12 +189,11 @@ def check(cluster, tokenizer, lesson, evaluation, selected):
         baseline = generated(cluster, tokenizer, task)
         memory = generated(cluster, tokenizer, task, selected)
         require_parity([baseline['reply']], [memory['reply']], require_complete=False)
-        zero = True
-        for receipt in memory['receipts']:
-            if receipt.get('memory_activated') or receipt.get('cache_writes') != 0 or receipt.get('offpath_delta') != 0:
-                zero = False
-        controls.append({'byte_identical': True, 'zero_installation': zero,
-                         'baseline': baseline, 'memory': memory})
+        effects = control_receipts(memory['receipts'])
+        controls.append({'byte_identical': True, 'baseline': baseline, 'memory': memory,
+                         'zero_installation': effects['zero_installation'],
+                         'zero_cache_writes': effects['zero_cache_writes'],
+                         'zero_offpath_delta': effects['zero_offpath_delta']})
         write_json(cluster.run_dir / 'controls.json', controls)
     result = decision(rows, controls, cluster.config['acceptance'])
     result.update(dev_grounded=count, dev_total=len(dev), heldout_opened=True)

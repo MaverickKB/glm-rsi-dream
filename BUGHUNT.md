@@ -89,32 +89,30 @@ during the probe was discarded. The saved value returns only when the probe
 leaves `failure` unset. Test:
 `test_restore_probe_keeps_a_failure_seen_during_the_probe`.
 
+### Rank 1 follow left a peer blocked in the admission vote
+
+Pinned `MultiDecoder.follow` calls `apply` with no handler. The overlay now
+catches that error, latches `broken`, and calls `unblock_peer`. If this rank
+has not entered the vote, it joins with a reject so the peer's gather returns.
+If the vote already aborted, it does not enter a second gather. Tests:
+`test_rank1_follow_unblocks_a_peer_blocked_in_admission` and
+`test_rank1_follow_does_not_gather_again_after_an_aborted_vote`.
+
+### Cache writes and the off-path delta were one flag
+
+`finished` used to copy `memory_activated` into `cache_writes` and to set
+`offpath_delta` from that same flag. Install now increments `cache_writes`
+only when rows are loaded. `offpath_delta` is a stored meter plus capture
+packets outside an attention capture. The control record and the keep/reject
+decision check installation, cache writes, and the off-path delta separately.
+An off-path request raises `Off-path cache write` or `Off-path state delta`
+for the field that failed. Tests:
+`test_cache_writes_and_offpath_delta_are_separate_measurements` and
+`test_paired_receipts_require_exact_rank_artifact_and_zero_offpath`.
+
 ## Not changed
 
-These need the pair, or a local change would reject controls that the code
-defines as exact.
-
-### High: rank 1 has no handler around `apply`
-
-Pinned `MultiDecoder.follow` (`families/glm5_next/cuda/multi.py:2267`) calls
-`apply` with no handler. The overlay inserts `complete_admission` into `apply`
-on both ranks (`src/tensorfold_dream/overlay.py`). If that call raises on
-rank 1, `follow` stops. Rank 0 can already be past the same collective with
-`decoder.broken` set. The rank that sees the exception now drops its slot. A
-peer blocked in the gather is not cleared by this process. That hang needs
-the two-rank runtime.
-
-### High: off-path receipts are one flag
-
-`finished` sets `cache_writes` from `memory_activated` and sets
-`offpath_delta` to `0.0` when memory is off, otherwise `None`
-(`src/tensorfold_dream/pocket_native.py`). The control checks in
-`src/glm_rsi_dream/loop.py` and `src/glm_rsi_dream/native_cluster.py` read
-`memory_activated`, `cache_writes`, and `offpath_delta` as if they were
-separate observations. They are not. Replacing the constant `0.0` would fail
-the off-path comparison those checks already require. The published control
-counts remain what those checks recorded. They are not three independent
-measurements.
+These still need the model or the pair. They were not changed.
 
 ### Medium: the manifest layer list is not tied to layer kind
 
@@ -174,7 +172,7 @@ No host names or addresses were added.
 
 ## Checks
 
-`ruff check .` passed. `CUDA_VISIBLE_DEVICES='' python -m pytest -q` passed,
-63 tests. `glm-rsi-dream --config config.example.json --dry-run run` printed
-the v0.0.2 dry-run plan and created no run directory. `python -m build`
-produced the 0.0.2 sdist and wheel. No GPU tests were run.
+`ruff check .` and `mypy` passed. `CUDA_VISIBLE_DEVICES='' python -m pytest -q`
+passed, 67 tests. `glm-rsi-dream --config config.example.json --dry-run run`
+printed the v0.0.2 dry-run plan and created no run directory. No GPU tests
+were run.

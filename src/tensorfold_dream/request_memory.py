@@ -4,13 +4,20 @@
 KEY = "tensorfold_dream.eval"
 
 
-def gather_status(decoder, values):
+def gather_status(decoder, values, phase="geometry"):
     """A failed rank exchange makes normal serving unavailable until recovery."""
+    decoder._admission_phase = phase
     try:
-        return decoder.g._gather_ints(values)
+        result = decoder.g._gather_ints(values)
     except Exception as error:
+        decoder._admission_phase = "aborted"
         decoder.broken = error
         raise
+    if phase == "geometry":
+        decoder._admission_phase = "geometry-done"
+    else:
+        decoder._admission_phase = "done"
+    return result
 
 
 def make_record(w, spec, prompt, count, failures):
@@ -136,7 +143,7 @@ def complete_admission(decoder, sid):
                 install(decoder, record)
             except Exception as error:
                 record["admission_error"] = str(error)
-            votes = gather_status(decoder, [int(not record.get("admission_error"))])
+            votes = gather_status(decoder, [int(not record.get("admission_error"))], "confirm")
             agreed = True
             for vote in votes:
                 if not vote[0]:
@@ -146,6 +153,7 @@ def complete_admission(decoder, sid):
         _reject_admission(decoder, record, sid)
         raise
     if not agreed:
+        decoder._admission_phase = "done"
         _reject_admission(decoder, record, sid)
         if decoder.w.rank == 0:
             raise ValueError("Paired memory installation rejected this request")
@@ -153,3 +161,41 @@ def complete_admission(decoder, sid):
     lane.st._eval_sid = sid
     if hasattr(lane.s, "_memory_record"):
         del lane.s._memory_record
+
+
+def _join_reject(decoder, words):
+    try:
+        decoder.g._gather_ints(list(words))
+    except Exception as error:
+        if decoder.broken is None:
+            decoder.broken = error
+
+
+def _release_open_admission(decoder):
+    state = getattr(decoder.w, "meta", {}).get(KEY)
+    if not state:
+        return
+    sid = getattr(decoder, "_eval_admit", None)
+    if sid is None or sid not in state.get("active", {}):
+        return
+    if sid not in decoder.lanes:
+        state["active"].pop(sid, None)
+        return
+    _reject_admission(decoder, state["active"][sid], sid)
+
+
+def unblock_peer(decoder):
+    """Join the admission vote a peer may still be waiting on, then drop this slot."""
+    phase = getattr(decoder, "_admission_phase", None)
+    if phase in ("aborted", "done", "geometry", "confirm"):
+        decoder._eval_admit = None
+        return
+    if phase == "geometry-done":
+        _join_reject(decoder, [0])
+    elif getattr(decoder, "_eval_admit", None) is None:
+        return
+    else:
+        _join_reject(decoder, [0, 0, 0, 0])
+    _release_open_admission(decoder)
+    decoder._admission_phase = "aborted"
+    decoder._eval_admit = None

@@ -141,7 +141,8 @@ def test_decision_requires_gain_per_fact_and_control_preservation():
     rows = []
     for i in range(10):
         rows.append({'fact_id': str(i % 2), 'memory': {'grounded': True}, 'baseline': {'grounded': False}})
-    controls = [{'byte_identical': True, 'zero_installation': True}]
+    controls = [{'byte_identical': True, 'zero_installation': True,
+                 'zero_cache_writes': True, 'zero_offpath_delta': True}]
     assert decision(rows, controls, acceptance)['verdict'] == 'keep'
     for row in rows:
         row['baseline']['grounded'] = True
@@ -149,6 +150,12 @@ def test_decision_requires_gain_per_fact_and_control_preservation():
     for row in rows:
         row['baseline']['grounded'] = False
     controls[0]['zero_installation'] = False
+    assert decision(rows, controls, acceptance)['verdict'] == 'reject'
+    controls[0]['zero_installation'] = True
+    controls[0]['zero_cache_writes'] = False
+    assert decision(rows, controls, acceptance)['verdict'] == 'reject'
+    controls[0]['zero_cache_writes'] = True
+    controls[0]['zero_offpath_delta'] = False
     assert decision(rows, controls, acceptance)['verdict'] == 'reject'
 
 

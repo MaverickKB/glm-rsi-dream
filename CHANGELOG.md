@@ -13,3 +13,5 @@
 - Reject a non-positive guard sample interval and a backwards swap counter before dividing.
 - Keep a failure observed during the restore probe.
 - Grade the helper fact with the alias that appears in its statement.
+- When rank 1's follower hits an error during eval admission, it joins the peer's admission vote and drops its own slot instead of leaving that vote blocked.
+- Report cache writes and the off-path delta as separate receipt fields, and reject a control when either one is nonzero.

@@ -103,6 +103,7 @@ def install(decoder, record):
     finally:
         decoder.e.use(previous)
     lane.st._eval_sid=record['sid']
+    record['cache_writes'] = int(record.get('cache_writes', 0)) + 1
     record['main_calls']=1
     record['memory_activated']=True
     record['memory_length']=n
