@@ -169,7 +169,16 @@ def execute_python(container, code):
     return text
 
 
+def expand_root(path):
+    expanded = os.path.expanduser(path)
+    if not expanded.startswith("/"):
+        raise ValueError("run directory must be absolute")
+    return expanded
+
+
 def dispatch(spec):
+    if isinstance(spec.get("root"), str):
+        spec["root"] = expand_root(spec["root"])
     action = spec["action"]
     if action == "no_listener":
         port = int(spec["port"])
