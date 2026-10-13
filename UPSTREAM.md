@@ -42,7 +42,7 @@ container binaries. The download references have not been pulled or loaded in
 this publication review. Fresh setup, exact source identity, and native behavior
 remain to be qualified on the pair.
 
-Package installation needs Python 3.11 or newer, setuptools, and tokenizers.
+Package installation supports Python 3.11, 3.12, and 3.13, plus setuptools and tokenizers.
 The `dev` extra adds pytest, CPU-capable PyTorch, ruff, and build. Native containers
 supply CUDA and TensorFold. `tools/prepare_baseline.py` uses Docker and the
 container's public huggingface_hub download API. Dependency packages retain their

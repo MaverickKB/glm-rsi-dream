@@ -41,14 +41,16 @@ Write linear Python for a junior reader, with named intermediates, loops, and
 clear if/else branches. Keep changes small. Use ordinary punctuation without
 em dashes. Do not add hype or unsupported outcome claims.
 
-From the checkout, use Python 3.11 or 3.12:
+Supported Python versions are 3.11, 3.12, and 3.13. Dev dependencies are locked
+in `uv.lock`. Install them with uv 0.13 or newer:
 
 ```sh
-pip install -e '.[dev]'
-ruff check .
-CUDA_VISIBLE_DEVICES='' python -m pytest -q
-python -m build
-glm-rsi-dream --config config.example.json --dry-run run
+uv sync --locked --extra dev
+uv run ruff check .
+uv run mypy
+CUDA_VISIBLE_DEVICES='' uv run python -m pytest -q
+uv build
+uv run glm-rsi-dream --config config.example.json --dry-run run
 ```
 
 Mark native GPU tests with pytest.mark.gpu and keep native runtime imports
