@@ -37,16 +37,16 @@ recall, and rollback need the Spark pair, and they run only when you pass
 
 ### On a laptop
 
-From this checkout, use Python 3.11 or 3.12:
+Supported Python versions are 3.11, 3.12, and 3.13. Dev dependencies are locked
+in `uv.lock`. Install them with uv 0.13 or newer:
 
 ```sh
-python3 -m venv .venv
-. .venv/bin/activate
-pip install -e '.[dev]'
-ruff check .
-CUDA_VISIBLE_DEVICES='' python -m pytest -q
-glm-rsi-dream --config config.example.json --dry-run run
-python tools/prepare_baseline.py --config config.example.json
+uv sync --locked --extra dev
+uv run ruff check .
+uv run mypy
+CUDA_VISIBLE_DEVICES='' uv run python -m pytest -q
+uv run glm-rsi-dream --config config.example.json --dry-run run
+uv run python tools/prepare_baseline.py --config config.example.json
 ```
 
 The dry run prints a plan. It lists capture, a fit of 96 rows at 11
@@ -62,12 +62,12 @@ answers and exact controls on the pair.
 
 ### On the Spark pair
 
-Live work needs exactly two NVIDIA DGX Spark GB10 nodes, Linux ARM64, working
-SSH between the coordinator and both ranks, Docker through the standard Unix
-socket, and the external TensorFold runtime and model files described in
-[UPSTREAM.md](UPSTREAM.md). The native containers supply CUDA, PyTorch, and
-their serving dependencies. Install `.[dev]` on the head if you want the CPU
-checks there. Read [MODEL-TERMS.md](MODEL-TERMS.md) before any downloads.
+Live work requires exactly two NVIDIA DGX Spark GB10 nodes, Linux ARM64,
+working SSH between the coordinator and both ranks, Docker access through the
+standard Unix socket, and the external compatible TensorFold runtime and model
+files described in [UPSTREAM.md](UPSTREAM.md). The native containers supply CUDA,
+PyTorch, and their serving dependencies. Install the locked `dev` extra on the
+head if using the CPU checks there. Read [MODEL-TERMS.md](MODEL-TERMS.md) before any downloads.
 
 Copy the checkout to the head Spark. Put your own SSH identity, containers,
 head API address and port, fabric address and interface, and protected service
@@ -80,17 +80,17 @@ cp config.example.json config.json
 
 Every operator host, storage directory, and listener port lives in
 `config.json`. The `.example` addresses and angle-bracket fields are
-placeholders. Set each `work_dir` to an absolute, writable directory owned by
-your operator account. The example uses `/var/tmp/glm-rsi-dream`. Choose a
-private run directory, for example under `~/.cache/glm-rsi-dream`. Keep
-configuration and run data out of source control. Point dashboard and
-protected-service URLs at services you own on the pair. The worker stays rank
-1 and exposes no generation API.
+placeholders. Both `work_dir` entries and the CLI `--run` default use
+`~/.cache/glm-rsi-dream`. The example used to say `/var/tmp/glm-rsi-dream`,
+and `--run` used to default to `runs/demo-1`. Those defaults are now the
+cache directory below. Keep configuration and run data out of source control.
+Point dashboard and protected-service URLs at services you own on the pair.
+The worker stays rank 1 and exposes no generation API.
 
 For a pair that is already serving a compatible runtime, run on the head Spark:
 
 ```sh
-glm-rsi-dream --config config.json --run ~/.cache/glm-rsi-dream/synthetic-1 \
+glm-rsi-dream --config config.json --run ~/.cache/glm-rsi-dream/demo-1 \
   --lesson examples/synthetic/lesson.json --eval examples/synthetic/eval.json \
   --live run
 ```
@@ -119,7 +119,7 @@ A pocket that was kept, and whose window restored the originals, can be read
 in another temporary serving window:
 
 ```sh
-glm-rsi-dream --config config.json --run ~/.cache/glm-rsi-dream/synthetic-1 \
+glm-rsi-dream --config config.json --run ~/.cache/glm-rsi-dream/demo-1 \
   --question 'What is the Linden project helper called?' --live ask
 ```
 
@@ -139,11 +139,76 @@ the model.
 STOP requests and restoration stay explicit:
 
 ```sh
-glm-rsi-dream --config config.json --run ~/.cache/glm-rsi-dream/synthetic-1 \
+glm-rsi-dream --config config.json --run ~/.cache/glm-rsi-dream/demo-1 \
   --live restore
 ```
 
 A `STOP` file in the run directory requests restoration during an active loop.
+
+## Where things live
+
+The default data directory is `~/.cache/glm-rsi-dream`. The CLI `--run` default
+changed from `runs/demo-1` to `~/.cache/glm-rsi-dream/demo-1`. The example
+`work_dir` changed from `/var/tmp/glm-rsi-dream` to `~/.cache/glm-rsi-dream`.
+A path that starts with `~/` is expanded on the machine that uses it: the
+coordinator expands `--run` before it writes local files, and each Spark
+expands `work_dir` for its own SSH account. An absolute path is used as written.
+
+| What | Path |
+| --- | --- |
+| Default data directory | `~/.cache/glm-rsi-dream`, the `work_dir` of both hosts in `config.example.json` |
+| Default coordinator run | `~/.cache/glm-rsi-dream/demo-1`, the CLI `--run` default. The basename `demo-1` is the run id |
+| Remote run root | `<work_dir>/<run id>`, from `Transport.root`. With the defaults that is `~/.cache/glm-rsi-dream/<run id>` on each Spark |
+| Baseline weights | `<work_dir>/baseline`, created by `tools/prepare_baseline.py` and mounted at `/models` (`/models/main`, `/models/drafter`) |
+| CLI config | `config.example.json`, the `glm-rsi-dream --config` default |
+| Operator config | `config.json`, the `prepare_baseline.py --config` default. Gitignored |
+| Lesson and eval | `examples/synthetic/lesson.json` and `examples/synthetic/eval.json`, the CLI defaults |
+| Packaged manifest | `src/glm_rsi_dream/resources/manifest.json`, read at startup and not rewritten by a run |
+| Published results | `results/RESULTS.md` and `results/source-results.json`. The loop does not write these |
+
+The coordinator writes these under `--run`: `state.json`, `events.json`,
+`lesson.json`, `eval.json`, `freeze.json`, `tokenizer.json`, `teachers.json`,
+`train-index.json`, `capture-complete.json`, `fit-report-rank0.json`,
+`fit-report-rank1.json`, `selected.json`, `dev.json`, `heldout.json`,
+`controls.json`, `check.json`, `evaluation-started.json`,
+`untagged-baseline.json`, `restore-parity.json`, `protected-preflight.json`,
+`protected-restored.json`, `pair/prefix.json`, `pair/pair.json`,
+`pair/compiled-rank0.pt`, `pair/compiled-rank1.pt`, and `responses/`. An
+operator can create `STOP` there. The loop reads it and does not create it.
+
+Each Spark's remote run root receives `src/`, `pair/` (including
+`pair/train-index.json`, `pair/compiled-rankN.pt`, and
+`pair/requests/<request id>.json`), `bootstrap.pth`, `capture/`, `receipts/`,
+`guard.json`, `guard.pid`, `guard.log`, `guard-done`, and, if a guard fires,
+`guard-fired.json`.
+
+Inside a candidate container those directories are mounted as `/opt/pocket`
+(the remote root, read only), `/capture` (read write), and `/z-receipts`
+(the remote `receipts/` directory, read write). `bootstrap.pth` is mounted at
+`<site-packages>/glm-rsi-dream.pth`. The trainer reads `/opt/pocket/pair` and
+`/capture`, and writes `/capture/fullstate-rankN.pt`,
+`/capture/<request id>-rankN.pt`, `/capture/compiled-rankN.pt`,
+`/capture/compiled-report-rankN.json`, `/capture/trainer-rankN.log`, and
+`/capture/trainer-status-rankN.json`. Receipts are
+`/z-receipts/<request id>-rankN.json`.
+
+The candidate environment sets `TF_DREAM_CAPTURE=1`,
+`TF_DREAM_CAPTURE_DIR=/capture`, `TF_DREAM_CAPTURE_MAX_BYTES=67108864`,
+`TF_DREAM_CAPTURE_COPY_ROWS=32`, `TF_DREAM_CAPTURE_ENGINE_SHA256` from the
+manifest, `TF_DREAM_EVAL=1`, and
+`TF_DREAM_EVAL_MANIFEST=/opt/pocket/pair/pair.json`. It forces
+`TF_GLM_HC_SPLIT=0` and `TF_GLM_PREFILL_OVERLAP=0`. If the original container
+already has `TF_DREAM_*`, `LW_ADAPTER`, or `LW_CAPTURE_DIR`, cloning stops.
+Fresh provisioning also passes the `baseline.environment` keys from config:
+`HF_HUB_OFFLINE`, `TENSORFOLD_NO_UPDATE_CHECK`, `TENSORFOLD_MEMORY_RESERVE_GIB`,
+`TF_GLM_COMM`, `NCCL_SOCKET_IFNAME`, `NCCL_IB_HCA`, `NCCL_IB_GID_INDEX`,
+`NCCL_MIN_NCHANNELS`, `NCCL_MAX_NCHANNELS`, `TF_GLM_KV`, `TF_GLM_DENSE`,
+`TF_GLM_MTP`, and `TF_GLM_HC_SPLIT`.
+
+The agent reads `/var/run/docker.sock`, `/proc/meminfo`, `/proc/vmstat`, and
+`/proc/net/tcp` and `/proc/net/tcp6`. The coordinator reads `/etc/dgx-release`
+before live work. CPU CI sets `CUDA_VISIBLE_DEVICES`, `PYTHONDONTWRITEBYTECODE`,
+and `UV_LOCKED`. This package does not read those three.
 
 ## How a pocket is trained, loaded, recalled, and rolled back
 
@@ -517,12 +582,13 @@ consumed.
 ### Where do real facts go?
 
 Keep real lessons, evaluation files, and run directories outside source
-control. `config.json` is ignored and holds host addresses, SSH identity,
-and ports. The loop copies the lesson into the private run directory, and
-the pocket tensors can encode those facts. The repository examples are
-fictional. Publish aggregate scores if you share a result, and leave out
-run receipts, captures, prompts, and anything that fingerprints the private
-data.
+control. The default place is `~/.cache/glm-rsi-dream`, described in
+[Where things live](#where-things-live). `config.json` is ignored and holds
+host addresses, SSH identity, and ports. The loop copies the lesson into the
+private run directory, and the pocket tensors can encode those facts. The
+repository examples are fictional. Publish aggregate scores if you share a
+result, and leave out run receipts, captures, prompts, and anything that
+fingerprints the private data.
 
 ## Contributing and licenses
 

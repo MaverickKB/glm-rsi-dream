@@ -1,11 +1,39 @@
 """Validate host-owned settings before any live operation."""
 import json
+import os
 import platform
+import shlex
 from pathlib import Path
 from urllib.parse import urlparse
 
 from .files import read_json
 from .manifest import MANIFEST
+
+# One data directory for the coordinator run and each Spark's work_dir.
+# "~" stays in the config so each host expands it for its own account.
+DEFAULT_DATA_DIR = "~/.cache/glm-rsi-dream"
+DEFAULT_RUN_DIR = DEFAULT_DATA_DIR + "/demo-1"
+
+
+def expand_home(path):
+    return os.path.expanduser(path)
+
+
+def acceptable_work_dir(path):
+    if not isinstance(path, str) or not path or path != path.strip():
+        return False
+    return expand_home(path).startswith("/")
+
+
+def shell_command(command):
+    """Quote a remote command, leaving a leading ~/ for the remote shell."""
+    parts = []
+    for arg in command:
+        if arg.startswith("~/"):
+            parts.append("$HOME/" + shlex.quote(arg[2:]))
+        else:
+            parts.append(shlex.quote(arg))
+    return " ".join(parts)
 
 
 def require_spark():
@@ -25,7 +53,7 @@ def load_config(path, live=False):
     for rank, host in enumerate(hosts):
         if host['rank'] != rank or not host['ssh'] or not host['original_container']:
             raise ValueError('Host entries must own ranks 0 and 1 in order')
-        if not host['work_dir'].startswith('/'):
+        if not acceptable_work_dir(host['work_dir']):
             raise ValueError('Work directory must be absolute on each Spark')
     if hosts[0]['ssh'] == hosts[1]['ssh']:
         raise ValueError('Two distinct Spark SSH targets are required')

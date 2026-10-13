@@ -26,6 +26,26 @@ def reply(text, finish='stop'):
             'usage': {'completion_tokens': 2}}
 
 
+def test_canonical_data_directory_is_the_cache(monkeypatch, tmp_path):
+    from glm_rsi_dream.agent import expand_root
+    from glm_rsi_dream.cli import build_parser
+    from glm_rsi_dream.config import DEFAULT_DATA_DIR, DEFAULT_RUN_DIR, shell_command
+    example = read_json(ROOT / 'config.example.json')
+    assert example['hosts'][0]['work_dir'] == DEFAULT_DATA_DIR
+    assert example['hosts'][1]['work_dir'] == DEFAULT_DATA_DIR
+    loaded = load_config(ROOT / 'config.example.json')
+    assert loaded['hosts'][0]['work_dir'] == DEFAULT_DATA_DIR
+    assert loaded['hosts'][1]['work_dir'] == DEFAULT_DATA_DIR
+    assert build_parser().parse_args(['status']).run == DEFAULT_RUN_DIR
+    monkeypatch.setenv('HOME', str(tmp_path))
+    expected = str(tmp_path / '.cache/glm-rsi-dream/demo-1')
+    assert expand_root(DEFAULT_RUN_DIR) == expected
+    command = shell_command(['mkdir', '-p', DEFAULT_DATA_DIR + '/baseline'])
+    assert command == 'mkdir -p $HOME/.cache/glm-rsi-dream/baseline'
+    mounted = DEFAULT_DATA_DIR + '/baseline:/models'
+    assert shell_command(['docker', 'run', '-v', mounted]) == 'docker run -v $HOME/.cache/glm-rsi-dream/baseline:/models'
+
+
 def test_demo_split_routing_and_disjointness():
     lesson, evaluation = fixtures()
     validate(lesson, evaluation)

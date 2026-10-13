@@ -4,13 +4,13 @@
       "rank": 0,
       "ssh": "<SSH_USER>@spark-head.example",
       "original_container": "<HEAD_CONTAINER>",
-      "work_dir": "/var/tmp/glm-rsi-dream"
+      "work_dir": "~/.cache/glm-rsi-dream"
     },
     {
       "rank": 1,
       "ssh": "<SSH_USER>@spark-worker.example",
       "original_container": "<WORKER_CONTAINER>",
-      "work_dir": "/var/tmp/glm-rsi-dream"
+      "work_dir": "~/.cache/glm-rsi-dream"
     }
   ],
   "api_url": "http://spark-head.example:<HEAD_API_PORT>",

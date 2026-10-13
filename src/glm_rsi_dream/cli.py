@@ -4,22 +4,29 @@ import json
 import sys
 from pathlib import Path
 
-from .config import load_config, require_spark
+from .config import DEFAULT_RUN_DIR, expand_home, load_config, require_spark
 from .files import read_json
 from .manifest import MANIFEST
 
 
-def main(argv=None):
+def build_parser():
     parser = argparse.ArgumentParser(description=MANIFEST['name'] + ', ' + MANIFEST['status'])
-    parser.add_argument('--config', default='config.example.json')
-    parser.add_argument('--run', default='runs/demo-1')
+    parser.add_argument('--config', default='config.example.json',
+                        help='config file (default: config.example.json)')
+    parser.add_argument('--run', default=DEFAULT_RUN_DIR,
+                        help='private run directory (default: ~/.cache/glm-rsi-dream/demo-1)')
     parser.add_argument('--lesson', default='examples/synthetic/lesson.json')
     parser.add_argument('--eval', default='examples/synthetic/eval.json')
     parser.add_argument('--live', action='store_true')
     parser.add_argument('--dry-run', action='store_true')
     parser.add_argument('--question')
     parser.add_argument('command', choices=['run', 'ask', 'restore', 'status'])
-    args = parser.parse_args(argv)
+    return parser
+
+
+def main(argv=None):
+    args = build_parser().parse_args(argv)
+    args.run = expand_home(args.run)
     try:
         if args.command == 'status':
             path = Path(args.run) / 'state.json'
