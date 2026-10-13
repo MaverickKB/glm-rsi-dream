@@ -2,6 +2,7 @@
 
 It uses Docker's Unix socket. Original containers are never reconfigured.
 """
+
 import base64
 import copy
 import hashlib
@@ -16,16 +17,17 @@ import tarfile
 import time
 import urllib.parse
 from pathlib import Path
+from typing import Any
 
 
 class DockerConnection(http.client.HTTPConnection):
-    def connect(self):
+    def connect(self) -> Any:
         self.sock = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
         self.sock.settimeout(15)
         self.sock.connect("/var/run/docker.sock")
 
 
-def docker(method, path, body=None):
+def docker(method: Any, path: Any, body: Any=None) -> Any:
     connection = DockerConnection("localhost", timeout=15)
     data = None if body is None else json.dumps(body)
     connection.request(method, path, data, {"Content-Type": "application/json"})
@@ -41,15 +43,15 @@ def docker(method, path, body=None):
     return json.loads(raw)
 
 
-def inspect(container):
+def inspect(container: Any) -> Any:
     return docker("GET", "/containers/" + urllib.parse.quote(container, safe="") + "/json")
 
 
-def identity(record):
+def identity(record: Any) -> Any:
     return {"Config": record["Config"], "HostConfig": record["HostConfig"], "Image": record["Image"]}
 
 
-def metrics():
+def metrics() -> Any:
     memory = {}
     for line in Path("/proc/meminfo").read_text().splitlines():
         fields = line.split()
@@ -63,7 +65,7 @@ def metrics():
             "swap_out_bytes": vm["pswpout"] * os.sysconf("SC_PAGE_SIZE")}
 
 
-def safe_path(root, relative):
+def safe_path(root: Any, relative: Any) -> Any:
     root = Path(root).resolve()
     path = (root / relative).resolve()
     if not path.is_relative_to(root):
@@ -71,7 +73,7 @@ def safe_path(root, relative):
     return path
 
 
-def stage(root, encoded):
+def stage(root: Any, encoded: Any) -> Any:
     data = base64.b64decode(encoded, validate=True)
     root = Path(root)
     root.mkdir(parents=True, exist_ok=True, mode=0o700)
@@ -82,7 +84,10 @@ def stage(root, encoded):
                 raise ValueError("only regular staged files are allowed")
             path = safe_path(root, member.name)
             path.parent.mkdir(parents=True, exist_ok=True)
-            content = archive.extractfile(member).read()
+            extracted = archive.extractfile(member)
+            if extracted is None:
+                raise ValueError("only regular staged files are allowed")
+            content = extracted.read()
             path.write_bytes(content)
             path.chmod(0o600)
     for name in ("capture", "receipts", "pair/requests"):
@@ -90,7 +95,7 @@ def stage(root, encoded):
     return {"staged_sha256": hashlib.sha256(data).hexdigest()}
 
 
-def clone(spec):
+def clone(spec: Any) -> Any:
     original = inspect(spec["original"])
     if identity(original) != spec["identity"]:
         raise ValueError("original launch identity changed")
@@ -144,7 +149,7 @@ def clone(spec):
     return {"id": result["Id"], "identity": identity(actual), "validated": validated}
 
 
-def execute_python(container, code):
+def execute_python(container: Any, code: Any) -> Any:
     record = docker("POST", "/containers/" + container + "/exec",
                     {"AttachStdout": True, "AttachStderr": True,
                      "Cmd": ["python3", "-B", "-c", code]})
@@ -169,14 +174,14 @@ def execute_python(container, code):
     return text
 
 
-def expand_root(path):
+def expand_root(path: Any) -> Any:
     expanded = os.path.expanduser(path)
     if not expanded.startswith("/"):
         raise ValueError("run directory must be absolute")
     return expanded
 
 
-def dispatch(spec):
+def dispatch(spec: Any) -> Any:
     if isinstance(spec.get("root"), str):
         spec["root"] = expand_root(spec["root"])
     action = spec["action"]

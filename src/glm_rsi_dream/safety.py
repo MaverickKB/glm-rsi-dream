@@ -1,5 +1,7 @@
 """Memory, swap and exact reply preservation gates."""
+
 import math
+from typing import Any
 
 
 class SafetyError(RuntimeError):
@@ -7,13 +9,13 @@ class SafetyError(RuntimeError):
 
 
 class MemoryGate:
-    def __init__(self, policy):
+    def __init__(self, policy: Any) -> None:
         self.policy = policy
-        self.previous = {}
-        self.high_since = {}
-        self.minima = {}
+        self.previous: dict[Any, Any] = {}
+        self.high_since: dict[Any, Any] = {}
+        self.minima: dict[Any, Any] = {}
 
-    def observe(self, rank, sample):
+    def observe(self, rank: Any, sample: Any) -> Any:
         for key in ("available", "time", "swap_out_bytes"):
             value = sample.get(key)
             if not isinstance(value, (int, float)) or not math.isfinite(value) or value < 0:
@@ -37,7 +39,7 @@ class MemoryGate:
         self.previous[rank] = sample
 
 
-def response_bytes(response, require_complete=True):
+def response_bytes(response: Any, require_complete: Any=True) -> Any:
     """Compare generated UTF-8 bytes, token counts and finish, excluding request IDs."""
     choice = response["choices"][0]
     message = choice.get("message")
@@ -52,7 +54,7 @@ def response_bytes(response, require_complete=True):
     return content.encode("utf-8"), choice.get("finish_reason"), response.get("usage", {}).get("completion_tokens")
 
 
-def require_parity(before, after, require_complete=True):
+def require_parity(before: Any, after: Any, require_complete: Any=True) -> Any:
     if len(before) != len(after) or not before:
         raise SafetyError("parity probe set is empty or incomplete")
     for original, candidate in zip(before, after):

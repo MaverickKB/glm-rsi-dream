@@ -1,5 +1,7 @@
 """Attention-only windows with paired receipts and host-local recovery guards."""
+
 import time
+from typing import Any
 
 from .controller import Cluster
 from .dataset import admitted
@@ -9,7 +11,7 @@ from .safety import SafetyError
 
 
 class AttentionCluster(Cluster):
-    def preflight(self):
+    def preflight(self) -> Any:
         pins = super().preflight()
         self.check_worker_listener()
         from tokenizers import Tokenizer
@@ -45,18 +47,18 @@ class AttentionCluster(Cluster):
         write_json(self.run_dir / 'protected-preflight.json', probes)
         return pins
 
-    def check_worker_listener(self):
+    def check_worker_listener(self) -> Any:
         from urllib.parse import urlparse
         parsed = urlparse(self.config['api_url'])
         default_port = 443 if parsed.scheme == 'https' else 80
         port = parsed.port or default_port
         return self.transport.call(1, 'no_listener', port=port)
 
-    def ready(self):
+    def ready(self) -> Any:
         super().ready()
         self.check_worker_listener()
 
-    def arm_guards(self):
+    def arm_guards(self) -> Any:
         for rank in range(2):
             owned = []
             for item in self.state['candidate_history']:
@@ -67,7 +69,7 @@ class AttentionCluster(Cluster):
                     'safety': self.config['safety'], 'api_url': self.config['api_url']}
             self.transport.call(rank, 'arm_guard', root=self.transport.root(rank, self.run_id), spec=spec)
 
-    def _restore(self):
+    def _restore(self) -> Any:
         super()._restore()
         try:
             self.check_worker_listener()
@@ -87,7 +89,7 @@ class AttentionCluster(Cluster):
             self.save()
             raise
 
-    def infer(self, body, policy=None):
+    def infer(self, body: Any, policy: Any=None) -> Any:
         policy = dict(policy or {})
         tag = body.get('metadata', {}).get('dream_eval')
         if tag and policy.get('use_memory'):

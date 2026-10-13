@@ -1,13 +1,15 @@
 """Independent host-local recovery if the head coordinator disappears."""
+
 import json
 import subprocess
 import sys
 import time
 import urllib.request
 from pathlib import Path
+from typing import Any
 
 
-def body_reports_outage(raw):
+def body_reports_outage(raw: Any) -> Any:
     """True when a health body says the pair is down or the ranks diverged."""
     try:
         body = json.loads(raw)
@@ -20,7 +22,7 @@ def body_reports_outage(raw):
     return False
 
 
-def sample():
+def sample() -> Any:
     available = 0
     swapped = 0
     for line in Path('/proc/meminfo').read_text().splitlines():
@@ -35,7 +37,7 @@ def sample():
     return time.monotonic(), available, swapped
 
 
-def run(path):
+def run(path: Any) -> Any:
     root = Path(path).parent
     spec = json.loads(Path(path).read_text())
     policy = spec['safety']

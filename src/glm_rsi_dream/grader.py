@@ -1,13 +1,15 @@
 """Local deterministic fact grading with grouped aliases and leakage rules."""
+
 import re
 import unicodedata
+from typing import Any
 
 
-def normalized(text):
+def normalized(text: Any) -> Any:
     return unicodedata.normalize("NFKC", text).casefold()
 
 
-def states_alias(answer, aliases):
+def states_alias(answer: Any, aliases: Any) -> Any:
     text = normalized(answer)
     for alias in aliases:
         value = normalized(alias).strip()
@@ -22,7 +24,7 @@ def states_alias(answer, aliases):
     return False
 
 
-def grade(answer, task):
+def grade(answer: Any, task: Any) -> Any:
     if not isinstance(answer, str):
         return False
     text = normalized(answer)
@@ -40,7 +42,7 @@ def grade(answer, task):
     return True
 
 
-def false_trigger(answer, facts):
+def false_trigger(answer: Any, facts: Any) -> Any:
     for fact in facts:
         rules = fact.get("false_trigger")
         if rules is None:

@@ -1,9 +1,11 @@
 # SPDX-License-Identifier: Apache-2.0
 """Real gradients of a frozen native MLA readout reference, not full-model KL."""
+
 import argparse
 import hashlib
 import json
 from pathlib import Path
+from typing import Any
 
 import torch
 from tensorfold.families.glm5_next.cuda import kv8
@@ -12,7 +14,7 @@ from glm_rsi_dream.attention import attention
 from glm_rsi_dream.manifest import MANIFEST
 
 
-def main():
+def main() -> Any:
     parser = argparse.ArgumentParser()
     parser.add_argument('--rank', type=int, required=True)
     parser.add_argument('--slots',type=int,default=MANIFEST['memory']['slots'])
@@ -65,11 +67,12 @@ def main():
         if not torch.isfinite(loss):
             raise RuntimeError("Nonfinite attention loss")
         loss.backward()
-        if not torch.isfinite(memory.grad).all() or memory.grad.norm() == 0:
+        gradient = memory.grad
+        if gradient is None or not torch.isfinite(gradient).all() or gradient.norm() == 0:
             raise RuntimeError("Invalid or zero attention gradient")
         direction = torch.randn_like(memory)
         direction /= direction.norm()
-        derivative = float((memory.grad * direction).sum())
+        derivative = float((gradient * direction).sum())
         epsilon = 0.02
         with torch.no_grad():
             plus = (attention(queries.double(), (memory + epsilon * direction).double(), history.double(), positions) - target.double()).square().mean()
@@ -87,7 +90,8 @@ def main():
             if not torch.isfinite(loss):
                 raise RuntimeError("Nonfinite fitting loss")
             loss.backward()
-            if not torch.isfinite(memory.grad).all():
+            gradient = memory.grad
+            if gradient is None or not torch.isfinite(gradient).all():
                 raise RuntimeError("Nonfinite fitting gradient")
             optimizer.step()
             if step % 50 == 0:

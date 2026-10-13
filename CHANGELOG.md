@@ -1,5 +1,17 @@
 # Changelog
 
+## Unreleased
+
+- Run Ruff, strict mypy, Hypothesis checks, and CPU coverage on Python 3.11, 3.12, and 3.13.
+- Reject admission geometry that does not fit the signed int32 rank exchange, and release only that request. An overflowing field no longer marks the pair broken.
+- Compare memory context limits using the one generated token native admission substitutes for a nonpositive count. Non-integer counts fail closed.
+- Record a request-local admission error when lane, capacity, or length checks fail, instead of escaping into the pair-wide breaker.
+- Reject non-finite manifest JSON, malformed manifest structure, path escape, and malformed candidate digests.
+- Finish rollback as restored or restore_failed when a candidate record is malformed. A failed restore leaves the changed flag set so a later window retries, and the phase does not stay on restoring.
+- Reject a staged archive member whose contents cannot be read.
+- Refuse an overlay module whose origin is not a filesystem path.
+- Raise the existing nonfinite-gradient error when a fitting gradient is missing.
+
 ## v0.0.2
 
 - Lock dev dependencies and run CPU checks on Python 3.11, 3.12, and 3.13 for Linux and macOS. Package metadata requires `>=3.11,<3.14`. Pushing a version tag attaches the sdist, wheel, and checksums to the GitHub release and does not publish to PyPI.

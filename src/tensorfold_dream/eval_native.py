@@ -7,6 +7,7 @@ import os
 import re
 from pathlib import Path
 from types import SimpleNamespace
+from typing import Any
 
 from tensorfold_dream import capture_native as capture
 
@@ -16,17 +17,17 @@ MAGIC = capture.WIRE_MAGIC
 STATE = SimpleNamespace(rank="unknown", containment={"failures": 0, "disabled": False})
 
 
-def call(operation, *args, default=None, startup=False, **kwargs):
+def call(operation: Any, *args: Any, default: Any=None, startup: Any=False, **kwargs: Any) -> Any:
     return capture.capture_call(
         operation, *args, tap=STATE, default=default, startup=startup, **kwargs
     )
 
 
-def requested(metadata):
+def requested(metadata: Any) -> Any:
     return isinstance(metadata, dict) and "dream_eval" in metadata
 
 
-def http_metadata(metadata):
+def http_metadata(metadata: Any) -> Any:
     selected = {}
     if isinstance(metadata, dict):
         for name in ("dream_capture", "dream_eval"):
@@ -35,7 +36,7 @@ def http_metadata(metadata):
     return selected
 
 
-def selection(metadata, pair_sha):
+def selection(metadata: Any, pair_sha: Any) -> Any:
     if not requested(metadata):
         return None
     if "dream_capture" in metadata:
@@ -60,23 +61,32 @@ def selection(metadata, pair_sha):
     return dict(spec)
 
 
-def checked_file(root, record):
-    path = (root / record["path"]).resolve()
-    if not path.is_relative_to(root.resolve()):
+def checked_file(root: Any, record: Any) -> Any:
+    if not isinstance(record, dict):
+        raise ValueError("candidate file must remain in manifest directory")
+    relative = record.get("path")
+    expected = record.get("sha256")
+    if not isinstance(relative, str) or not relative or Path(relative).is_absolute():
+        raise ValueError("candidate file must remain in manifest directory")
+    if not isinstance(expected, str) or re.fullmatch(r"[0-9a-f]{64}", expected) is None:
+        raise ValueError("candidate digest mismatch: " + relative)
+    root_path = Path(root).resolve()
+    path = (root_path / relative).resolve()
+    if path == root_path or not path.is_relative_to(root_path) or not path.is_file():
         raise ValueError("candidate file must remain in manifest directory")
     raw = path.read_bytes()
-    if hashlib.sha256(raw).hexdigest() != record["sha256"]:
-        raise ValueError("candidate digest mismatch: " + record["path"])
+    if hashlib.sha256(raw).hexdigest() != expected:
+        raise ValueError("candidate digest mismatch: " + relative)
     return path
 
 
-def load_candidates(path, w, inputs):
+def load_candidates(path: Any, w: Any, inputs: Any) -> Any:
     from .pocket_native import load
 
     return load(path, w)
 
 
-def _attach(engine, model_dir):
+def _attach(engine: Any, model_dir: Any) -> Any:
     w = engine.w
     if w.world != 2 or engine.parallel != 4 or len(w.layers) != 45:
         raise ValueError(
@@ -90,7 +100,7 @@ def _attach(engine, model_dir):
     return state
 
 
-def attach(engine, model_dir):
+def attach(engine: Any, model_dir: Any) -> Any:
     if os.environ.get("TF_DREAM_EVAL") != "1":
         return
     STATE.rank = engine.w.rank
@@ -109,7 +119,7 @@ def attach(engine, model_dir):
         capture.log_notice(f"[dream-eval rank={engine.w.rank}] ready pair={identity}")
 
 
-def request(engine, metadata):
+def request(engine: Any, metadata: Any) -> Any:
     if os.environ.get("TF_DREAM_EVAL") != "1":
         return None
     scope = getattr(capture.REQUEST_CAPTURE, "scope", None)
@@ -121,7 +131,7 @@ def request(engine, metadata):
     return call(selection, metadata, state["pair_sha256"])
 
 
-def wire_extension(capture_spec, eval_spec):
+def wire_extension(capture_spec: Any, eval_spec: Any) -> Any:
     # Native untagged ADMIT stays byte-identical, including its absent tail.
     if capture_spec is None and eval_spec is None:
         return []
@@ -133,11 +143,11 @@ def wire_extension(capture_spec, eval_spec):
     return [MAGIC, len(raw), *raw]
 
 
-def parse_admit(record, payload, offset):
+def parse_admit(record: Any, payload: Any, offset: Any) -> Any:
     if offset == len(payload):
         return record
 
-    def parse():
+    def parse() -> Any:
         envelope = capture.parse_wire(payload, offset, raise_decode_errors=True)
         if set(envelope) != {"capture", "eval"}:
             raise ValueError("invalid request envelope")
@@ -149,23 +159,23 @@ def parse_admit(record, payload, offset):
     return call(parse, default=record, force=True)
 
 
-def admitted(decoder, record):
+def admitted(decoder: Any, record: Any) -> Any:
     from .request_memory import admitted as register
     register(decoder, record)
 
 
-def spec_for(w, st):
+def spec_for(w: Any, st: Any) -> Any:
     state = getattr(w, "meta", {}).get(KEY)
     if state is None:
         return None
     return state["active"].get(getattr(st, "_eval_sid", None))
 
 
-def tagged(w, st):
+def tagged(w: Any, st: Any) -> Any:
     return spec_for(w, st) is not None
 
 
-def select_prefill(decoder, group):
+def select_prefill(decoder: Any, group: Any) -> Any:
     pieces = []
     offset = 0
     for lane, stop in group:
@@ -176,7 +186,7 @@ def select_prefill(decoder, group):
     decoder.e.pbuf._eval_pieces = pieces
 
 
-def select_decode(w, b, segments):
+def select_decode(w: Any, b: Any, segments: Any) -> Any:
     pieces = []
     offset = 0
     for seg in segments:
@@ -186,7 +196,7 @@ def select_decode(w, b, segments):
     b._eval_pieces = pieces
 
 
-def has_main(w, b):
+def has_main(w: Any, b: Any) -> Any:
     for st, offset, count in getattr(b, "_eval_pieces", ()):
         record = spec_for(w, st)
         if record is not None and record["spec"]["arm"] == "main":
@@ -194,7 +204,7 @@ def has_main(w, b):
     return False
 
 
-def _finished(decoder, sid):
+def _finished(decoder: Any, sid: Any) -> Any:
     state = decoder.w.meta.get(KEY)
     if state is None:
         return
@@ -227,5 +237,5 @@ def _finished(decoder, sid):
     )
 
 
-def finished(decoder, sid):
+def finished(decoder: Any, sid: Any) -> Any:
     return call(_finished, decoder, sid)

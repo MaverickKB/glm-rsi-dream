@@ -6,17 +6,23 @@ import json
 import os
 import sys
 import threading
+from collections.abc import Callable
 from contextlib import contextmanager
 from functools import wraps
 from pathlib import Path
+from typing import Any, overload
 
 from .capture_tap import (
-    CONFIG_SHA,
+    CONFIG_SHA as CONFIG_SHA,
+)
+from .capture_tap import (
     CaptureTap,
     TapConfig,
-    log_notice,
     packet_bytes,
     validate_metadata,
+)
+from .capture_tap import (
+    log_notice as log_notice,
 )
 from .capture_tap import requested as _requested
 
@@ -24,7 +30,7 @@ KEY = "tensorfold_dream.capture_only"
 WIRE_MAGIC = 1_964_111
 
 
-def file_sha256(path):
+def file_sha256(path: Any) -> Any:
     digest = hashlib.sha256()
     with Path(path).open("rb") as handle:
         while block := handle.read(1_048_576):
@@ -39,7 +45,7 @@ REQUEST_CAPTURE = threading.local()
 FAILURE_LIMIT = 3
 
 
-def _release(tap, sid):
+def _release(tap: Any, sid: Any) -> Any:
     capture = tap.active.pop(sid, None)
     if capture is not None:
         tap.reserved -= capture["reserve"]
@@ -47,12 +53,12 @@ def _release(tap, sid):
             tap.queued_names.discard(capture["name"])
 
 
-def _raise_capture(exc, owner=None):
+def _raise_capture(exc: Any, owner: Any=None) -> Any:
     raise exc
 
 
 
-def _failure_notice(tap, message):
+def _failure_notice(tap: Any, message: Any) -> Any:
     if tap is None:
         log_notice("[dream-capture] " + message)
         return
@@ -63,8 +69,8 @@ def _failure_notice(tap, message):
     log_notice(f"[dream-capture rank={rank}] skipped: {message}")
 
 
-def capture_call(operation, *args, tap=None, sid=None, default=None,
-                 startup=False, force=False, on_error=None, reason=None, reservation=None, **kwargs):
+def capture_call(operation: Any, *args: Any, tap: Any=None, sid: Any=None, default: Any=None,
+                 startup: Any=False, force: Any=False, on_error: Any=None, reason: Any=None, reservation: Any=None, **kwargs: Any) -> Any:
     """The sole serving/capture exception boundary. BaseException propagates."""
     state = PROCESS_CAPTURE
     try:
@@ -107,14 +113,22 @@ def capture_call(operation, *args, tap=None, sid=None, default=None,
         return default
 
 
-def contained(operation=None, *, startup=False):
-    def decorate(callback):
+@overload
+def contained(operation: Callable[..., Any], *, startup: bool = False) -> Callable[..., Any]: ...
+
+
+@overload
+def contained(operation: None = None, *, startup: bool = False) -> Callable[[Callable[..., Any]], Callable[..., Any]]: ...
+
+
+def contained(operation: Any = None, *, startup: bool = False) -> Any:
+    def decorate(callback: Any) -> Any:
         @wraps(callback)
-        def call(*args, **kwargs):
+        def call(*args: Any, **kwargs: Any) -> Any:
             tap = None
             sid = None
             # Resolve capture ownership within the same boundary as the callback.
-            def invoke():
+            def invoke() -> Any:
                 nonlocal tap, sid
                 owner = args[0] if args else None
                 weights = getattr(owner, "w", owner)
@@ -131,7 +145,7 @@ def contained(operation=None, *, startup=False):
                     sid = args[1]
                 return callback(*args, **kwargs)
 
-            def fail(exc):
+            def fail(exc: Any) -> Any:
                 return capture_call(_raise_capture, exc, *args[:1], tap=tap, sid=sid, startup=startup)
 
             result = capture_call(invoke, on_error=fail, force=True)
@@ -145,7 +159,7 @@ def contained(operation=None, *, startup=False):
 
 
 @contained
-def startup_code():
+def startup_code() -> Any:
 
     config = TapConfig.from_env()
     if config is None:
@@ -156,7 +170,7 @@ def startup_code():
 
 
 @contained(startup=True)
-def attach(engine, model_dir):
+def attach(engine: Any, model_dir: Any) -> Any:
     config = TapConfig.from_env()
     if config is None:
         return
@@ -192,22 +206,22 @@ def attach(engine, model_dir):
 
 
 
-def requested(metadata):
+def requested(metadata: Any) -> Any:
     return capture_call(_requested, metadata, default=False)
 
 
-def http_metadata(metadata):
-    def select():
+def http_metadata(metadata: Any) -> Any:
+    def select() -> Any:
         return {"dream_capture": metadata["dream_capture"]}
     return capture_call(select)
 
 
-def _set_metadata(engine, metadata):
+def _set_metadata(engine: Any, metadata: Any) -> Any:
     engine.request.metadata = metadata
     return True
 
 
-def _metadata_scope(engine, metadata):
+def _metadata_scope(engine: Any, metadata: Any) -> Any:
     request = engine.request
     previous = getattr(request, "metadata", None)
     weights = getattr(engine, "w", None)
@@ -219,7 +233,7 @@ def _metadata_scope(engine, metadata):
 
 
 @contextmanager
-def request_metadata(engine, metadata):
+def request_metadata(engine: Any, metadata: Any) -> Any:
     """Always yield to native serving, even if capture setup or restore fails."""
     outer = getattr(REQUEST_CAPTURE, "scope", None)
     frame = capture_call(_metadata_scope, engine, metadata)
@@ -240,7 +254,7 @@ def request_metadata(engine, metadata):
 
 
 @contained
-def capture_request(engine, prompt, metadata, vision):
+def capture_request(engine: Any, prompt: Any, metadata: Any, vision: Any) -> Any:
     tap = engine.w.meta.get(KEY)
     if tap is None:
         return None
@@ -264,7 +278,7 @@ def capture_request(engine, prompt, metadata, vision):
     return validate_metadata(metadata, prompt, tap.identity["config_sha256"])
 
 
-def _wire_extension(spec):
+def _wire_extension(spec: Any) -> Any:
     if spec is None:
         return [WIRE_MAGIC, 0]
     data = json.dumps(spec, separators=(",", ":")).encode()
@@ -273,11 +287,11 @@ def _wire_extension(spec):
     return [WIRE_MAGIC, len(data), *data]
 
 
-def wire_extension(spec):
+def wire_extension(spec: Any) -> Any:
     return capture_call(_wire_extension, spec, default=[WIRE_MAGIC, 0])
 
 
-def parse_wire(payload, offset, *, raise_decode_errors=False):
+def parse_wire(payload: Any, offset: Any, *, raise_decode_errors: Any=False) -> Any:
     if offset + 2 > len(payload) or payload[offset] != WIRE_MAGIC:
         raise ValueError("capture protocol marker missing; both ranks need the same overlay")
     length = payload[offset + 1]
@@ -293,12 +307,12 @@ def parse_wire(payload, offset, *, raise_decode_errors=False):
         return None
 
 
-def parse_admit_capture(record, payload, offset):
-    def failed_parse(exc):
+def parse_admit_capture(record: Any, payload: Any, offset: Any) -> Any:
+    def failed_parse(exc: Any) -> Any:
         record["capture_error"] = type(exc).__name__
         return None
 
-    def parse_and_insert():
+    def parse_and_insert() -> Any:
         record["capture"] = capture_call(parse_wire, payload, offset, raise_decode_errors=True,
                                          on_error=failed_parse, force=True)
         return record
@@ -307,7 +321,7 @@ def parse_admit_capture(record, payload, offset):
     return record
 
 
-def _discard(tap, sid, reason="incomplete native forward"):
+def _discard(tap: Any, sid: Any, reason: Any="incomplete native forward") -> Any:
     capture = tap.active.get(sid)
     reserved = tap.reserved
     capture_call(tap.discard, sid, reason, tap=tap, sid=sid, force=True)
@@ -317,7 +331,7 @@ def _discard(tap, sid, reason="incomplete native forward"):
 
 
 @contained
-def admitted(decoder, record, stream):
+def admitted(decoder: Any, record: Any, stream: Any) -> Any:
     tap = decoder.w.meta.get(KEY)
     framing_error = record.pop("capture_error", None)
     if tap is None:
@@ -331,7 +345,7 @@ def admitted(decoder, record, stream):
 
 
 @contained
-def select_pieces(decoder, group):
+def select_pieces(decoder: Any, group: Any) -> Any:
     tap = decoder.w.meta.get(KEY)
     pieces = []
     lo = 0
@@ -350,7 +364,7 @@ def select_pieces(decoder, group):
 
 
 @contained
-def terminal(w, b, rows):
+def terminal(w: Any, b: Any, rows: Any) -> Any:
     tap = w.meta.get(KEY)
     pieces = getattr(b, "_capture_pieces", ())
     if tap is None or not b.prefill or not pieces:
@@ -362,7 +376,7 @@ def terminal(w, b, rows):
 
 
 @contained
-def completed(w, b, rows):
+def completed(w: Any, b: Any, rows: Any) -> Any:
     tap = w.meta.get(KEY)
     pieces = getattr(b, "_capture_pieces", ())
     if tap is None or not b.prefill or not pieces:
@@ -372,14 +386,14 @@ def completed(w, b, rows):
 
 
 @contained
-def finished(decoder, sid):
+def finished(decoder: Any, sid: Any) -> Any:
     tap = decoder.w.meta.get(KEY)
     if tap is not None:
         _discard(tap, sid)
 
 
 @contained
-def failed(w, b, reason):
+def failed(w: Any, b: Any, reason: Any) -> Any:
     tap = w.meta.get(KEY)
     if tap is None:
         return

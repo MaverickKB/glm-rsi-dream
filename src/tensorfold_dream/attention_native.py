@@ -1,15 +1,17 @@
 # SPDX-License-Identifier: Apache-2.0
 """Request-owned hybrid attention memory. Backbone tensors remain untouched."""
+
 import hashlib
 import json
 from pathlib import Path
+from typing import Any
 
 import torch
 
 KEY='tensorfold_dream.eval'
 
 
-def initialize(engine):
+def initialize(engine: Any) -> Any:
     state=engine.w.meta.get(KEY)
     if state is None:
         raise RuntimeError('Attention manifest unavailable on one rank')
@@ -36,7 +38,7 @@ def initialize(engine):
     engine.e.reset()
 
 
-def prepare(w, record, ordinary, count):
+def prepare(w: Any, record: Any, ordinary: Any, count: Any) -> Any:
     """Validate and load numerical memory before touching a request slot."""
     from tensorfold.families.glm5_next.cuda import decode
     state = w.meta[KEY]
@@ -82,7 +84,7 @@ def prepare(w, record, ordinary, count):
     return n + len(suffix)
 
 
-def install(decoder, record):
+def install(decoder: Any, record: Any) -> Any:
     """Restore one preflighted plan into its reserved slot."""
     if record['spec']['arm'] != 'main' or not record['policy'].get('use_memory'):
         return
@@ -114,7 +116,7 @@ def install(decoder, record):
     record.pop('memory_plan', None)
 
 
-def capture_read(layer, w, b, qa, lc, pos_dev, lo, count):
+def capture_read(layer: Any, w: Any, b: Any, qa: Any, lc: Any, pos_dev: Any, lo: Any, count: Any) -> Any:
     from .eval_native import spec_for
     for st,offset,size in getattr(b,'_eval_pieces',()):
         record=spec_for(w,st)
@@ -132,7 +134,7 @@ def capture_read(layer, w, b, qa, lc, pos_dev, lo, count):
              'cache':rows.cpu(),'position':position,'prefix_length':n})
 
 
-def capture_output(layer,w,b,ol,lo,count):
+def capture_output(layer: Any,w: Any,b: Any,ol: Any,lo: Any,count: Any) -> Any:
     from .eval_native import spec_for
     for st,offset,size in getattr(b,'_eval_pieces',()):
         record=spec_for(w,st)

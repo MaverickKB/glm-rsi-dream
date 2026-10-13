@@ -1,9 +1,11 @@
 """Validate host-owned settings before any live operation."""
+
 import json
 import os
 import platform
 import shlex
 from pathlib import Path
+from typing import Any
 from urllib.parse import urlparse
 
 from .files import read_json
@@ -15,17 +17,17 @@ DEFAULT_DATA_DIR = "~/.cache/glm-rsi-dream"
 DEFAULT_RUN_DIR = DEFAULT_DATA_DIR + "/demo-1"
 
 
-def expand_home(path):
+def expand_home(path: Any) -> Any:
     return os.path.expanduser(path)
 
 
-def acceptable_work_dir(path):
+def acceptable_work_dir(path: Any) -> Any:
     if not isinstance(path, str) or not path or path != path.strip():
         return False
     return expand_home(path).startswith("/")
 
 
-def shell_command(command):
+def shell_command(command: Any) -> Any:
     """Quote a remote command, leaving a leading ~/ for the remote shell."""
     parts = []
     for arg in command:
@@ -36,14 +38,14 @@ def shell_command(command):
     return " ".join(parts)
 
 
-def require_spark():
+def require_spark() -> Any:
     if platform.system() != 'Linux' or platform.machine() not in ('aarch64', 'arm64'):
         raise ValueError('Live work runs on the head Spark (Linux ARM64)')
     if not Path('/etc/dgx-release').is_file():
         raise ValueError('Live coordinator requires a DGX Spark host')
 
 
-def load_config(path, live=False):
+def load_config(path: Any, live: Any=False) -> Any:
     config = read_json(path)
     if live and '<' in json.dumps(config):
         raise ValueError('Replace configuration placeholders before live work')

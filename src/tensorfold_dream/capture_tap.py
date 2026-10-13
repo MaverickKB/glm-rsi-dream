@@ -15,6 +15,7 @@ import threading
 import time
 from dataclasses import dataclass
 from pathlib import Path
+from typing import Any, BinaryIO, cast
 
 import torch
 
@@ -30,7 +31,7 @@ METADATA_LIMIT = 65_536
 LOG_QUEUE: queue.Queue[str] = queue.Queue(maxsize=128)
 
 
-def log_notice(message):
+def log_notice(message: Any) -> Any:
     try:
         LOG_QUEUE.put_nowait(message)
     except Exception:
@@ -38,7 +39,7 @@ def log_notice(message):
         pass
 
 
-def _log_loop():
+def _log_loop() -> Any:
     while True:
         message = LOG_QUEUE.get()
         try:
@@ -53,7 +54,7 @@ LOG_WRITER = threading.Thread(target=_log_loop, name="dream-capture-log-writer",
 LOG_WRITER.start()
 
 
-def packet_layout(tokens, width, inputs):
+def packet_layout(tokens: Any, width: Any, inputs: Any) -> Any:
     return {
         "sact": ((tokens, inputs), torch.bfloat16),
         "sy": ((tokens, width), torch.float32),
@@ -73,7 +74,7 @@ def packet_layout(tokens, width, inputs):
     }
 
 
-def packet_bytes(tokens, width, inputs):
+def packet_bytes(tokens: Any, width: Any, inputs: Any) -> Any:
     total = 0
     for shape, dtype in packet_layout(tokens, width, inputs).values():
         elements = 1
@@ -83,14 +84,14 @@ def packet_bytes(tokens, width, inputs):
     return total
 
 
-def requested(metadata):
+def requested(metadata: Any) -> Any:
     if not isinstance(metadata, dict):
         return False
     capture = metadata.get("dream_capture")
     return isinstance(capture, dict) and capture.get("tag") == TAG
 
 
-def prepare_metadata(metadata, prompt, tokenizer, config_sha):
+def prepare_metadata(metadata: Any, prompt: Any, tokenizer: Any, config_sha: Any) -> Any:
     """Offline caller: verify plain completion text and derive answer token mask."""
     if not requested(metadata):
         return None
@@ -124,7 +125,7 @@ def prepare_metadata(metadata, prompt, tokenizer, config_sha):
     return prepared
 
 
-def validate_metadata(metadata, prompt, config_sha):
+def validate_metadata(metadata: Any, prompt: Any, config_sha: Any) -> Any:
     """Serving validates the caller's pretokenized capture identity.
 
     The offline producer uses prepare_metadata and must independently
@@ -171,7 +172,7 @@ class TapConfig:
     copy_rows: int = 32
 
     @classmethod
-    def from_env(cls, env=None):
+    def from_env(cls, env: Any=None) -> Any:
         env = os.environ if env is None else env
         enabled = env.get("TF_DREAM_CAPTURE", "0")
         if enabled == "0":
@@ -189,34 +190,34 @@ class TapConfig:
 class LimitedWriter:
     """Torch's zip writer streams directly to disk within the reservation."""
 
-    def __init__(self, handle, limit):
+    def __init__(self, handle: Any, limit: Any) -> None:
         self.handle = handle
         self.limit = limit
         self.largest_write_bytes = 0
 
-    def write(self, data):
+    def write(self, data: Any) -> Any:
         if self.handle.tell() + len(data) > self.limit:
             raise ValueError("serialized packet exceeds reservation")
         self.largest_write_bytes = max(self.largest_write_bytes, len(data))
         return self.handle.write(data)
 
-    def flush(self):
+    def flush(self) -> Any:
         self.handle.flush()
 
 
 class CaptureTap:
-    def __init__(self, config, rank, width, inputs, top_k, norm, norm_eps, identity):
+    def __init__(self, config: Any, rank: Any, width: Any, inputs: Any, top_k: Any, norm: Any, norm_eps: Any, identity: Any) -> None:
         if rank not in (0, 1) or width % 128 or top_k <= 0:
             raise ValueError("capture requires the TP=2 terminal layout")
         self.config, self.rank = config, rank
         self.width, self.inputs, self.top_k = width, inputs, top_k
         self.norm, self.norm_eps, self.identity = norm, norm_eps, identity
-        self.active = {}
+        self.active: dict[Any, dict[str, Any]] = {}
         self.containment = {"failures": 0, "disabled": False}
-        self.write_queue = queue.Queue(maxsize=2)
+        self.write_queue: queue.Queue[tuple[dict[str, Any], threading.Event]] = queue.Queue(maxsize=2)
         self.writer = None
-        self.queued_names = set()
-        self.published_names = set()
+        self.queued_names: set[str] = set()
+        self.published_names: set[str] = set()
         self.reserved = 0
         self.stats = {"completed": 0, "skipped": 0, "failed": 0, "seconds": 0.0,
                       "largest_serialization_write_bytes": 0, "warmup_seconds": 0.0, "dropped": 0}
@@ -230,16 +231,16 @@ class CaptureTap:
         self.writer = threading.Thread(target=self._write_loop, name="dream-capture-writer", daemon=True)
         self.writer.start()
 
-    def notice(self, status, reason):
+    def notice(self, status: Any, reason: Any) -> Any:
         from .capture_native import capture_call
 
-        def report():
+        def report() -> Any:
             self.stats[status] += 1
             log_notice(f"[dream-capture rank={self.rank}] {status}: {reason}")
 
         capture_call(report, tap=self, force=True)
 
-    def warm_combiner(self, combine):
+    def warm_combiner(self, combine: Any) -> Any:
         """Warm the routed-only variant at startup on private one-row zeros.
 
         A one-row grid shares the later capture's D/SLOTS/BLOCK specialization.
@@ -257,7 +258,7 @@ class CaptureTap:
         del experts, weights, output
         self.stats["warmup_seconds"] = time.perf_counter() - start_time
 
-    def begin(self, sid, prompt, spec, cached=0, images=False):
+    def begin(self, sid: Any, prompt: Any, spec: Any, cached: Any=0, images: Any=False) -> Any:
         if spec is None or self.containment["disabled"]:
             return
         if cached or images:
@@ -301,13 +302,13 @@ class CaptureTap:
         except Exception as exc:
             self._fault(sid, exc, "allocation: " + type(exc).__name__)
 
-    def discard(self, sid, reason="incomplete native forward"):
+    def discard(self, sid: Any, reason: Any="incomplete native forward") -> Any:
         capture = self.active.pop(sid, None)
         if capture is not None:
             self.reserved -= capture["reserve"]
             self.notice("skipped", reason)
 
-    def terminal(self, native, pieces, combine):
+    def terminal(self, native: Any, pieces: Any, combine: Any) -> Any:
         """After terminal moe_block, before hc_post overwrites owner x.
 
         pieces are (sid, native row offset, request token offset, row count).
@@ -362,7 +363,7 @@ class CaptureTap:
                 self._fault(sid, exc, "terminal copy failed: " + type(exc).__name__)
         self.stats["seconds"] += time.perf_counter() - start_time
 
-    def completed(self, native, pieces):
+    def completed(self, native: Any, pieces: Any) -> Any:
         """After the native chunk and any requested heads succeed, before reuse."""
         start_time = time.perf_counter()
         for sid, lo, position, count in pieces:
@@ -389,12 +390,12 @@ class CaptureTap:
                 self._fault(sid, exc, "completion failed: " + type(exc).__name__)
         self.stats["seconds"] += time.perf_counter() - start_time
 
-    def _fault(self, sid, exc, reason):
+    def _fault(self, sid: Any, exc: Any, reason: Any) -> Any:
         from .capture_native import _raise_capture, capture_call
 
         capture_call(_raise_capture, exc, tap=self, sid=sid, reason=reason)
 
-    def publish(self, sid):
+    def publish(self, sid: Any) -> Any:
         """Detach after the native head, then wait for successful scope restore."""
         from .capture_native import REQUEST_CAPTURE, capture_call
 
@@ -408,14 +409,14 @@ class CaptureTap:
         self.active.pop(sid)
         capture_call(self.enqueue, capture, tap=self, reservation=capture)
 
-    def drop_pending(self, capture):
+    def drop_pending(self, capture: Any) -> Any:
         if capture.get("queued", False):
             capture["cancelled"] = True
             return
         self.queued_names.discard(capture["name"])
         self.reserved -= capture["reserve"]
 
-    def enqueue(self, capture):
+    def enqueue(self, capture: Any) -> Any:
         """Drop on full. The optional fast-writer wait has a fixed 20ms ceiling."""
         done = threading.Event()
         capture["queued"] = True
@@ -433,7 +434,7 @@ class CaptureTap:
         # serializer/fsync can never extend this fixed request-path budget.
         done.wait(0.02)
 
-    def _write_loop(self):
+    def _write_loop(self) -> Any:
         from .capture_native import capture_call
 
         while True:
@@ -444,7 +445,7 @@ class CaptureTap:
             done.set()
             self.write_queue.task_done()
 
-    def _write_capture(self, capture):
+    def _write_capture(self, capture: Any) -> Any:
         if capture.get("cancelled", False):
             return
         packet = capture["packet"]
@@ -455,7 +456,7 @@ class CaptureTap:
             packet_file = temporary / "packet.pt"
             with packet_file.open("xb") as handle:
                 writer = LimitedWriter(handle, capture["reserve"] - METADATA_LIMIT)
-                torch.save(packet, writer)
+                torch.save(packet, cast(BinaryIO, writer))
                 self.stats["largest_serialization_write_bytes"] = max(
                     self.stats["largest_serialization_write_bytes"], writer.largest_write_bytes)
                 handle.flush()
@@ -497,7 +498,7 @@ class CaptureTap:
             raise
 
     @staticmethod
-    def _sync_directory(path):
+    def _sync_directory(path: Any) -> Any:
         descriptor = os.open(path, os.O_RDONLY)
         try:
             os.fsync(descriptor)

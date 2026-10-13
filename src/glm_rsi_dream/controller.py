@@ -1,4 +1,5 @@
 """Recoverable two-Spark capture/check/serve windows, run on the head Spark."""
+
 import base64
 import json
 import threading
@@ -8,6 +9,7 @@ import urllib.request
 import uuid
 from contextlib import contextmanager
 from pathlib import Path
+from typing import Any
 
 from .files import digest, read_json, sha, write_json
 from .guard import body_reports_outage
@@ -17,7 +19,7 @@ from .transport import Transport
 
 
 class Cluster:
-    def __init__(self, config, run_dir, transport=None):
+    def __init__(self, config: Any, run_dir: Any, transport: Any = None) -> None:
         self.config = config
         self.run_dir = Path(run_dir).resolve()
         self.run_id = self.run_dir.name
@@ -25,27 +27,29 @@ class Cluster:
             raise ValueError("run directory basename must be a safe ID, at most 64 characters")
         self.transport = transport or Transport(config)
         self.state_path = self.run_dir / "state.json"
-        self.state = read_json(self.state_path) if self.state_path.exists() else {"originals": [], "candidates": [], "phase": "new"}
+        loaded = read_json(self.state_path) if self.state_path.exists() else {
+            "originals": [], "candidates": [], "phase": "new"}
+        self.state: dict[str, Any] = loaded
         self.state.setdefault("candidate_history", [])
         self.state.setdefault("trainer_history", [])
         self.gate = MemoryGate(config["safety"])
         for rank, minimum in self.state.get("memory_minima", {}).items():
             self.gate.minima[int(rank)] = minimum
         self.stop = threading.Event()
-        self.failure = None
-        self.watcher = None
+        self.failure: BaseException | None = None
+        self.watcher: threading.Thread | None = None
         self.changed = False
         self.restore_lock = threading.RLock()
         self.probe_lock = threading.RLock()
         self.save_lock = threading.RLock()
         self.counter = 0
 
-    def save(self):
+    def save(self) -> Any:
         with self.save_lock:
             self.state["memory_minima"] = self.gate.minima
             write_json(self.state_path, self.state)
 
-    def health(self):
+    def health(self) -> Any:
         url = self.config["api_url"] + "/health"
         try:
             opened = urllib.request.urlopen(url, timeout=5)
@@ -61,12 +65,12 @@ class Cluster:
             if body_reports_outage(raw):
                 raise SafetyError("head health reports rank desynchronization")
 
-    def probe(self, serving=True):
+    def probe(self, serving: Any=True) -> Any:
         # Sampling and comparison have one owner even with a watcher and caller.
         with self.probe_lock:
             return self._probe(serving)
 
-    def _probe(self, serving=True):
+    def _probe(self, serving: Any=True) -> Any:
         if (self.run_dir / "STOP").exists() and self.state["phase"] not in ("restored", "restoring"):
             raise InterruptedError("STOP requested")
         for rank in range(2):
@@ -74,7 +78,7 @@ class Cluster:
         if serving:
             self.health()
 
-    def background_probe(self):
+    def background_probe(self) -> Any:
         try:
             while not self.stop.wait(self.config["safety"]["probe_seconds"]):
                 self.probe()
@@ -94,12 +98,12 @@ class Cluster:
                 self.state["restore_error"] = str(restore_error)
                 self.save()
 
-    def ensure_safe(self):
+    def ensure_safe(self) -> Any:
         if self.failure is not None:
             raise SafetyError("background serving gate failed: " + str(self.failure))
         self.probe()
 
-    def body(self, prompt, tagged=False, arm="none", teacher=None, completion=False):
+    def body(self, prompt: Any, tagged: Any=False, arm: Any="none", teacher: Any=None, completion: Any=False) -> Any:
         if teacher:
             prompt = "Reference facts stated by the user:\n" + teacher + "\n\nQuestion: " + prompt
         body = {"model": self.config["model"], "temperature": 0, "max_tokens": self.config["max_tokens"],
@@ -120,7 +124,7 @@ class Cluster:
                                               "arm": arm, "pair_sha256": pair["pair_sha256"]}}
         return body
 
-    def infer(self, body, policy=None):
+    def infer(self, body: Any, policy: Any=None) -> Any:
         self.ensure_safe()
         tagged = body.get("metadata", {}).get("dream_eval")
         if policy is not None:
@@ -158,7 +162,7 @@ class Cluster:
             write_json(self.run_dir / "responses" / (name + "-receipts.json"), receipts)
         return reply, receipts
 
-    def preflight(self):
+    def preflight(self) -> Any:
         self.probe()
         if self.state["phase"] in ("serving", "cutover", "restoring", "restore_failed"):
             raise SafetyError("an existing serving window requires restore before a new window")
@@ -203,7 +207,7 @@ class Cluster:
         self.save()
         return pins
 
-    def manifest(self):
+    def manifest(self) -> Any:
         pair_dir = self.run_dir / "pair"
         binding = {"mechanism": MANIFEST["memory"]["mechanism"], "slots": MANIFEST["memory"]["slots"],
                    "tp_world": 2, "original_identities": [],
@@ -215,7 +219,7 @@ class Cluster:
                 "binding": binding, "pair_sha256": digest(binding)}
         write_json(pair_dir / "pair.json", pair)
 
-    def ready(self):
+    def ready(self) -> Any:
         deadline = time.monotonic() + self.config["safety"]["ready_timeout_seconds"]
         while time.monotonic() < deadline:
             self.probe(serving=False)
@@ -230,11 +234,11 @@ class Cluster:
                 time.sleep(1)
         raise SafetyError("paired serving readiness timed out")
 
-    def restore(self):
+    def restore(self) -> Any:
         with self.restore_lock:
             return self._restore()
 
-    def _restore(self):
+    def _restore(self) -> Any:
         if len(self.state["originals"]) != 2:
             raise SafetyError("restoration requires two preserved original identities")
         self.stop.set()
@@ -244,12 +248,18 @@ class Cluster:
         stopped = set()
         owned = self.state["candidate_history"] + self.state["trainer_history"]
         for candidate in owned:
-            if candidate["id"] in stopped:
-                continue
-            stopped.add(candidate["id"])
-            rank = candidate["rank"]
+            # One malformed record must not skip the original containers.
             try:
-                self.transport.call(rank, "stop", container=candidate["id"])
+                identifier = candidate["id"]
+                rank = candidate["rank"]
+                if identifier in stopped:
+                    continue
+                stopped.add(identifier)
+            except Exception as error:
+                errors.append("candidate record: " + str(error))
+                continue
+            try:
+                self.transport.call(rank, "stop", container=identifier)
             except Exception as error:
                 errors.append(str(error))
         for rank in (1, 0):
@@ -264,6 +274,9 @@ class Cluster:
                 break
             except (OSError, SafetyError):
                 time.sleep(1)
+            except Exception as error:
+                errors.append(str(error))
+                break
         else:
             errors.append("original head readiness failed after restore")
         for rank, original in enumerate(self.state["originals"]):
@@ -288,12 +301,13 @@ class Cluster:
         self.state["phase"] = "restore_failed" if errors else "restored"
         self.state["restore_errors"] = errors
         self.save()
-        self.changed = False
         if errors:
+            # Leave changed set so a later window exit retries restore.
             raise SafetyError("planned restore verification failed: " + "; ".join(errors))
+        self.changed = False
 
     @contextmanager
-    def window(self, protected):
+    def window(self, protected: Any) -> Any:
         pins = self.preflight()
         self.manifest()
         before = []

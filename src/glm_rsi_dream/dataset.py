@@ -1,18 +1,20 @@
 """Freeze task identity and apply explicit, configurable scope routing."""
+
 import re
+from typing import Any
 
 from .files import digest, read_json, write_json
 from .safety import SafetyError
 
 
-def matches_group(text, terms):
+def matches_group(text: Any, terms: Any) -> Any:
     for term in terms:
         if re.search(r'(?<!\w)' + re.escape(term.casefold()) + r'(?!\w)', text.casefold()):
             return True
     return False
 
 
-def admitted(question, routes):
+def admitted(question: Any, routes: Any) -> Any:
     for route in routes:
         matched = True
         for group in route['all']:
@@ -24,7 +26,7 @@ def admitted(question, routes):
     return False
 
 
-def validate(lesson, evaluation):
+def validate(lesson: Any, evaluation: Any) -> Any:
     if not lesson['facts'] or not lesson['routes']:
         raise ValueError('Supply facts and bounded routes')
     facts = {}
@@ -59,7 +61,7 @@ def validate(lesson, evaluation):
     return lesson, evaluation
 
 
-def freeze(cluster, lesson_path, eval_path):
+def freeze(cluster: Any, lesson_path: Any, eval_path: Any) -> Any:
     if cluster.run_dir.exists():
         raise SafetyError('Use a new private run directory for each loop')
     lesson, evaluation = validate(read_json(lesson_path), read_json(eval_path))
@@ -72,7 +74,7 @@ def freeze(cluster, lesson_path, eval_path):
     return lesson, evaluation
 
 
-def verify(cluster):
+def verify(cluster: Any) -> Any:
     frozen = read_json(cluster.run_dir / 'freeze.json')
     for name in ('lesson', 'eval'):
         if digest(read_json(cluster.run_dir / (name + '.json'))) != frozen[name + '_sha256']:
@@ -82,7 +84,7 @@ def verify(cluster):
     return frozen
 
 
-def close_fitting(cluster, selected):
+def close_fitting(cluster: Any, selected: Any) -> Any:
     marker = cluster.run_dir / 'evaluation-started.json'
     if marker.exists():
         raise SafetyError('Holdout already opened; fitting stays closed')

@@ -1,6 +1,17 @@
 """Keep native GPU checks separate from the CPU suite."""
 
 import pytest
+from hypothesis import HealthCheck, settings
+
+settings.register_profile(
+    "ci",
+    max_examples=60,
+    derandomize=True,
+    deadline=None,
+    database=None,
+    suppress_health_check=[HealthCheck.function_scoped_fixture],
+)
+settings.load_profile("ci")
 
 
 def pytest_collection_modifyitems(items):
