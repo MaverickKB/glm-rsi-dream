@@ -41,7 +41,7 @@ Write linear Python for a junior reader, with named intermediates, loops, and
 clear if/else branches. Keep changes small. Use ordinary punctuation without
 em dashes. Do not add hype or unsupported outcome claims.
 
-From the checkout, use Python 3.11, 3.12, or 3.13. Dev dependencies are locked
+Supported Python versions are 3.11, 3.12, and 3.13. Dev dependencies are locked
 in `uv.lock`. Install them with uv 0.13 or newer:
 
 ```sh

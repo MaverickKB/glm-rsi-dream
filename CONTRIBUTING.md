@@ -4,7 +4,7 @@ Open an issue to describe a substantial behavior change before implementing it.
 Keep pull requests small and focused. Explain the problem, the changed behavior,
 and the checks you ran. Write linear Python with named steps and readable loops.
 
-Use Python 3.11, 3.12, or 3.13 and run the CPU checks before submitting.
+Supported Python versions are 3.11, 3.12, and 3.13. Run the CPU checks before submitting.
 Dev dependencies are locked in `uv.lock`. Install them with uv 0.13 or newer:
 
 ```sh

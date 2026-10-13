@@ -6,7 +6,13 @@ build-backend = "setuptools.build_meta"
 name = "glm-rsi-dream"
 dynamic = ["version"]
 description = "Experimental Spark-only learned attention memory with a self-run GLM loop"
-requires-python = ">=3.11"
+requires-python = ">=3.11,<3.14"
+classifiers = [
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+]
 license = "MIT AND Apache-2.0 AND CC-BY-4.0"
 license-files = ["LICENSE", "NOTICE", "licenses/*.txt"]
 dependencies = ["tokenizers==0.22.1"]
@@ -33,6 +39,7 @@ testpaths = ["tests"]
 markers = ["gpu: requires CUDA and the compatible native runtime"]
 
 [tool.ruff]
+# Lowest version in the supported range (>=3.11,<3.14).
 target-version = "py311"
 respect-gitignore = false
 
@@ -52,6 +59,7 @@ url = "https://download.pytorch.org/whl/cpu"
 explicit = true
 
 [tool.mypy]
+# Lowest version in the supported range (>=3.11,<3.14).
 python_version = "3.11"
 files = ["src", "tests"]
 ignore_missing_imports = true

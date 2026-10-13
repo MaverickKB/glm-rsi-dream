@@ -19,7 +19,7 @@ native qualification of this checkout's exact CLI remains a verification target.
 
 ## Quick start: CPU dry run
 
-From this checkout, use Python 3.11, 3.12, or 3.13. Dev dependencies are locked
+Supported Python versions are 3.11, 3.12, and 3.13. Dev dependencies are locked
 in `uv.lock`. Install them with uv 0.13 or newer:
 
 ```sh
