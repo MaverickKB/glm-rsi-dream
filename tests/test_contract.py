@@ -46,6 +46,23 @@ def test_canonical_data_directory_is_the_cache(monkeypatch, tmp_path):
     assert shell_command(['docker', 'run', '-v', mounted]) == 'docker run -v $HOME/.cache/glm-rsi-dream/baseline:/models'
 
 
+def test_fact_statements_satisfy_their_alias_groups_and_not_another_fact():
+    lesson, evaluation = fixtures()
+    facts = {}
+    for fact in lesson['facts']:
+        facts[fact['id']] = fact['statement']
+    splits = [('train', lesson['training']), ('dev', lesson['development']),
+              ('heldout', evaluation['heldout'])]
+    for split, rows in splits:
+        for row in rows:
+            statement = facts[row['fact_id']]
+            assert grade(statement, row), split + ' ' + row['id']
+            for other_id, other in facts.items():
+                if other_id == row['fact_id']:
+                    continue
+                assert not grade(other, row), row['id'] + ' also matches ' + other_id
+
+
 def test_demo_split_routing_and_disjointness():
     lesson, evaluation = fixtures()
     validate(lesson, evaluation)
@@ -124,7 +141,8 @@ def test_decision_requires_gain_per_fact_and_control_preservation():
     rows = []
     for i in range(10):
         rows.append({'fact_id': str(i % 2), 'memory': {'grounded': True}, 'baseline': {'grounded': False}})
-    controls = [{'byte_identical': True, 'zero_installation': True}]
+    controls = [{'byte_identical': True, 'zero_installation': True,
+                 'zero_cache_writes': True, 'zero_offpath_delta': True}]
     assert decision(rows, controls, acceptance)['verdict'] == 'keep'
     for row in rows:
         row['baseline']['grounded'] = True
@@ -132,6 +150,12 @@ def test_decision_requires_gain_per_fact_and_control_preservation():
     for row in rows:
         row['baseline']['grounded'] = False
     controls[0]['zero_installation'] = False
+    assert decision(rows, controls, acceptance)['verdict'] == 'reject'
+    controls[0]['zero_installation'] = True
+    controls[0]['zero_cache_writes'] = False
+    assert decision(rows, controls, acceptance)['verdict'] == 'reject'
+    controls[0]['zero_cache_writes'] = True
+    controls[0]['zero_offpath_delta'] = False
     assert decision(rows, controls, acceptance)['verdict'] == 'reject'
 
 
@@ -165,6 +189,76 @@ def test_atomic_private_files_survive_concurrent_writes(tmp_path):
     assert isinstance(read_json(path)['value'], int)
     assert path.stat().st_mode & 0o777 == 0o600
     assert not list(path.parent.glob('*.tmp'))
+
+
+def test_guard_rejects_desync_health_and_backwards_swap(tmp_path, monkeypatch):
+    import time
+    from types import SimpleNamespace
+
+    from glm_rsi_dream import guard
+
+    root = tmp_path / 'guard-run'
+    root.mkdir()
+    spec = {'original': 'original-example', 'candidates': ['candidate-example'],
+            'deadline': time.time() + 3600, 'ready_after': 0,
+            'api_url': 'http://example-head:8888',
+            'safety': {'memory_floor_bytes': 1, 'swap_out_bytes_per_second': 10_000_000,
+                       'swap_sustain_seconds': 30, 'probe_seconds': 5,
+                       'dashboard_url': 'http://example-dashboard/status',
+                       'protected_urls': ['http://example-service/health']}}
+    path = root / 'guard.json'
+    path.write_text(json.dumps(spec))
+
+    class Response:
+        status = 200
+
+        def read(self, limit):
+            return b'{"ok": false, "rank_desynchronized": true}'
+
+        def __enter__(self):
+            return self
+
+        def __exit__(self, exc_type, exc, traceback):
+            return False
+
+    monkeypatch.setattr(guard, 'sample', lambda: (time.monotonic(), 10 ** 12, 0))
+    monkeypatch.setattr(guard.urllib.request, 'urlopen', lambda *args, **kwargs: Response())
+    monkeypatch.setattr(guard.subprocess, 'run', lambda *args, **kwargs: SimpleNamespace(returncode=0))
+    monkeypatch.setattr(guard.time, 'sleep', lambda seconds: (root / 'guard-done').write_text('done\n'))
+    guard.run(path)
+    fired = json.loads((root / 'guard-fired.json').read_text())
+    assert fired['reason'] == 'protected health'
+
+    samples = [(0.0, 10 ** 12, 100), (2.0, 10 ** 12, 40)]
+
+    def sample():
+        return samples.pop(0)
+
+    def sleep(seconds):
+        if not samples:
+            (root / 'guard-done').write_text('done\n')
+
+    (root / 'guard-fired.json').unlink()
+    (root / 'guard-done').unlink(missing_ok=True)
+    monkeypatch.setattr(guard, 'sample', sample)
+    monkeypatch.setattr(guard.time, 'sleep', sleep)
+
+    class Healthy:
+        status = 200
+
+        def read(self, limit):
+            return b'ready'
+
+        def __enter__(self):
+            return self
+
+        def __exit__(self, exc_type, exc, traceback):
+            return False
+
+    monkeypatch.setattr(guard.urllib.request, 'urlopen', lambda *args, **kwargs: Healthy())
+    guard.run(path)
+    fired = json.loads((root / 'guard-fired.json').read_text())
+    assert fired['reason'] == 'memory telemetry is invalid'
 
 
 def test_status_excludes_preserved_environment(tmp_path, capsys):

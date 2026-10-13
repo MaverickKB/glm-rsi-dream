@@ -7,3 +7,11 @@
 - Agree memory preparation and local restoration across both TP ranks before forward execution. Failed installation releases only its request.
 - Report rank desynchronization in health and return HTTP503 for an unhealthy pair.
 - Add CPU regressions for reservation, paired failures and health responses.
+- Release a memory slot and clear its attention rows when the rank exchange fails after a local install.
+- Parse a valid eval tag even when this rank's capture observer is disabled.
+- Treat an explicit unhealthy or rank-desynchronized health body as a failed probe, including HTTP 503.
+- Reject a non-positive guard sample interval and a backwards swap counter before dividing.
+- Keep a failure observed during the restore probe.
+- Grade the helper fact with the alias that appears in its statement.
+- When rank 1's follower hits an error during eval admission, it joins the peer's admission vote and drops its own slot instead of leaving that vote blocked.
+- Report cache writes and the off-path delta as separate receipt fields, and reject a control when either one is nonzero.

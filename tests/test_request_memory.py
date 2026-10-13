@@ -228,3 +228,162 @@ def test_failed_rank_exchange_marks_decoder_broken():
     with pytest.raises(RuntimeError, match='rank exchange failed'):
         request_memory.gather_status(value, [1])
     assert value.broken is failure
+
+
+class RowBuffer:
+    def __init__(self, values):
+        self.values = list(values)
+
+    def fill_(self, number):
+        self.values = [number for _ in self.values]
+
+    def zero_(self):
+        self.values = [0 for _ in self.values]
+
+
+def test_rank_exchange_failure_releases_slot_and_clears_installed_rows(monkeypatch):
+    value = decoder()
+    rows = RowBuffer([1, 1, 1])
+    value.lanes[0].st.kc = [rows]
+    value.w.meta[KEY]["active"][0] = {"sid": 0, "effective_length": 97}
+    calls = {"count": 0}
+
+    def gather(words):
+        calls["count"] += 1
+        if calls["count"] == 1:
+            return [list(words), list(words)]
+        raise RuntimeError("rank exchange failed")
+
+    def install(decoder_value, record):
+        decoder_value.lanes[0].st.kc[0].fill_(4)
+        record["memory_activated"] = True
+
+    value.g._gather_ints = gather
+    monkeypatch.setattr(attention_native, "install", install)
+    with pytest.raises(RuntimeError, match="rank exchange failed"):
+        request_memory.complete_admission(value, 0)
+    assert value.broken is not None
+    assert 0 not in value.lanes
+    assert rows.values == [0, 0, 0]
+
+
+def test_agreed_install_keeps_attention_rows(monkeypatch):
+    value = decoder()
+    rows = RowBuffer([0, 0])
+    value.lanes[0].st.kc = [rows]
+    value.w.meta[KEY]["active"][0] = {"sid": 0, "effective_length": 97}
+
+    def gather(words):
+        return [list(words), list(words)]
+
+    def install(decoder_value, record):
+        decoder_value.lanes[0].st.kc[0].fill_(4)
+        record["memory_activated"] = True
+
+    value.g._gather_ints = gather
+    monkeypatch.setattr(attention_native, "install", install)
+    request_memory.complete_admission(value, 0)
+    assert rows.values == [4, 4]
+    assert 0 in value.lanes
+
+
+def load_follow():
+    sources = json.loads(gzip.decompress(
+        (Path(__file__).parent / "upstream_sources.json.gz").read_bytes()))
+    source = bootstrap.transform("multi", sources["families/glm5_next/cuda/multi.py"])
+    assert "_memory.unblock_peer(self)" in source
+    for node in ast.walk(ast.parse(source)):
+        if isinstance(node, ast.FunctionDef) and node.name == "follow":
+            namespace = {
+                "_memory": request_memory,
+                "_watch": lambda *args, **kwargs: None,
+                "_unwatch": lambda *args, **kwargs: None,
+                "unseal": lambda msg, seq, rank=1: msg,
+                "SEAL_MOD": 2_147_483_647,
+                "torch": SimpleNamespace(no_grad=lambda: (lambda fn: fn)),
+            }
+            module = ast.Module(body=[node], type_ignores=[])
+            exec(compile(module, "multi.py", "exec"), namespace)
+            return namespace["follow"]
+    raise AssertionError("follow missing")
+
+
+def test_rank1_follow_unblocks_a_peer_blocked_in_admission(monkeypatch):
+    pair = [decoder(0), decoder(1)]
+    barrier = threading.Barrier(2)
+    votes = {}
+
+    def gather(rank, words):
+        votes[rank] = list(words)
+        barrier.wait(timeout=5)
+        ordered = [list(votes[0]), list(votes[1])]
+        barrier.wait(timeout=5)
+        return ordered
+
+    for value in pair:
+        rank = value.w.rank
+        value.g._gather_ints = lambda words, rank=rank: gather(rank, words)
+        value.g._share = lambda values: [1, 2]
+        value.received = 0
+        value.idle = False
+        value.rank = rank
+        value.watchdog = None
+        value.w.meta[KEY]["active"][0] = {"sid": 0, "effective_length": 97}
+
+    def apply(msg):
+        pair[1]._eval_admit = 0
+        raise RuntimeError("rank 1 admit failed before the vote")
+
+    def refuse_install(*args, **kwargs):
+        raise AssertionError("installed")
+
+    pair[1].apply = apply
+    monkeypatch.setattr(attention_native, "install", refuse_install)
+    follow = load_follow()
+    with ThreadPoolExecutor(max_workers=2) as executor:
+        head = executor.submit(request_memory.complete_admission, pair[0], 0)
+        worker = executor.submit(follow, pair[1], True)
+        with pytest.raises(ValueError, match="rejected this request"):
+            head.result(timeout=5)
+        worker.result(timeout=5)
+    assert "admit failed" in str(pair[1].broken)
+    assert votes[1] == [0, 0, 0, 0]
+    assert 0 not in pair[0].lanes
+    assert 0 not in pair[1].lanes
+
+
+def test_rank1_follow_does_not_gather_again_after_an_aborted_vote():
+    pair = [decoder(0), decoder(1)]
+    barrier = threading.Barrier(2)
+    calls = {0: 0, 1: 0}
+
+    def gather(rank, words):
+        calls[rank] += 1
+        barrier.wait(timeout=5)
+        raise RuntimeError("rank exchange failed")
+
+    for value in pair:
+        rank = value.w.rank
+        value.g._gather_ints = lambda words, rank=rank: gather(rank, words)
+        value.g._share = lambda values: [1, 2]
+        value.received = 0
+        value.idle = False
+        value.rank = rank
+        value.watchdog = None
+        value.w.meta[KEY]["active"][0] = {"sid": 0, "effective_length": 97}
+
+    def apply(msg):
+        pair[1]._eval_admit = 0
+        request_memory.complete_admission(pair[1], 0)
+
+    pair[1].apply = apply
+    follow = load_follow()
+    with ThreadPoolExecutor(max_workers=2) as executor:
+        head = executor.submit(request_memory.complete_admission, pair[0], 0)
+        worker = executor.submit(follow, pair[1], True)
+        with pytest.raises(RuntimeError, match="rank exchange failed"):
+            head.result(timeout=5)
+        worker.result(timeout=5)
+    assert calls == {0: 1, 1: 1}
+    assert 0 not in pair[0].lanes
+    assert 0 not in pair[1].lanes

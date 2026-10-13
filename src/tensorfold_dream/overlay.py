@@ -36,9 +36,19 @@ def extend(name, source, replace):
                          "            except Exception as error:\n                self.broken = error\n                raise\n"
                          "            _memory.complete_admission(self, sid)\n")
         source = replace(source, "                self._admitted(a, s, feed, constraint)\n",
+                         "                if a.get('eval') is not None:\n"
+                         "                    self._eval_admit = a['sid']\n"
                          "                self._admitted(a, s, feed, constraint)\n"
                          "                if a.get('eval') is not None:\n"
-                         "                    _memory.complete_admission(self, a['sid'])\n")
+                         "                    _memory.complete_admission(self, a['sid'])\n"
+                         "                    self._eval_admit = None\n")
+        source = replace(source,
+                         "            self.apply(unseal(self.g._share(None), self.received, self.rank))\n",
+                         "            try:\n"
+                         "                self.apply(unseal(self.g._share(None), self.received, self.rank))\n"
+                         "            except Exception as error:\n"
+                         "                self.broken = error\n"
+                         "                _memory.unblock_peer(self)\n")
         source = replace(source, '        return {"streams":',
                          '        return {"ok": self.broken is None, "rank_desynchronized": self.broken is not None, "streams":')
         source = replace(source, '        payload += _capture.wire_extension(info.get("capture"))\n',

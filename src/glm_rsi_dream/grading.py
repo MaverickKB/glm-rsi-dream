@@ -68,7 +68,13 @@ def decision(rows, controls, acceptance):
     accepted = recall >= acceptance['minimum_grounded_recall']
     accepted = accepted and recall - baseline >= acceptance['minimum_gain']
     for row in controls:
-        if not row['byte_identical'] or not row['zero_installation']:
+        if not row['byte_identical']:
+            accepted = False
+        if not row['zero_installation']:
+            accepted = False
+        if not row['zero_cache_writes']:
+            accepted = False
+        if not row['zero_offpath_delta']:
             accepted = False
     if acceptance['require_per_fact']:
         for counts in per_fact.values():

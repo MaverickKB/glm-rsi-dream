@@ -7,6 +7,19 @@ import urllib.request
 from pathlib import Path
 
 
+def body_reports_outage(raw):
+    """True when a health body says the pair is down or the ranks diverged."""
+    try:
+        body = json.loads(raw)
+    except (json.JSONDecodeError, UnicodeDecodeError, TypeError):
+        return False
+    if not isinstance(body, dict):
+        return False
+    if body.get("rank_desynchronized") is True or body.get("ok") is False:
+        return True
+    return False
+
+
 def sample():
     available = 0
     swapped = 0
@@ -37,22 +50,30 @@ def run(path):
             reason = 'window recovery deadline'
         if previous is not None:
             elapsed = now - previous[0]
-            rate = (swapped - previous[2]) / elapsed
-            if rate > policy['swap_out_bytes_per_second']:
-                if high_since is None:
-                    high_since = previous[0]
-                if now - high_since >= policy['swap_sustain_seconds']:
-                    reason = 'sustained swap-out'
+            delta = swapped - previous[2]
+            if elapsed <= 0 or delta < 0:
+                reason = 'memory telemetry is invalid'
             else:
-                high_since = None
+                rate = delta / elapsed
+                if rate > policy['swap_out_bytes_per_second']:
+                    if high_since is None:
+                        high_since = previous[0]
+                    if now - high_since >= policy['swap_sustain_seconds']:
+                        reason = 'sustained swap-out'
+                else:
+                    high_since = None
         previous = now, available, swapped
         urls = [policy['dashboard_url']] + policy['protected_urls']
+        health_url = spec['api_url'] + '/health'
         if time.time() >= spec['ready_after']:
-            urls.append(spec['api_url'] + '/health')
+            urls.append(health_url)
         try:
             for url in urls:
                 with urllib.request.urlopen(url, timeout=5) as response:
-                    if response.status != 200 or not response.read(65536):
+                    raw = response.read(65536)
+                    if response.status != 200 or not raw:
+                        raise RuntimeError('protected response failed')
+                    if url == health_url and body_reports_outage(raw):
                         raise RuntimeError('protected response failed')
         except Exception:
             reason = 'protected health'

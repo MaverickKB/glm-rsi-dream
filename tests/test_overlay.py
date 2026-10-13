@@ -63,6 +63,20 @@ def test_overlay_compiles_and_preserves_inspect_source(fullname, name, tmp_path)
         capture_native.PROCESS_CAPTURE.update(before)
 
 
+def test_disabled_containment_still_parses_eval_wire():
+    spec = {'tag': 'glm-eval-v1', 'request_id': 'cpu-disabled', 'arm': 'main', 'pair_sha256': 'a' * 64}
+    payload = eval_native.wire_extension(None, spec)
+    before = dict(eval_native.STATE.containment)
+    eval_native.STATE.containment['disabled'] = True
+    eval_native.STATE.containment['failures'] = 3
+    try:
+        record = eval_native.parse_admit({}, payload, 0)
+    finally:
+        eval_native.STATE.containment.clear()
+        eval_native.STATE.containment.update(before)
+    assert record['eval'] == spec
+
+
 def test_tagged_wire_leaves_untagged_bytes_absent_and_round_trips():
     assert eval_native.wire_extension(None, None) == []
     spec = {'tag':'glm-eval-v1', 'request_id':'cpu-test', 'arm':'main', 'pair_sha256':'a'*64}

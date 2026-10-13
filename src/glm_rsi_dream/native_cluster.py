@@ -110,6 +110,9 @@ class AttentionCluster(Cluster):
                         raise SafetyError('Native memory extent is unproven')
                     if selected and receipt.get('artifact_sha256') != selected[rank]['sha256']:
                         raise SafetyError('Rank artifact identity differs from selected memory')
-                elif receipt.get('cache_writes') != 0 or receipt.get('offpath_delta') != 0:
-                    raise SafetyError('Off-path memory effect')
+                else:
+                    if receipt.get('cache_writes') != 0:
+                        raise SafetyError('Off-path cache write')
+                    if receipt.get('offpath_delta') != 0:
+                        raise SafetyError('Off-path state delta')
         return reply, receipts
