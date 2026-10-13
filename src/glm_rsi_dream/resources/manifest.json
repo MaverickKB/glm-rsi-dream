@@ -1,8 +1,8 @@
 {
   "name": "GLM RSI Dream",
   "package": "glm-rsi-dream",
-  "version": "0.0.1",
-  "status": "v0.0.1",
+  "version": "0.0.2",
+  "status": "v0.0.2",
   "vendor": "GLM RSI Dream contributors",
   "model": "GLM-5.3-Flash-EXL3",
   "runtime": {
@@ -22,7 +22,8 @@
       "multi": "a7c4cd5ddda71d53b28d3132ee11d8f59c030e96742d6c60d28a78394097b290",
       "multi_prefill": "a158e1ffceff25d3593fbe0d583a39f0b004c66d26b6e4b147a172a1718a6dc2",
       "verify": "e0d450b84fe6b4e285ae0bb5942e92aa86762a554e29aae8e38d53c447b1e13f",
-      "glm_app": "fe97ccb18a3a2c63ab905f5ade0ddd778a2a623d15a237d740bbfaca82b1396a"
+      "glm_app": "fe97ccb18a3a2c63ab905f5ade0ddd778a2a623d15a237d740bbfaca82b1396a",
+      "cuda_http": "c1c2eb0db9a20926fb39200dd5e126363b63391153217a4ada0f4b9ac242f2e1"
     },
     "source_files": {
       "cli.py": "77cf439bdf805e898a96c28f407a7aacde8db76b03d002bacff90e5fd0a3bf57",

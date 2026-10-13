@@ -149,34 +149,8 @@ def parse_admit(record, payload, offset):
 
 
 def admitted(decoder, record):
-    state = decoder.w.meta.get(KEY)
-    spec = record.get("eval")
-    if state is None or spec is None:
-        return
-    checked = call(selection, {"dream_eval": spec}, state["pair_sha256"])
-    # Both ranks read the same selection from the sealed native ADMIT trailer.
-    # The head reaches this before _flush wakes the worker, so admission must
-    # stay local. Pair readiness was already agreed by both ranks at attach.
-    if checked is None:
-        return
-    sid = record["sid"]
-    if sid in state["active"] or len(state["active"]) >= 4:
-        raise ValueError("duplicate or over-capacity evaluation admission")
-    state["active"][sid] = {
-        "spec": checked,
-        "sid": sid,
-        "main_calls": 0,
-        "failures_at_start": STATE.containment["failures"],
-    }
-    from .pocket_native import admitted as initialize
-
-    call(initialize, decoder.w, state["active"][sid], record["prompt"])
-    decoder.lanes[sid].st._eval_sid = sid
-    from .attention_native import install
-    install(decoder, state["active"][sid])
-    capture.log_notice(
-        f"[dream-eval rank={decoder.w.rank}] admitted {checked['request_id']} arm={checked['arm']}"
-    )
+    from .request_memory import admitted as register
+    register(decoder, record)
 
 
 def spec_for(w, st):
@@ -232,11 +206,14 @@ def _finished(decoder, sid):
         tp_world=2,
         main_calls=record["main_calls"],
         hook_failed=STATE.containment["failures"] != record["failures_at_start"],
-        completed=True,
+        completed=not bool(record.get('admission_error')),
+        admission_error=record.get('admission_error'),
+        reserved_capacity=record.get('reserved_capacity'),
     )
     from .pocket_native import finished as finalize
 
-    receipt.update(finalize(decoder.w, record))
+    if not record.get("admission_error"):
+        receipt.update(finalize(decoder.w, record))
     path = state["receipts"] / (
         receipt["request_id"] + "-rank" + str(decoder.w.rank) + ".json"
     )

@@ -4,12 +4,16 @@
 
 def extend(name, source, replace):
     source = replace(source, "from __future__ import annotations\n",
-                     "from __future__ import annotations\nfrom tensorfold_dream import eval_native as _eval\n")
+                     "from __future__ import annotations\nfrom tensorfold_dream import eval_native as _eval\nfrom tensorfold_dream import request_memory as _memory\n")
     if name == "glm_app":
         source = replace(source, "if _capture.requested(metadata):",
                          "if _capture.requested(metadata) or _eval.requested(metadata):")
         source = replace(source, "capture_metadata = _capture.http_metadata(metadata)",
                          "capture_metadata = _eval.http_metadata(metadata)")
+    elif name == "cuda_http":
+        source = replace(source, "                self._json(200, health.of(app).snapshot(app))\n",
+                         "                body = health.of(app).snapshot(app)\n"
+                         "                self._json(200 if body.get('ok') else 503, body)\n")
     elif name == "engine":
         source = replace(source, "        _capture.attach(self, model_dir)\n",
                          "        _capture.attach(self, model_dir)\n        _eval.attach(self, model_dir)\n")
@@ -17,6 +21,26 @@ def extend(name, source, replace):
                          '"capture": _capture.capture_request(self, prompt, metadata, vision),\n'
                          '                                              "eval": _eval.request(self, metadata)})')
     elif name == "multi":
+        source = replace(source, "        self._check()\n        g = self.g\n",
+                         "        self._check()\n        _memory.prepare_request(self, s)\n        g = self.g\n")
+        source = replace(source, "        need = self._need(len(s.prompt))\n",
+                         "        try:\n            need = _memory.extent_need(self, s)\n"
+                         "        except Exception:\n            return True  # admit reports a preflight error to this request\n")
+        if source.count("self._need(len(prompt))") != 3:
+            raise ValueError("three native prompt extent sites required")
+        source = source.replace("self._need(len(prompt))", "_memory.extent_need(self, s)")
+        source = replace(source, "        self.lanes[sid].key = key\n",
+                         "        self.lanes[sid].key = key\n"
+                         "        if info.get('eval') is not None:\n"
+                         "            try:\n                self._flush()\n"
+                         "            except Exception as error:\n                self.broken = error\n                raise\n"
+                         "            _memory.complete_admission(self, sid)\n")
+        source = replace(source, "                self._admitted(a, s, feed, constraint)\n",
+                         "                self._admitted(a, s, feed, constraint)\n"
+                         "                if a.get('eval') is not None:\n"
+                         "                    _memory.complete_admission(self, a['sid'])\n")
+        source = replace(source, '        return {"streams":',
+                         '        return {"ok": self.broken is None, "rank_desynchronized": self.broken is not None, "streams":')
         source = replace(source, '        payload += _capture.wire_extension(info.get("capture"))\n',
                          '        payload += _eval.wire_extension(info.get("capture"), info.get("eval"))\n')
         source = replace(source, "return _capture.parse_admit_capture(dict(", "return _eval.parse_admit(dict(")

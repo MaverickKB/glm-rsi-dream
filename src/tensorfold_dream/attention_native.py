@@ -36,15 +36,12 @@ def initialize(engine):
     engine.e.reset()
 
 
-def install(decoder, record):
-    """Admission is local on both ranks; initial state was agreed at startup."""
-    if record['spec']['arm']!='main' or not record['policy'].get('use_memory'):
-        return
+def prepare(w, record, ordinary, count):
+    """Validate and load numerical memory before touching a request slot."""
     from tensorfold.families.glm5_next.cuda import decode
-    state=decoder.w.meta[KEY]
-    lane=decoder.lanes[record['sid']]
+    state = w.meta[KEY]
     prefix=state['prefix']
-    ordinary=list(lane.s.prompt)
+    ordinary=list(ordinary)
     normal=prefix['normal_ids']
     if ordinary[:len(normal)]!=normal:
         raise ValueError('Ordinary system prefix differs from frozen native template')
@@ -60,8 +57,8 @@ def install(decoder, record):
         if actual!=selected['sha256']:
             raise ValueError('Memory artifact identity mismatch')
         if state.get('compressed_sha')!=actual:
-            value=torch.load(path,map_location=decoder.w.device,weights_only=True)
-            if value['schema_version']!=3 or value['mechanism']!='attention_state_v1' or value['rank']!=decoder.w.rank or not value['training_only'] or not value['dense_only']:
+            value=torch.load(path,map_location=w.device,weights_only=True)
+            if value['schema_version']!=3 or value['mechanism']!='attention_state_v1' or value['rank']!=w.rank or not value['training_only'] or not value['dense_only']:
                 raise ValueError('Memory tensor owner mismatch')
             n=value['length']
             from tensorfold.families.glm5_next.cuda import kda
@@ -79,10 +76,23 @@ def install(decoder, record):
         snap=state['compressed']
         record['artifact_sha256']=actual
     n=len(snap.ids)
-    if selected and n+len(suffix)+lane.s.count>decoder.w.cfg.dense_limit:
+    if selected and n+len(suffix)+count>w.cfg.dense_limit:
         raise ValueError('Compressed cartridge admits dense contexts only')
-    if n+len(suffix)+lane.s.count>lane.st.capacity:
-        raise ValueError('Request extent too small for memory')
+    record['memory_plan'] = (snap, suffix)
+    return n + len(suffix)
+
+
+def install(decoder, record):
+    """Restore one preflighted plan into its reserved slot."""
+    if record['spec']['arm'] != 'main' or not record['policy'].get('use_memory'):
+        return
+    from tensorfold.families.glm5_next.cuda import decode
+    lane = decoder.lanes[record['sid']]
+    ordinary = list(lane.s.prompt)
+    snap, suffix = record['memory_plan']
+    n = len(snap.ids)
+    if n + len(suffix) + decoder.rows_max > lane.st.capacity:
+        raise ValueError('Request extent too small for memory prefill')
     lane.s.prompt=[0]*n+suffix
     lane.stops=[]
     lane.point=None
@@ -99,6 +109,8 @@ def install(decoder, record):
     record['ordinary_ids']=ordinary
     record['suffix_start']=n
     record['attention_capture']=record['policy'].get('attention_capture',False)
+
+    record.pop('memory_plan', None)
 
 
 def capture_read(layer, w, b, qa, lc, pos_dev, lo, count):

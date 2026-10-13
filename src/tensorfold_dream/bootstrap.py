@@ -27,6 +27,7 @@ HANDLER_HASHES = {
     "cuda/http.py": "c1c2eb0db9a20926fb39200dd5e126363b63391153217a4ada0f4b9ac242f2e1",
 }
 OVERLAY_MODULES = {
+    "tensorfold.cuda.http": "cuda_http",
     PACKAGE + "engine": "engine",
     PACKAGE + "multi": "multi",
     PACKAGE + "forward": "forward",
