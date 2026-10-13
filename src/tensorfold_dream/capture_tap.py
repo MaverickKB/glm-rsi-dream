@@ -27,7 +27,7 @@ METADATA_LIMIT = 65_536
 
 
 # One bounded daemon drain is initialized before any serving request.
-LOG_QUEUE = queue.Queue(maxsize=128)
+LOG_QUEUE: queue.Queue[str] = queue.Queue(maxsize=128)
 
 
 def log_notice(message):

@@ -2,31 +2,128 @@ name: CPU checks
 
 on:
   push:
+    branches: ["main"]
   pull_request:
 
 permissions:
   contents: read
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  CUDA_VISIBLE_DEVICES: ""
+  PYTHONDONTWRITEBYTECODE: "1"
+  UV_LOCKED: "1"
+
 jobs:
+  ruff:
+    name: Ruff
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      - uses: astral-sh/setup-uv@v10
+        with:
+          version: "0.13.0"
+          enable-cache: true
+      - name: Install locked dev dependencies
+        run: uv sync --extra dev --python 3.12
+      - name: Lint
+        run: uv run ruff check .
+
+  typecheck:
+    name: Type check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      - uses: astral-sh/setup-uv@v10
+        with:
+          version: "0.13.0"
+          enable-cache: true
+      - name: Install locked dev dependencies
+        run: uv sync --extra dev --python 3.12
+      - name: Type check
+        run: uv run mypy
+
   cpu:
+    name: CPU tests (${{ matrix.os }}, ${{ matrix.python-version }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+        python-version: ["3.11", "3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v7
+        with:
+          python-version: ${{ matrix.python-version }}
+      - uses: astral-sh/setup-uv@v10
+        with:
+          version: "0.13.0"
+          enable-cache: true
+      - name: Install locked dev dependencies
+        run: uv sync --extra dev --python ${{ matrix.python-version }}
+      - name: Test on CPU
+        run: uv run python -m pytest -q -p no:cacheprovider
+
+  wheel:
+    name: Wheel (${{ matrix.python-version }})
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        python-version: ["3.11", "3.12"]
-    env:
-      CUDA_VISIBLE_DEVICES: ""
-      PYTHONDONTWRITEBYTECODE: "1"
+        python-version: ["3.11", "3.12", "3.13"]
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v7
         with:
           python-version: ${{ matrix.python-version }}
-      - name: Install CPU dependencies
+      - uses: astral-sh/setup-uv@v10
+        with:
+          version: "0.13.0"
+          enable-cache: true
+      - name: Build sdist and wheel
+        run: uv build --python ${{ matrix.python-version }}
+      - name: Install the wheel in a clean environment
         run: |
-          python -m pip install torch==2.9.0 --index-url https://download.pytorch.org/whl/cpu
-          python -m pip install -e '.[dev]'
-      - name: Lint
-        run: ruff check .
-      - name: Test on CPU
-        run: python -m pytest -q -p no:cacheprovider
+          set -eu
+          env_dir="${RUNNER_TEMP}/wheel-env"
+          uv venv "$env_dir" --python "${{ matrix.python-version }}"
+          UV_PROJECT_ENVIRONMENT="$env_dir" uv sync --extra test --no-install-project --python "${{ matrix.python-version }}"
+          uv pip install --python "$env_dir/bin/python" --no-deps dist/*.whl
+          "$env_dir/bin/python" -c '
+          import pathlib
+          import glm_rsi_dream
+          import tensorfold_dream
+          from glm_rsi_dream.manifest import MANIFEST
+          for module in (glm_rsi_dream, tensorfold_dream):
+              path = pathlib.Path(module.__file__).resolve()
+              if "site-packages" not in path.parts:
+                  raise SystemExit("imported the source tree: " + str(path))
+          if not MANIFEST.get("version"):
+              raise SystemExit("packaged manifest is missing")
+          '
+      - name: Test the installed wheel
+        run: |
+          set -eu
+          env_dir="${RUNNER_TEMP}/wheel-env"
+          # pytest adds src/ to the import path. Hide it so collection imports the wheel.
+          mv src "${RUNNER_TEMP}/src-hidden"
+          "$env_dir/bin/python" -m pytest -q -p no:cacheprovider
+          "$env_dir/bin/glm-rsi-dream" --config config.example.json --dry-run run

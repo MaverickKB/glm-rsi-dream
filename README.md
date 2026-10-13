@@ -19,16 +19,16 @@ native qualification of this checkout's exact CLI remains a verification target.
 
 ## Quick start: CPU dry run
 
-From this checkout, use Python 3.11 or 3.12:
+From this checkout, use Python 3.11, 3.12, or 3.13. Dev dependencies are locked
+in `uv.lock`. Install them with uv 0.13 or newer:
 
 ```sh
-python3 -m venv .venv
-. .venv/bin/activate
-pip install -e '.[dev]'
-ruff check .
-CUDA_VISIBLE_DEVICES='' python -m pytest -q
-glm-rsi-dream --config config.example.json --dry-run run
-python tools/prepare_baseline.py --config config.example.json
+uv sync --locked --extra dev
+uv run ruff check .
+uv run mypy
+CUDA_VISIBLE_DEVICES='' uv run python -m pytest -q
+uv run glm-rsi-dream --config config.example.json --dry-run run
+uv run python tools/prepare_baseline.py --config config.example.json
 ```
 
 These two planning commands open no subprocess or network connection and create
@@ -41,8 +41,8 @@ Live work requires exactly two NVIDIA DGX Spark GB10 nodes, Linux ARM64,
 working SSH between the coordinator and both ranks, Docker access through the
 standard Unix socket, and the external compatible TensorFold runtime and model
 files described in [UPSTREAM.md](UPSTREAM.md). The native containers supply CUDA,
-PyTorch, and their serving dependencies. Install `.[dev]` on the head if using the
-CPU checks there. Read [MODEL-TERMS.md](MODEL-TERMS.md) before any downloads.
+PyTorch, and their serving dependencies. Install the locked `dev` extra on the
+head if using the CPU checks there. Read [MODEL-TERMS.md](MODEL-TERMS.md) before any downloads.
 
 Copy the checkout to the head Spark. Configure your own SSH identity, containers,
 head API address and port, fabric address/interface settings, and protected
