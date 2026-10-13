@@ -3,6 +3,7 @@
 Existing container names always stop this operation before any creation. The
 pocket controller owns every later clone/cutover/restore of these originals.
 """
+
 import argparse
 import json
 import subprocess
@@ -10,6 +11,7 @@ import sys
 import time
 import urllib.request
 from pathlib import Path
+from typing import Any
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 from glm_rsi_dream.config import load_config, require_spark, shell_command
@@ -17,7 +19,7 @@ from glm_rsi_dream.safety import MemoryGate
 from glm_rsi_dream.transport import Transport
 
 
-def plans(config):
+def plans(config: Any) -> Any:
     runtime = config['runtime']
     baseline = config['baseline']
     result = []
@@ -55,13 +57,13 @@ def plans(config):
     return result
 
 
-def remote(config, target, command, check=True):
+def remote(config: Any, target: Any, command: Any, check: Any = True) -> Any:
     # A single shell command is required by SSH's remote command protocol.
     # A leading ~/ stays expandable as $HOME on that Spark.
     return subprocess.run(config['ssh_command'] + [target, shell_command(command)], check=check)
 
 
-def main(argv=None):
+def main(argv: Any=None) -> Any:
     parser = argparse.ArgumentParser(description='Fresh baseline plan; default is offline dry-run')
     parser.add_argument('--config', default='config.json',
                         help='config file (default: config.json)')

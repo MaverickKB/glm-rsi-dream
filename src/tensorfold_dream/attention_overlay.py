@@ -1,7 +1,10 @@
 # SPDX-License-Identifier: Apache-2.0
 """Small explicit extension of the release's pinned source overlay."""
 
-def extend_attention(name,source,replace):
+from typing import Any
+
+
+def extend_attention(name: Any,source: Any,replace: Any) -> Any:
     if name=='engine':
         source=replace(source,'            self.multi.model_dir = self.model_dir\n',
             '            self.multi.model_dir = self.model_dir\n'

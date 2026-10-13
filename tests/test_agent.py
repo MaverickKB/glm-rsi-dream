@@ -36,6 +36,19 @@ def test_clone_preserves_original_and_disables_candidate_restart():
     assert not any('--port' in arg for arg in created['Cmd'])
 
 
+def test_stage_rejects_a_member_with_no_bytes(tmp_path, monkeypatch):
+    import io
+    import tarfile
+    buffer = io.BytesIO()
+    with tarfile.open(fileobj=buffer, mode="w:gz") as archive:
+        info = tarfile.TarInfo("note.txt")
+        info.size = 4
+        archive.addfile(info, io.BytesIO(b"note"))
+    monkeypatch.setattr(tarfile.TarFile, "extractfile", lambda self, member: None)
+    with pytest.raises(ValueError, match="regular staged files"):
+        stage(tmp_path / "run", base64.b64encode(buffer.getvalue()).decode())
+
+
 def test_stage_rejects_path_escape_and_links(tmp_path):
     import io
     import tarfile

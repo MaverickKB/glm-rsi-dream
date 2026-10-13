@@ -1,4 +1,5 @@
 """Head-Spark SSH transport. Constructing it is separate from dry-run planning."""
+
 import base64
 import io
 import json
@@ -7,19 +8,20 @@ import subprocess
 import tarfile
 import threading
 from pathlib import Path
+from typing import Any
 
 
 class Transport:
-    def __init__(self, config):
+    def __init__(self, config: Any) -> None:
         self.config = config
         self.agent_code = Path(__file__).with_name("agent.py").read_text()
         self.locks = [threading.RLock(),threading.RLock()]
 
-    def call(self, host_rank, action, **fields):
+    def call(self, host_rank: Any, action: Any, **fields: Any) -> Any:
         with self.locks[host_rank]:
             return self._call(host_rank,action,**fields)
 
-    def _call(self, host_rank, action, **fields):
+    def _call(self, host_rank: Any, action: Any, **fields: Any) -> Any:
         rank = host_rank
         host = self.config["hosts"][rank]
         command = list(self.config.get("remote_python", ["python3"]))
@@ -37,18 +39,18 @@ class Transport:
             raise RuntimeError("Spark rank " + str(rank) + " operation " + action + " failed: " + result.stderr.decode()[-500:])
         return json.loads(result.stdout)
 
-    def root(self, rank, run_id):
+    def root(self, rank: Any, run_id: Any) -> Any:
         return self.config["hosts"][rank]["work_dir"] + "/" + run_id
 
-    def write(self, rank, run_id, relative, raw):
+    def write(self, rank: Any, run_id: Any, relative: Any, raw: Any) -> Any:
         return self.call(rank, "write", root=self.root(rank, run_id), path=relative,
                          data=base64.b64encode(raw).decode())
 
-    def read(self, rank, run_id, relative):
+    def read(self, rank: Any, run_id: Any, relative: Any) -> Any:
         record = self.call(rank, "read", root=self.root(rank, run_id), path=relative)
         return base64.b64decode(record["data"], validate=True)
 
-    def stage(self, rank, run_id, run_dir):
+    def stage(self, rank: Any, run_id: Any, run_dir: Any) -> Any:
         buffer = io.BytesIO()
         source_root = Path(__file__).resolve().parents[1]
         with tarfile.open(fileobj=buffer, mode="w:gz") as archive:

@@ -14,7 +14,8 @@ uv run mypy
 CUDA_VISIBLE_DEVICES='' uv run python -m pytest -q
 ```
 
-CI runs those checks on Linux and macOS. After changing a direct pin, refresh
+CI runs Ruff, mypy, the CPU tests, and the wheel install on Python 3.11, 3.12,
+and 3.13. CPU tests also run on macOS. After changing a direct pin, refresh
 the lock with `uv lock` and commit `uv.lock`.
 
 Tests marked `gpu` skip when CUDA is unavailable. CPU checks do not establish

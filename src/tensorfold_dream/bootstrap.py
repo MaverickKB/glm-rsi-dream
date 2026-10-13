@@ -16,6 +16,7 @@ import linecache
 import os
 import sys
 from pathlib import Path
+from typing import Any
 
 ROOT = Path(__file__).resolve().parent
 PACKAGE = "tensorfold.families.glm5_next.cuda."
@@ -38,13 +39,13 @@ OVERLAY_MODULES = {
 }
 
 
-def replace_once(source, old, new):
+def replace_once(source: Any, old: Any, new: Any) -> Any:
     if source.count(old) != 1:
         raise ValueError("capture overlay anchor is absent or ambiguous: " + old[:80])
     return source.replace(old, new, 1)
 
 
-def transform(name, source):
+def transform(name: Any, source: Any) -> Any:
     digest = hashlib.sha256(source.encode()).hexdigest()
     # Full hashes are retained in the packaged source-pin resource.
 
@@ -134,7 +135,7 @@ def transform(name, source):
     return extend(name, source, replace_once)
 
 
-def verify_source_directory(package_root):
+def verify_source_directory(package_root: Any) -> Any:
     from glm_rsi_dream.manifest import MANIFEST
 
     pins = MANIFEST["engine"]
@@ -148,26 +149,26 @@ def verify_source_directory(package_root):
 
 
 class OverlayLoader(importlib.machinery.SourceFileLoader):
-    def exec_module(self, module):
+    def exec_module(self, module: Any) -> Any:
         code = self.get_code(module.__name__)
         # Classes are inspected through module.__file__; functions use their
         # code filename. Both must identify the exact compiled source.
         module.__file__ = code.co_filename
         exec(code, module.__dict__)
 
-    def get_source(self, fullname):
+    def get_source(self, fullname: Any) -> Any:
         # After compilation, inspect must recover the same source even when
         # linecache is cleared. The installed engine file stays unchanged.
         if hasattr(self, "_compiled_source"):
             return self._compiled_source
         return super().get_source(fullname)
 
-    def get_code(self, fullname):
+    def get_code(self, fullname: Any) -> Any:
         source = self.get_data(self.path).decode()
         name = OVERLAY_MODULES[fullname]
         from tensorfold_dream.capture_native import capture_call
 
-        def overlay_code():
+        def overlay_code() -> Any:
             transformed = transform(name, source)
             digest = hashlib.sha256(transformed.encode()).hexdigest()
             filename = self.path + ".capture-" + digest
@@ -190,7 +191,7 @@ class OverlayLoader(importlib.machinery.SourceFileLoader):
 
 
 class OverlayFinder(importlib.abc.MetaPathFinder):
-    def find_spec(self, fullname, path=None, target=None):
+    def find_spec(self, fullname: Any, path: Any=None, target: Any=None) -> Any:
         if fullname not in OVERLAY_MODULES:
             return None
         from tensorfold_dream.capture_native import (
@@ -206,11 +207,16 @@ class OverlayFinder(importlib.abc.MetaPathFinder):
             capture_call(_raise_capture, ValueError("capture overlay requires a source-backed TensorFold module"),
                          startup=True)
             return spec
-        spec.loader = OverlayLoader(fullname, spec.origin)
+        origin = spec.origin
+        if not isinstance(origin, str):
+            capture_call(_raise_capture, ValueError("capture overlay requires a source-backed TensorFold module"),
+                         startup=True)
+            return spec
+        spec.loader = OverlayLoader(fullname, origin)
         return spec
 
 
-def _install():
+def _install() -> Any:
     if os.environ.get("TF_DREAM_CAPTURE") != "1" and os.environ.get("TF_DREAM_EVAL") != "1":
         return
     for finder in sys.meta_path:
@@ -234,7 +240,7 @@ def _install():
 _STARTUP_NOTICE = False
 
 
-def install():
+def install() -> Any:
     global _STARTUP_NOTICE
     if (os.environ.get("TF_DREAM_CAPTURE") != "1" and os.environ.get("TF_DREAM_EVAL") != "1") or _STARTUP_NOTICE:
         return

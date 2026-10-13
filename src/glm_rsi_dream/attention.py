@@ -1,9 +1,12 @@
 # SPDX-License-Identifier: Apache-2.0
 """Differentiable shared key/value attention with causal suffix history."""
+
+from typing import Any
+
 import torch
 
 
-def attention(queries, memory, history, positions):
+def attention(queries: Any, memory: Any, history: Any, positions: Any) -> Any:
     cache = torch.cat([memory, history], dim=0)
     scores = torch.einsum('rhd,nd->rhn', queries, cache) * 0.0625
     row_ids = torch.arange(history.shape[0], device=queries.device)

@@ -1,6 +1,8 @@
 """One autonomous capture, fit, check, and keep/reject cycle on the Sparks."""
+
 import json
 import time
+from typing import Any
 
 from .dataset import close_fitting, freeze, verify
 from .files import digest, read_json, sha, write_json
@@ -9,7 +11,7 @@ from .manifest import MANIFEST
 from .safety import SafetyError, require_parity
 
 
-def event(cluster, phase, detail):
+def event(cluster: Any, phase: Any, detail: Any) -> Any:
     path = cluster.run_dir / 'events.json'
     events = read_json(path) if path.exists() else []
     events.append({'time': time.time(), 'phase': phase, 'detail': detail})
@@ -17,7 +19,7 @@ def event(cluster, phase, detail):
     print(phase + ': ' + detail, flush=True)
 
 
-def prompt_body(cluster, tokenizer, question, main=False):
+def prompt_body(cluster: Any, tokenizer: Any, question: Any, main: Any=False) -> Any:
     prefix = read_json(cluster.run_dir / 'pair/prefix.json')
     suffix = tokenizer.encode('<|user|>' + question + '<|assistant|><think></think>', add_special_tokens=False).ids
     body = cluster.body(prefix['normal_ids'] + suffix, tagged=True,
@@ -26,7 +28,7 @@ def prompt_body(cluster, tokenizer, question, main=False):
     return body
 
 
-def generated(cluster, tokenizer, task, selected=None, full=False):
+def generated(cluster: Any, tokenizer: Any, task: Any, selected: Any=None, full: Any=False) -> Any:
     body = prompt_body(cluster, tokenizer, task['prompt'], main=full or selected is not None)
     policy = {'use_memory': full or selected is not None}
     if selected is not None:
@@ -38,7 +40,7 @@ def generated(cluster, tokenizer, task, selected=None, full=False):
             'reply': reply, 'receipts': receipts}
 
 
-def capture(cluster, tokenizer, lesson):
+def capture(cluster: Any, tokenizer: Any, lesson: Any) -> Any:
     if (cluster.run_dir / 'train-index.json').exists():
         raise SafetyError('Capture is immutable; start a new run')
     facts = []
@@ -76,7 +78,7 @@ def capture(cluster, tokenizer, lesson):
     event(cluster, 'capture', str(len(index)) + ' GLM-reviewed train-only attention trajectories')
 
 
-def train(cluster):
+def train(cluster: Any) -> Any:
     if (cluster.run_dir / 'evaluation-started.json').exists():
         raise SafetyError('Heldout opened; fitting remains closed')
     verify(cluster)
@@ -133,7 +135,7 @@ def train(cluster):
     return selected
 
 
-def evaluate_items(cluster, tokenizer, lesson, items, selected, label, compare=False):
+def evaluate_items(cluster: Any, tokenizer: Any, lesson: Any, items: Any, selected: Any, label: Any, compare: Any=False) -> Any:
     facts = []
     for fact in lesson['facts']:
         facts.append(fact['statement'])
@@ -156,7 +158,7 @@ def evaluate_items(cluster, tokenizer, lesson, items, selected, label, compare=F
     return rows
 
 
-def control_receipts(receipts):
+def control_receipts(receipts: Any) -> Any:
     """Installation, cache writes, and off-path delta are separate measurements."""
     activated = False
     cache_ok = True
@@ -173,7 +175,7 @@ def control_receipts(receipts):
             'zero_offpath_delta': delta_ok}
 
 
-def check(cluster, tokenizer, lesson, evaluation, selected):
+def check(cluster: Any, tokenizer: Any, lesson: Any, evaluation: Any, selected: Any) -> Any:
     dev = evaluate_items(cluster, tokenizer, lesson, lesson['development'], selected, 'dev')
     count = 0
     for row in dev:
@@ -200,7 +202,7 @@ def check(cluster, tokenizer, lesson, evaluation, selected):
     return result
 
 
-def run(cluster, lesson_path, eval_path):
+def run(cluster: Any, lesson_path: Any, eval_path: Any) -> Any:
     lesson, evaluation = freeze(cluster, lesson_path, eval_path)
     result = None
     try:
@@ -225,7 +227,7 @@ def run(cluster, lesson_path, eval_path):
         raise
 
 
-def ask(cluster, question):
+def ask(cluster: Any, question: Any) -> Any:
     verify(cluster)
     report = read_json(cluster.run_dir / 'check.json')
     if report['verdict'] != 'keep' or not report.get('restored'):

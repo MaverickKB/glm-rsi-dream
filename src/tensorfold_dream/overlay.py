@@ -2,7 +2,10 @@
 """Compose request-owned attention memory with the pinned capture loader."""
 
 
-def extend(name, source, replace):
+from typing import Any
+
+
+def extend(name: Any, source: Any, replace: Any) -> Any:
     source = replace(source, "from __future__ import annotations\n",
                      "from __future__ import annotations\nfrom tensorfold_dream import eval_native as _eval\nfrom tensorfold_dream import request_memory as _memory\n")
     if name == "glm_app":

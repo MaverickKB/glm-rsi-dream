@@ -1,15 +1,17 @@
 """Offline planning and explicit Spark-head execution."""
+
 import argparse
 import json
 import sys
 from pathlib import Path
+from typing import Any
 
 from .config import DEFAULT_RUN_DIR, expand_home, load_config, require_spark
 from .files import read_json
 from .manifest import MANIFEST
 
 
-def build_parser():
+def build_parser() -> Any:
     parser = argparse.ArgumentParser(description=MANIFEST['name'] + ', ' + MANIFEST['status'])
     parser.add_argument('--config', default='config.example.json',
                         help='config file (default: config.example.json)')
@@ -24,7 +26,7 @@ def build_parser():
     return parser
 
 
-def main(argv=None):
+def main(argv: Any = None) -> Any:
     args = build_parser().parse_args(argv)
     args.run = expand_home(args.run)
     try:
